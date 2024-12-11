@@ -9,27 +9,51 @@ import {Container, Navbar, Row, Col} from 'react-bootstrap';
 export default function Home() {
   return (
     <>
-    <Container>
-      <Row>
-        <Col></Col>
-        <Col>d</Col>
-        <Col></Col>
-      </Row>
-    </Container>
     <Navbar className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="#home">Brand link</Navbar.Brand>
       </Container>
     </Navbar>
+    {
+      [1,2,3,4,5,6,7,8,9].map((i) =>{
+        return (
+
+          <Container key={i}>
+          <Row>
+            <Col></Col>
+            <Col>
+            {i%2==1 ? <h1 className="text-danger">HELP</h1>:<Col></Col>}
+            </Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col>            
+            {i%2==0 ? <h1 className="text-danger">HELP</h1>:<Col></Col>}
+            </Col>
+            <Col></Col>
+            <Col></Col>
+          </Row>
+          <Row>
+            <Col></Col>
+            <Col></Col>
+            <Col>            
+            {i%2==1 ? <h1 className="text-danger">HELP</h1>:<Col></Col>}
+            </Col>
+          </Row>
+        </Container>
+        )
+        })
+      
+    }
+
+
+    <div className={styles.page}>
+      <main className={styles.main}>
+        <h1 className="text-danger">HELP</h1>
+      </main>
+      <footer className={styles.footer}>
+      </footer>
+    </div>
     </>
-
-
-    // <div className={styles.page}>
-    //   <main className={styles.main}>
-    //     <h1 className="text-danger">what the hell</h1>
-    //   </main>
-    //   <footer className={styles.footer}>
-    //   </footer>
-    // </div>
   );
 }
