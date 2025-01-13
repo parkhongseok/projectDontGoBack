@@ -1,9 +1,10 @@
 'use client'
-import styles from "./page.module.css";
+// import MyNavbar from "./navbar";
 // import {Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
 // import Container from 'react-bootstrap/Container';
 // import Row from 'react-bootstrap/Row';
 // import Col from 'react-bootstrap/Col';
+import styles from "./page.module.css";
 import {Container, Navbar, Row, Col} from 'react-bootstrap';
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
         <Navbar.Brand href="#home">Brand link</Navbar.Brand>
       </Container>
     </Navbar>
+
     {
       [1,2,3,4,5,6,7,8,9].map((i) =>{
         return (

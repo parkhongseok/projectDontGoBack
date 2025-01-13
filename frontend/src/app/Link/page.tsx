@@ -8,7 +8,7 @@ import {Container, Row, Col} from 'react-bootstrap';
 export default function Link() {
   // let [data, setData]= useState(['hi'])
   // fetch("http://localhost:8090/api/v1/articles")
-  let [data, setData] = useState(
+  const [data, setData] = useState(
     [
     {title: 'tilte1', content: 'content1'},
     {title: 'tilte2', content: 'content2'}

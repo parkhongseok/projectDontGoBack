@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import MyNavbar from "./navbar";
-import DropNav from "./dropNav";
-
+// import DropNav from "./dropNav";
 
 
 
@@ -34,6 +33,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
       <MyNavbar></MyNavbar>
+      {/* <DropNav></DropNav> */}
         {children}
       </body>
     </html>
