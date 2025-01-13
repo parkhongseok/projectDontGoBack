@@ -1,15 +1,19 @@
 'use client'
 
-import { useEffect } from "react";
+// import { useEffect } from "react";
+// import Script from 'next/script';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+// import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function MyNavbar(){
-  useEffect(() => {
-    require("bootstrap/dist/js/bootstrap.bundle.min.js");
-  }, []);
-
+  // useEffect(() => {
+  //   require("bootstrap/dist/js/bootstrap.bundle.min.js");
+  // }, []);
+    // useEffect(() => {
+    //   import('bootstrap/dist/js/bootstrap.bundle.min.ts');
+    // }, []);
   return(
       <>
       <Navbar bg="light" data-bs-theme="light">
