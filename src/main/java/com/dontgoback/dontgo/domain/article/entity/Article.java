@@ -1,6 +1,4 @@
 package com.dontgoback.dontgo.domain.article.entity;
-
-
 import com.dontgoback.dontgo.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import lombok.*;

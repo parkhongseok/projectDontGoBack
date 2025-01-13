@@ -6,17 +6,17 @@ spring:
   output:
     ansi:
       enabled: always
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: true
-  datasource:
-    url: jdbc:h2:mem:db_dev;MODE=MYSQL
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#      settings:
+#        web-allow-others: true
+#  datasource:
+#    url: jdbc:h2:mem:db_dev;MODE=MYSQL
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
 # datasource:
 #  driver-class-name: com.mysql.cj.jdbc.Driver
 #  url: jdbc:mysql://localhost:3306/your_db_name
@@ -24,3 +24,15 @@ spring:
 #  password: your_db_password
 #custom:
 #  fileDirPath: /usr/file
+  datasource:
+    url: jdbc:mysql://localhost:3306/dontgo
+    username: root
+    password: ghdtjr!2009
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
