@@ -2,10 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  
-  "proxy": "http://localhost:8090", 
-
-
+  "proxy": "http://localhost:8090",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,6 +10,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "bootstrap": "^5.3.3",
     "next": "15.0.4",
     "react": "^19.0.0",

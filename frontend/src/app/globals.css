@@ -1,1 +1,37 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
+:root {
+  --white: #fff;
+  --black: #000;
+  --gray1: #D8D8D8;
+  --gray2: #A6A6A6;
+  --gray3: #615D5D;
+  --text-color-white: var{--white};
+  --test-color-black: var{--black};
+  --text-color1: var{--gray1};
+  --text-color2: var{--gray2};
+  --text-color3: var{--gray3};
+
+  --text-color-red: #BB4040;
+  --text-color-red-light: #C87474;
+  --text-color-blue: #4958B8;
+  --text-color-blue-light: #8696F9;
+}
+
+body {
+  background-color: var(--gray1);
+  /* color: var(--text-color); */
+  font-family: Arial, sans-serif;
+}
+
+.posts-container{
+  width: 60vw;
+  height: 100vh;
+  margin: auto;
+  background-color: var(--gray2);
+  border-radius: 15px 15px 0 0;
+
+}
+
+.post-item{
+  margin-top: 30px;
+}
