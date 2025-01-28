@@ -1,6 +1,6 @@
 import "./globals.css";
-import { Container, Row, Col } from 'react-bootstrap';
 import SideBar from "./components/Sidebar";
+// import Header from "./components/Header";
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -11,7 +11,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="layout-home">
         <SideBar/>
-        {children}
+        {/* <Header/> */}
+        <div>
+          {children}
+        </div>
 
 
       </body>

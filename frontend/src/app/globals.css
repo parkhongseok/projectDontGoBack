@@ -1,37 +1,72 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
+
 :root {
-  --white: #fff;
+  --white: #f2eeee;
   --black: #000;
   --gray1: #D8D8D8;
   --gray2: #A6A6A6;
   --gray3: #615D5D;
-  --text-color-white: var{--white};
-  --test-color-black: var{--black};
-  --text-color1: var{--gray1};
-  --text-color2: var{--gray2};
-  --text-color3: var{--gray3};
 
   --text-color-red: #BB4040;
   --text-color-red-light: #C87474;
   --text-color-blue: #4958B8;
   --text-color-blue-light: #8696F9;
+
+  --sidebar-width: 6vw;
+  --sidebar-item-width: 3vw;
+  --post-width : 60vw;
 }
 
+/* layout */
 body {
   background-color: var(--gray1);
   /* color: var(--text-color); */
   font-family: Arial, sans-serif;
 }
+.main-layout{
+  display: flex;
+  flex-direction: row;
+}
+
+/* page */
+.sidebar-space{
+  width: var(--sidebar-width);
+}
+
+.main-space{
+display: flex;
+flex-direction: column;
+/* width: var(--post-width); */
+margin: auto;
+}
+
+.posts-top-manu{
+  position: fixed;
+  float:left;
+  /* margin: auto;
+  text-align: center; */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100px;
+}
 
 .posts-container{
   width: 60vw;
   height: 100vh;
+  overflow-y: auto;
   margin: auto;
   background-color: var(--gray2);
   border-radius: 15px 15px 0 0;
-
 }
 
-.post-item{
-  margin-top: 30px;
+.postOne{
+margin: 0;
+padding: 0;
+}
+
+.post-underline{
+  margin: 0;
+  padding: 0;
+  margin-top: 20px;
 }
