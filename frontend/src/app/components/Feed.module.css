@@ -1,0 +1,119 @@
+
+.userName{
+  margin: 0;
+  padding: 0;
+  /* font-size: 15px; */
+  font-weight: bolder;
+}
+
+.red{
+  color :var(--text-color-red)
+}
+
+.blue{
+  color :var(--text-color-blue)
+}
+
+.time{
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  color: var(--gray1);
+}
+
+.more{
+  margin: 0;
+  padding: 0;
+  background-color: inherit;
+  border: none;
+  font-size: 12px;
+  color: var(--gray1);
+  font-weight: bolder;
+}
+
+.content{
+  margin: 0;
+  padding: 0;
+  /* font-size: 12px; */
+  color: var(--white);
+}
+
+.like,.comment{
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  color: var(--gray1);
+}
+.writeFeedContainer{
+  cursor: pointer; 
+}
+
+.write{
+  margin: 0;
+  padding: 5px 10px;
+  background-color: inherit;
+  border: 2px solid var(--white); 
+  border-radius: 10px; 
+  background-color: transparent;
+  color: var(--white);
+  font-size: 13px;
+  cursor: pointer; 
+  transition: all 0.3s ease; 
+}
+
+.write:hover {
+  border: 2px solid var(--gray3); 
+  background-color: var(--gray3); /* 배경을 하얀색으로 변경 */
+  color: var(--gray1); /* 텍스트를 검정색으로 변경 */
+}
+
+.overay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.createBoxBackground{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: default;
+}
+
+.createBoxlayout{
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+}
+
+.createBoxContainer{
+  width: 60vw;
+  height: auto;
+  min-height: 10vh;
+  max-height: 60vh;
+  overflow-y: auto;
+  margin: auto;
+  background-color: var(--gray4);
+  border-radius: 15px;
+  position: relative; /* 위치 기준을 설정 */
+  top: -5vh; 
+
+}
+
+.textBox{
+  background-color: transparent;
+  border:none;
+  resize: none; 
+  overflow-y: hidden; 
+  height: auto;  
+  min-height: 80px;
+  outline: none; 
+  cursor: text;
+}

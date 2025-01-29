@@ -1,4 +1,16 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
+/* 모든 속성 초기화 */
+* {margin: 0; padding: 0; box-sizing: border-box;}
+a {text-decoration: none; color: inherit;}
+ul {list-style: none;}
+h1,h2,h3,h4,h5,h6,p {margin: 0;}
+body {
+    font-family: Arial, "맑은 고딕", sans-serif; 
+    line-height: 1;
+    overflow-x: hidden;
+}
+img {border: none;}
+button {background: none; border: none;}
 
 :root {
   --white: #f2eeee;
@@ -6,6 +18,7 @@
   --gray1: #D8D8D8;
   --gray2: #A6A6A6;
   --gray3: #615D5D;
+  --gray4: #313131;
 
   --text-color-red: #BB4040;
   --text-color-red-light: #C87474;
@@ -15,6 +28,37 @@
   --sidebar-width: 6vw;
   --sidebar-item-width: 3vw;
   --post-width : 60vw;
+}
+
+.fontWhite{
+  color: var(--white);
+}
+.fontBlack{
+  color: var(----black);
+}
+.fontGray1{
+  color: var(--gray1);
+}
+.fontGray2{
+  color: var(--gray2);
+}
+.fontGray3{
+  color: var(--gray2);
+}
+.fontGray4{
+  color: var(--gray2);
+}
+.fontBlue{
+  color: var(--text-color-blue);
+}
+.fontBlueLight{
+  color: var(--text-color-blue-light);
+}
+.fontRed{
+  color: var(--text-color-red);
+}
+.fontRedLight{
+  color: var(--text-color-red-light);
 }
 
 /* layout */
@@ -40,7 +84,7 @@ flex-direction: column;
 margin: auto;
 }
 
-.posts-top-manu{
+.feeds-top-manu{
   position: fixed;
   float:left;
   /* margin: auto;
@@ -51,22 +95,15 @@ margin: auto;
   height: 100px;
 }
 
-.posts-container{
+.feeds-container{
   width: 60vw;
-  height: 100vh;
-  overflow-y: auto;
+  min-height: 100vh;
+  overflow-y: hidden;
   margin: auto;
   background-color: var(--gray2);
   border-radius: 15px 15px 0 0;
 }
 
-.postOne{
-margin: 0;
-padding: 0;
-}
-
-.post-underline{
-  margin: 0;
-  padding: 0;
-  margin-top: 20px;
-}
+  .feed-underline{
+    margin-top: 30px;
+  }
