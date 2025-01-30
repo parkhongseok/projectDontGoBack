@@ -4,7 +4,6 @@
   left: 0;
   height: 100vh;
   width: var(--sidebar-width);
-  /* background-color: #f8f9fa; */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -39,8 +38,8 @@
 }
 
 .settingsContainer {
-  margin-top: auto; /* 네비게이션 메뉴 이후 설정 버튼을 맨 아래로 이동 */
-  margin-bottom: 20px; /* 설정 버튼과 하단 간격 */
+  margin-top: auto; 
+  margin-bottom: 20px; 
   width: 100%;
   text-align: center;
 }

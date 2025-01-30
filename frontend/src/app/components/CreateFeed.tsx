@@ -3,27 +3,24 @@
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Stack} from 'react-bootstrap';
-
-type TypeOfCreateFeed = {
-  userId: number;
-  userName: string;
-  feedType: string;
-};
+import Types from '../types'
+import { useState } from "react";
+import CreateBox from "./CreateBox";
 
 type userProps = {
-  user : TypeOfCreateFeed; // Props의 타입 정의
-  setShowWriteBox : React.Dispatch<React.SetStateAction<boolean>>
+  user : Types.User;
 };
 
-export default function CreateFeed({ user , setShowWriteBox} : userProps){
-  const feedTypeClass = styles[user.feedType] || "";
+export default function CreateFeed({ user } : userProps ){
+  const feedTypeClass = styles[user.userType] || "";
   const openWriteBox = () => {
     setShowWriteBox(true)
   };
-  
+  const [showWriteBox, setShowWriteBox] = useState(false);
+
   return (
-    <div className={`${styles.writeFeedContainer} px-5`}>
-      <Stack direction="horizontal" gap={3} >
+    < >
+      <Stack direction="horizontal" gap={3} className={`${styles.CreateFeedContainer}  cursorPointer px-2 py-2 b-4`} >
         <div>
           <p className={`${styles.userName} ${feedTypeClass}`}>
             {user.userName}
@@ -41,7 +38,10 @@ export default function CreateFeed({ user , setShowWriteBox} : userProps){
           </button>
         </div>
       </Stack>
-    </div>
+      {
+        showWriteBox ? <CreateBox user = { user } setShowWriteBox = { setShowWriteBox }/> : null
+      }
+    </>
   )
 }
 

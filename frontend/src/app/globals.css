@@ -7,11 +7,17 @@ h1,h2,h3,h4,h5,h6,p {margin: 0;}
 body {
     font-family: Arial, "맑은 고딕", sans-serif; 
     line-height: 1;
-    overflow-x: hidden;
+    min-height: 100%;
+    /* overflow-x: hidden;
+    overflow-y: auto; */
 }
 img {border: none;}
 button {background: none; border: none;}
 
+.init {
+  margin: 0;
+  padding: 0;
+}
 :root {
   --white: #f2eeee;
   --black: #000;
@@ -26,7 +32,7 @@ button {background: none; border: none;}
   --text-color-blue-light: #8696F9;
 
   --sidebar-width: 6vw;
-  --sidebar-item-width: 3vw;
+  --sidebar-item-width: 2.5vw;
   --post-width : 60vw;
 }
 
@@ -61,6 +67,10 @@ button {background: none; border: none;}
   color: var(--text-color-red-light);
 }
 
+.cursorPointer{
+  cursor: pointer; 
+}
+
 /* layout */
 body {
   background-color: var(--gray1);
@@ -71,7 +81,9 @@ body {
   display: flex;
   flex-direction: row;
 }
-
+.loading{
+  min-height: 80px;
+}
 /* page */
 .sidebar-space{
   width: var(--sidebar-width);
@@ -98,7 +110,7 @@ margin: auto;
 .feeds-container{
   width: 60vw;
   min-height: 100vh;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   margin: auto;
   background-color: var(--gray2);
   border-radius: 15px 15px 0 0;
@@ -106,4 +118,17 @@ margin: auto;
 
   .feed-underline{
     margin-top: 30px;
+  }
+
+  .feed-detail-container{
+    width: 60vw;
+    min-height: 60vh;
+    /* overflow-y: hidden; */
+    margin: auto;
+    background-color: var(--gray2);
+    border-radius: 15px;
+  }
+
+  .cusorDefault{
+    cursor: text;
   }

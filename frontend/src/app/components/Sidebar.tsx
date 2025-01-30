@@ -24,7 +24,7 @@ export default function SideBar(){
           <Nav.Link href="#write">
             <img src="/plus.svg" alt="Write" className={styles.navImage} />
           </Nav.Link>
-          <Nav.Link href="#likes">
+          <Nav.Link href="test">
             <img src="/like.svg" alt="Likes" className={styles.navImage} />
           </Nav.Link>
         </Nav>

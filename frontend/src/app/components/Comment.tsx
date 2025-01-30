@@ -3,40 +3,27 @@ import styles from "./Feed.module.css"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Dropdown, Stack} from 'react-bootstrap';
 import Types from '../types'
-import Link from "next/link";
-import { useFeed } from "../context/FeedContest";
-import { useParams } from "next/navigation";
 
-type FeedProps = {
-  feed: Types.Feed | null;  // Props의 타입 정의
+type CommentProps = {
+  comment: Types.Comment;
 };
 
-export default function Feed({ feed } : FeedProps){
-  const { setFeedContext } = useFeed();
-  if (!feed) {
-    return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시
-  }
+export default function Feed({ comment } : CommentProps){
 
-  const handleFeedClick = () => {
-      setFeedContext(feed);
-  };
-
-  // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
-  const feedTypeClass = styles[feed.feedType] || "";
-  const { id } = useParams<{ id: string }>();
+  const feedTypeClass = styles[comment.commentType] || "";
 
   return (
     <Stack className="px-5" gap={3}>
       <Stack direction="horizontal" gap={3} >
         <div>
           <p className={`${styles.userName} ${feedTypeClass}`}>
-            {feed.userName}
+            {comment.userName}
           </p>
         </div>
         <div className="vr" />
         <div className="">        
           <p className={styles.time}>
-            {feed.beforeTime}
+            {comment.beforeTime}
           </p>
         </div>
         <div className="ms-auto"> 
@@ -50,29 +37,24 @@ export default function Feed({ feed } : FeedProps){
               <Dropdown.Item href="#/action-2">삭제하기</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
+
         </div>
       </Stack>
-      { id ? 
-            <p className={`px-5 ${styles.content}`} >
-              {feed.content}
-            </p> 
-            :
-      <Link className={`px-5`} href={`/post/${feed.feedId}`} onClick={handleFeedClick}>
+      <div className="px-5">
         <p className={styles.content}>
-          {feed.content}
+          {comment.content}
         </p>
-      </Link>
-    }
+      </div>
       <Stack className="px-5" direction="horizontal" gap={3}>
         <div className="">
           <p className={styles.like}>
-            좋아요 {feed.likeCount}개
+            좋아요 {comment.likeCount}개
           </p>
         </div>
         <div className="vr" />
         <div className="">
           <p className={styles.comment}>
-            댓글 {feed.commentCount}개
+            댓글 {comment.commentCount}개
           </p>
         </div>
       </Stack>

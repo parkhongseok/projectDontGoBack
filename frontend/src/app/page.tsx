@@ -5,83 +5,46 @@ import {Stack} from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import CreateFeed from "./components/CreateFeed";
 import Feed from "./components/Feed";
-import CreateBox from "./components/CreateBox";
+import Dummys from "./dummyData";
+import Types from "./types";
 
-
-// Post 컴포넌트에도 중복되는 코드
-type TypeOfFeed = {
-  userId: number;
-  userName: string;
-  feedType: string;
-  beforeTime: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
-};
 
 export default function Home() {
-  const [feeds, setFeed] = useState<TypeOfFeed[]>([
-    {userId: 1, userName: "before", feedType : "red", beforeTime:"1시간전", content: "contents Test ", likeCount: 0, commentCount : 0 },
-    {userId: 1, userName: "before", feedType : "red", beforeTime:"1시간전", content: "contents Test ", likeCount: 0, commentCount : 0 },
-    {userId: 1, userName: "hihi", feedType : "blue", beforeTime:"1시간전", content: "contents Test ", likeCount: 0, commentCount : 0 },
-    {userId: 1, userName: "before", feedType : "red", beforeTime:"1시간전", content: "contents Test ", likeCount: 0, commentCount : 0 },
-    {userId: 1, userName: "hihi", feedType : "blue", beforeTime:"1시간전", content: "contents Test ", likeCount: 0, commentCount : 0 },
-    {userId: 1, userName: "before", feedType : "red", beforeTime:"1시간전", content: "contents Test ", likeCount: 0, commentCount : 0 },
-    {userId: 1, userName: "hihi", feedType : "blue", beforeTime:"1시간전", content: "contents Test ", likeCount: 0, commentCount : 0 }
-  ]);
-
-  const userInfo = {
-    userId: 1,
-    userName: "영희",
-    feedType: "blue"
-  }
+  const user = Dummys.User;
+  const [feeds, setFeed] = useState<Types.Feed[]>(Dummys.Feeds);
 
   // useEffect(() => {
   //   fetch("http://localhost:8090/api/v1/feeds")
   //   .then(response=>response.json())
   //   .then((result)=>{
   //     console.log(result);
-  //     setPost(result.data.posts)
+  //     setFeed(result.data.posts)
   //   })
   // }, [])
 
-  const [showWriteBox, setShowWriteBox] = useState(false);
-
-
-
   return (
-    <div className="main-layout">
-      <div className="sidebar-space"></div>
+    <>
+      {/* dropdown 버튼이 들어올 자리 */}
+      <p className="text-center mb-4 pt-4">Post</p>
+      <div className="pt-4 feeds-container">
+        {/* 사이드바가 차지하지 않는 나머지 공간 */}
+        <Stack gap={4} direction="vertical" >
+          {/* 글쓰기 영역 user기능 */}
+          <div className="">
 
-      <div className="main-space">
-        {/* dropdown 버튼이 들어올 자리 */}
-        <p className="text-center mb-4 pt-3">Post</p>
-        <div className="pt-4 feeds-container">
-          {/* 사이드바가 차지하지 않는 나머지 공간 */}
-          <Stack gap={4} direction="vertical" >
-            {/* 글쓰기 영역 user기능 */}
-            <div className="">
-              {
-              showWriteBox ? <CreateBox user = {userInfo} setShowWriteBox = {setShowWriteBox}/> : null
-              }
-            <CreateFeed 
-            user = {userInfo}
-            setShowWriteBox = {setShowWriteBox}
-            />
-            <hr className="feed-underline"/>
-            </div>
-            {
-              feeds.map((item, idx)=>
-                <div key={idx}>
-                  <Feed feed = {item} ></Feed>
-                  <hr className="feed-underline"/>
-                </div>
-            )
-            }
-          </Stack>
-        </div>
+          <CreateFeed user = {user}/>
+          <hr className="init mt-3"/>
+          </div>
+          {
+            feeds.map((item, idx)=>
+              <div key={idx} >
+                <Feed feed = {item} />
+                <hr className="init mt-3 fontGray1"/>
+              </div>
+          )
+          }
+        </Stack>
       </div>
-
-    </div>
+    </>
   );
 }

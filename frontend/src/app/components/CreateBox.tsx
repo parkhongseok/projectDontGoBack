@@ -4,20 +4,15 @@ import { useState } from "react";
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Form, Stack} from 'react-bootstrap';
-
-type TypeOfCreateFeed = {
-  userId: number;
-  userName: string;
-  feedType: string;
-};
+import Types from '../types'
 
 type userProps = {
-  user : TypeOfCreateFeed;
+  user : Types.User;
   setShowWriteBox : React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function CreateBox({ user , setShowWriteBox} : userProps){
-  const feedTypeClass = styles[user.feedType] || "";
+  const feedTypeClass = styles[user.userType] || "";
   const autoResize = (e : React.FormEvent<HTMLTextAreaElement>) => {
     const target = e.target as HTMLTextAreaElement;
     target.style.height = 'auto';  // 먼저 높이를 auto로 리셋
@@ -39,7 +34,7 @@ export default function CreateBox({ user , setShowWriteBox} : userProps){
     // 요청 객체
     const postData = {
       userId : user.userId,
-      feedType : user.feedType,
+      feedType : user.userType,
       content : content,
     };
 
@@ -74,7 +69,7 @@ export default function CreateBox({ user , setShowWriteBox} : userProps){
           {/* 사이드바가 차지하지 않는 나머지 공간 */}
 
           {/* 본격 사용 가능 공간 */}
-          <Stack gap={1} direction="vertical" className="pb-5 pt-1" >
+          <Stack gap={1} direction="vertical" className="pb-4 pt-2" >
             {/* 상단  취소 / 게시글 작성 / ... */}
             <Stack direction="horizontal" className="mx-5">
               <>
