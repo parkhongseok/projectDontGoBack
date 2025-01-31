@@ -6,12 +6,12 @@ import styles from "./Feed.module.css"
 import {Stack} from 'react-bootstrap';
 import Feed from "./Feed";
 import CreateComment from "./CreateComment";
-import Types from "../types";
+import * as Types from "../types";
 import Dummys from "../dummyData";
 import Comment from '../components/Comment';
 
 export default function FeedDetail(){
-  const [comments, setcomment] = useState<Types.Comment[]>(Dummys.Comments);
+  const [comments] = useState<Types.Comment[]>(Dummys.Comments);
   const user = Dummys.User;
   const feed = Dummys.Feed;
 

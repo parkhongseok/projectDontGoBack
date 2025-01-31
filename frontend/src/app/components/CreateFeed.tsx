@@ -3,7 +3,7 @@
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Stack} from 'react-bootstrap';
-import Types from '../types'
+import * as Types from '../types'
 import { useState } from "react";
 import CreateBox from "./CreateBox";
 
@@ -39,7 +39,7 @@ export default function CreateFeed({ user } : userProps ){
         </div>
       </Stack>
       {
-        showWriteBox ? <CreateBox user = { user } setShowWriteBox = { setShowWriteBox }/> : null
+        showWriteBox ? <CreateBox setShowWriteBox = { setShowWriteBox }/> : null
       }
     </>
   )

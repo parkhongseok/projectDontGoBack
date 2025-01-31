@@ -1,33 +1,45 @@
 'use client'
 
-import { useState } from "react";
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Stack} from 'react-bootstrap';
-import * as Types from '../types'
 import Dummys from "../dummyData";
-type propsType = {
-    setShowWriteBox: React.Dispatch<React.SetStateAction<boolean>>
+import { useFeed } from "../context/FeedContest";
+
+type propsType = { 
+  setShowEditBox: React.Dispatch<React.SetStateAction<boolean>>
   }
 
-export default function CreateBox({ setShowWriteBox } : propsType){
+export default function EditBox({ setShowEditBox } : propsType){
   const user = Dummys.User;
-  const feedTypeClass = styles[user.userType] || "";
+  const { feedContext, setFeedContext } = useFeed();
+  
+  if (!feedContext) {
+    return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
+  }
+  const feedTypeClass = styles[feedContext.feedType] || "";
+  const setContent = (newContent : string) =>{
+    setFeedContext({
+      ...feedContext,
+      content: newContent,
+    })
+  };
+  const closeBox = () => {
+    setShowEditBox(false)
+  };
+
   const autoResize = (e : React.FormEvent<HTMLTextAreaElement>) => {
     const target = e.target as HTMLTextAreaElement;
     target.style.height = 'auto';  // 먼저 높이를 auto로 리셋
     target.style.height = `${target.scrollHeight}px`;  // 텍스트의 높이에 맞게 설정
   };
-    const closeBox = () => {
-      setShowWriteBox(false)
-  };
 
-  const [content, setContent] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value); 
   };
+
   const handleSubmit = async () => {
-    if (!content.trim()) {
+    if (!feedContext.content.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
@@ -35,12 +47,12 @@ export default function CreateBox({ setShowWriteBox } : propsType){
     const postData = {
       userId : user.userId,
       feedType : user.userType,
-      content : content,
+      content : feedContext.content,
     };
 
     try {
       const response = await fetch("/api/v1/posts", {
-        method: "POST",
+        method: "UPDATE",
         headers: {
           "Content-Type": "application/json",
         },
@@ -49,7 +61,7 @@ export default function CreateBox({ setShowWriteBox } : propsType){
 
       if (response.ok){
         setContent("");
-        setShowWriteBox(false);
+        setShowEditBox(false);
       } else { 
         alert("잠시 후 다시 시도해주세요.");
       }
@@ -89,14 +101,14 @@ export default function CreateBox({ setShowWriteBox } : propsType){
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
               <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>
-                {user.userName}
+                {feedContext.userName}
               </p>
               <textarea 
                 onInput={(e) => autoResize(e)}
                 rows={5} 
                 className={`${styles.textBox} fontWhite`}
                 placeholder="게시글 작성하기"
-                value={content} 
+                value = {feedContext.content} 
                 onChange={handleChange}
                 // disabled
                 // readOnly

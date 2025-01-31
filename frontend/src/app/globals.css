@@ -67,6 +67,12 @@ button {background: none; border: none;}
   color: var(--text-color-red-light);
 }
 
+.marginAuto{
+  margin : auto;
+}
+.textCener{
+  text-align: center;
+}
 .cursorPointer{
   cursor: pointer; 
 }

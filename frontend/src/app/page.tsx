@@ -2,16 +2,16 @@
 
 import "./globals.css";
 import {Stack} from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import CreateFeed from "./components/CreateFeed";
 import Feed from "./components/Feed";
 import Dummys from "./dummyData";
-import Types from "./types";
+import * as Types from "./types";
 
 
 export default function Home() {
   const user = Dummys.User;
-  const [feeds, setFeed] = useState<Types.Feed[]>(Dummys.Feeds);
+  const [feeds] = useState<Types.Feed[]>(Dummys.Feeds);
 
   // useEffect(() => {
   //   fetch("http://localhost:8090/api/v1/feeds")

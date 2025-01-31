@@ -2,31 +2,54 @@ import "../globals.css";
 import styles from "./Feed.module.css"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Dropdown, Stack} from 'react-bootstrap';
-import Types from '../types'
+import * as Types from '../types'
 import Link from "next/link";
 import { useFeed } from "../context/FeedContest";
 import { useParams } from "next/navigation";
+import { useState } from "react";
+import Dummys from "../dummyData";
+import EditBox from "./EditBox";
+import DeleteBox from "./DeleteBox";
 
 type FeedProps = {
   feed: Types.Feed | null;  // Props의 타입 정의
 };
 
 export default function Feed({ feed } : FeedProps){
-  const { setFeedContext } = useFeed();
-  if (!feed) {
-    return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시
+  const user = Dummys.User;
+  const { updateFeedContext } = useFeed();
+  const { id } = useParams<{ id: string }>();
+  const [ showEditBox, setShowEditBox ] = useState(false);
+  const [ showDeleteBox, setShowDeleteBox ] = useState(false);
+  const openEditBox = () => {
+    setShowEditBox(true);
+  }
+  const openDeleteBox = () => {
+    setShowDeleteBox(true);
   }
 
-  const handleFeedClick = () => {
-      setFeedContext(feed);
-  };
-
+  if (!feed) {
+    return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
+  }
+  
   // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
   const feedTypeClass = styles[feed.feedType] || "";
-  const { id } = useParams<{ id: string }>();
+  const handleFeedClick = () => {
+    updateFeedContext(feed);
+  };
 
   return (
     <Stack className="px-5" gap={3}>
+      {
+        showEditBox &&
+        <div >
+          <EditBox setShowEditBox = { setShowEditBox }/> 
+        </div>
+      }
+      {
+        showDeleteBox &&
+        <DeleteBox setShowDeleteBox={setShowDeleteBox}/>
+      }
       <Stack direction="horizontal" gap={3} >
         <div>
           <p className={`${styles.userName} ${feedTypeClass}`}>
@@ -46,8 +69,18 @@ export default function Feed({ feed } : FeedProps){
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">수정하기</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">삭제하기</Dropdown.Item>
+{
+  (feed.userId == user.userId) ?
+    <>
+      <Dropdown.Item onClick={()=>{openEditBox(); handleFeedClick();}}>수정하기</Dropdown.Item>
+      <Dropdown.Item onClick={openDeleteBox}>삭제하기</Dropdown.Item>
+    </>  : 
+    <>
+      <Dropdown.Item href="#/action-2">저장하기</Dropdown.Item>
+      <Dropdown.Item href="#/action-2">관심없음</Dropdown.Item>
+      <Dropdown.Item href="#/action-2">혼인신고하기</Dropdown.Item>
+    </>
+}
             </Dropdown.Menu>
           </Dropdown>
         </div>

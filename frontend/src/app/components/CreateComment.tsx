@@ -3,7 +3,7 @@
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Stack} from 'react-bootstrap';
-import Types from '../types'
+import * as Types from '../types'
 import CreateBox from "./CreateBox";
 import { useState } from "react";
 
@@ -13,6 +13,7 @@ type userProps = {
 };
 
 export default function CreateComment({feed, user} : userProps){
+  const [showWriteBox, setShowWriteBox] = useState(false);
 
   if (!feed) {
     return <div className={`${styles.CreateCommentContainer} cursorPointer px-4`}/> ;
@@ -21,7 +22,6 @@ export default function CreateComment({feed, user} : userProps){
   const openWriteBox = () => {
     setShowWriteBox(true)
   };
-  const [showWriteBox, setShowWriteBox] = useState(false);
 
   return (
     <div className={`${styles.CreateCommentContainer} cursorPointer px-4`}>

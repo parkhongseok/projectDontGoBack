@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import {Stack} from 'react-bootstrap';
 import Feed from "../../components/Feed";
 import CreateComment from "../../components/CreateComment";
-import Types from "../../types";
+import * as Types from "../../types";
 import Dummys from "../../dummyData";
 import Comment from '../../components/Comment';
 import { useParams } from "next/navigation";
@@ -15,7 +15,7 @@ export default function FeedDetile() {
   const user = Dummys.User;
   const { feedContext, setFeedContext } = useFeed();
   const { id } = useParams<{ id: string }>();
-  const [comments, setcomment] = useState<Types.Comment[]>(Dummys.Comments);
+  const [comments] = useState<Types.Comment[]>(Dummys.Comments);
 
   useEffect(()=>{
     if (!feedContext){
