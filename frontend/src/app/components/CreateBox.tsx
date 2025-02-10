@@ -3,8 +3,8 @@
 import { useState } from "react";
 import "../globals.css";
 import styles from "./Feed.module.css"
-import {Stack} from 'react-bootstrap';
-import * as Types from '../types'
+import {Button, Stack} from 'react-bootstrap';
+// import * as Types from '../types'
 import Dummys from "../dummyData";
 type propsType = {
     setShowWriteBox: React.Dispatch<React.SetStateAction<boolean>>
@@ -32,19 +32,17 @@ export default function CreateBox({ setShowWriteBox } : propsType){
       return;
     }
     // 요청 객체
-    const postData = {
-      userId : user.userId,
-      feedType : user.userType,
+    const feedRequest = {
       content : content,
     };
 
     try {
-      const response = await fetch("/api/v1/posts", {
+      const response = await fetch("http://localhost:8090/api/v1/feeds", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(postData),
+        body: JSON.stringify(feedRequest),
       });
 
       if (response.ok){
@@ -102,12 +100,12 @@ export default function CreateBox({ setShowWriteBox } : propsType){
                 // readOnly
               />
               <>
-              <button 
+              <Button 
               className={`ms-auto ${styles.write}`}
               onClick={handleSubmit}
               >
                 게시
-              </button>
+              </Button>
               </>
             </Stack>
           </Stack>

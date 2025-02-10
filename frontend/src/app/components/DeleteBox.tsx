@@ -1,40 +1,43 @@
 'use client'
 
+import { Stack } from "react-bootstrap";
 import "../globals.css";
 import styles from "./Feed.module.css"
-import {Stack} from 'react-bootstrap';
+import { redirect, useRouter } from "next/navigation";
 
 type propsType = { 
-  setShowDeleteBox: React.Dispatch<React.SetStateAction<boolean>>
+  FeedId : number;
+  setShowDeleteBox: React.Dispatch<React.SetStateAction<boolean>>;
   }
 
-export default function DeleteBox({ setShowDeleteBox } : propsType){
+export default function DeleteBox( { FeedId, setShowDeleteBox } : propsType){
+  const router = useRouter();
   const closeBox = () => {
     setShowDeleteBox(false)
   };
 
+
   const handleSubmit = async () => {
-    // try {
-    //   const response = await fetch("/api/v1/posts", {
-    //     method: "UPDATE",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(postData),
-    //   });
+    try {
+      const response = await fetch(`http://localhost:8090/api/v1/feeds/${FeedId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    //   if (response.ok){
-    //     setContent("");
-    //     setShowDeleteBox(false);
-    //   } else { 
-    //     alert("잠시 후 다시 시도해주세요.");
-    //   }
-    // } catch (error) {
-    //   console.log("Error : ", error)
-    //   alert("서버 오류가 발생했습니다.")
-    // }
-
+      if (response.ok){
+        closeBox();
+        router.push("/");
+      } else { 
+        alert("잠시 후 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.log("Error : ", error)
+      alert("서버 오류가 발생했습니다.")
+    }
   }
+
 
   return (
   <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
@@ -55,7 +58,7 @@ export default function DeleteBox({ setShowDeleteBox } : propsType){
               </div>
               <div className={`${styles.deleteBtn} ${styles.deleteBtnLine} ms-auto `}>
                 <button className={` fontRed `} onClick={handleSubmit}>
-                  게시
+                  삭제
                 </button>
               </div>
             </Stack>

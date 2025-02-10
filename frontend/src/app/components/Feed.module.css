@@ -6,11 +6,11 @@
   font-weight: bolder;
 }
 
-.red{
+.RED{
   color :var(--text-color-red)
 }
 
-.blue{
+.BLUE{
   color :var(--text-color-blue)
 }
 
@@ -41,11 +41,11 @@
   text-align: center;
   transition: all 0.3s ease; 
 }
-
+/* 
 .more:hover{
   color: var(--gray4);
   font-size: 20px;
-}
+} */
 
 .content{
   margin: 0;

@@ -38,7 +38,7 @@ export default function CreateComment({feed, user} : userProps){
         </div>
       </Stack>
       {
-        showWriteBox ? <CreateBox user = {user} setShowWriteBox = {setShowWriteBox} /> : null
+        showWriteBox ? <CreateBox setShowWriteBox = {setShowWriteBox} /> : null
       }
     </div>
   )

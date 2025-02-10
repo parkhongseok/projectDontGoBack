@@ -23,7 +23,7 @@ export default function Feed({ comment } : CommentProps){
         <div className="vr" />
         <div className="">        
           <p className={styles.time}>
-            {comment.beforeTime}
+            {comment.createdAt}
           </p>
         </div>
         <div className="ms-auto"> 

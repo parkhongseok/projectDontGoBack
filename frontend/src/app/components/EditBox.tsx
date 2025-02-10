@@ -4,7 +4,8 @@ import "../globals.css";
 import styles from "./Feed.module.css"
 import {Stack} from 'react-bootstrap';
 import Dummys from "../dummyData";
-import { useFeed } from "../context/FeedContest";
+import { useFeed } from "../context/FeedContext";
+import { useEffect, useState } from "react";
 
 type propsType = { 
   setShowEditBox: React.Dispatch<React.SetStateAction<boolean>>
@@ -13,17 +14,26 @@ type propsType = {
 export default function EditBox({ setShowEditBox } : propsType){
   const user = Dummys.User;
   const { feedContext, setFeedContext } = useFeed();
-  
+
   if (!feedContext) {
     return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
   }
+  const [feed, setFeed] = useState(feedContext);
   const feedTypeClass = styles[feedContext.feedType] || "";
+
   const setContent = (newContent : string) =>{
-    setFeedContext({
-      ...feedContext,
+    setFeed({
+      ...feed,
       content: newContent,
     })
   };
+  const setContentCotext = (newContent : string) =>{
+    setFeedContext({
+      ...feed,
+      content: newContent,
+    })
+  };
+
   const closeBox = () => {
     setShowEditBox(false)
   };
@@ -45,14 +55,12 @@ export default function EditBox({ setShowEditBox } : propsType){
     }
     // 요청 객체
     const postData = {
-      userId : user.userId,
-      feedType : user.userType,
-      content : feedContext.content,
+      content : feed.content,
     };
 
     try {
-      const response = await fetch("/api/v1/posts", {
-        method: "UPDATE",
+      const response = await fetch(`http://localhost:8090/api/v1/feeds/${feed.feedId}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -60,8 +68,9 @@ export default function EditBox({ setShowEditBox } : propsType){
       });
 
       if (response.ok){
-        setContent("");
+        setContentCotext(postData.content);
         setShowEditBox(false);
+        // 응답 객체를 context에 반영해야함
       } else { 
         alert("잠시 후 다시 시도해주세요.");
       }
@@ -69,8 +78,8 @@ export default function EditBox({ setShowEditBox } : propsType){
       console.log("Error : ", error)
       alert("서버 오류가 발생했습니다.")
     }
-
   }
+
   return (
   <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
       <div className="sidebar-space"/>
@@ -108,7 +117,7 @@ export default function EditBox({ setShowEditBox } : propsType){
                 rows={5} 
                 className={`${styles.textBox} fontWhite`}
                 placeholder="게시글 작성하기"
-                value = {feedContext.content} 
+                value = {feed.content} 
                 onChange={handleChange}
                 // disabled
                 // readOnly

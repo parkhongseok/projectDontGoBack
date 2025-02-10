@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Dropdown, Stack} from 'react-bootstrap';
 import * as Types from '../types'
 import Link from "next/link";
-import { useFeed } from "../context/FeedContest";
+import { useFeed } from "../context/FeedContext";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import Dummys from "../dummyData";
@@ -48,7 +48,7 @@ export default function Feed({ feed } : FeedProps){
       }
       {
         showDeleteBox &&
-        <DeleteBox setShowDeleteBox={setShowDeleteBox}/>
+        <DeleteBox FeedId={feed.feedId} setShowDeleteBox={setShowDeleteBox}/>
       }
       <Stack direction="horizontal" gap={3} >
         <div>
@@ -59,7 +59,7 @@ export default function Feed({ feed } : FeedProps){
         <div className="vr" />
         <div className="">        
           <p className={styles.time}>
-            {feed.beforeTime}
+            {feed.createdAt}
           </p>
         </div>
         <div className="ms-auto"> 

@@ -1,12 +1,14 @@
 export type Feed = {
   feedId: number;
   userId: number;
+  content: string;
   userName: string;
   feedType: string;
-  beforeTime: string;
-  content: string;
   likeCount: number;
   commentCount: number;
+  createdAt: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export type User = {
@@ -21,17 +23,11 @@ export type Comment = {
   commentId: number;
   feedId: number;
   userId: number;
+  content: string;
   userName: string;
   commentType: string;
-  beforeTime: string;
-  content: string;
   likeCount: number;
   commentCount: number;
+  createdAt: string;
+  updatedAt?: string;
 };
-
-// ✅ 여기서 타입을 적용함
-export const Types = {
-  Feed: {} as Feed,
-  User: {} as User,
-  Comment: {} as Comment,
-} as const;

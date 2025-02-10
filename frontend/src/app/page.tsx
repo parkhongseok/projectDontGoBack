@@ -2,7 +2,7 @@
 
 import "./globals.css";
 import {Stack} from 'react-bootstrap';
-import {useState } from 'react';
+import {useEffect, useState } from 'react';
 import CreateFeed from "./components/CreateFeed";
 import Feed from "./components/Feed";
 import Dummys from "./dummyData";
@@ -11,16 +11,19 @@ import * as Types from "./types";
 
 export default function Home() {
   const user = Dummys.User;
-  const [feeds] = useState<Types.Feed[]>(Dummys.Feeds);
+  const [feeds, setFeed] = useState<Types.Feed[]>(Dummys.Feeds);
+  
+  const fetchFeeds = () => {
+    fetch("http://localhost:8090/api/v1/feeds")
+        .then(response => response.json())
+        .then((result) => {
+            setFeed(result.data.feeds);
+        });
+  };
 
-  // useEffect(() => {
-  //   fetch("http://localhost:8090/api/v1/feeds")
-  //   .then(response=>response.json())
-  //   .then((result)=>{
-  //     console.log(result);
-  //     setFeed(result.data.posts)
-  //   })
-  // }, [])
+  useEffect(() => {
+    fetchFeeds();
+  }, [])
 
   return (
     <>

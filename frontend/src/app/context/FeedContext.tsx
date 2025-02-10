@@ -16,8 +16,6 @@ export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
   const [feedContext, setFeedContext] = useState<Types.Feed| null>(null);
   // const [isLoaded, setIsLoaded] = useState(false); // 로컬스토리지에서 복구 완료 여부
 
-
-
   // feedContext가 변경될 때마다 로컬스토리지 저장
   useEffect(() => {
     if (feedContext) {

@@ -2,7 +2,7 @@
 
 import "./globals.css";
 import SideBar from "./components/Sidebar";
-import { FeedProvider } from "./context/FeedContest";
+import { FeedProvider } from "./context/FeedContext";
 // import { useEffect } from "react";
 
 export default function RootLayout({
