@@ -6,6 +6,8 @@ import styles from "./Feed.module.css"
 import {Button, Stack} from 'react-bootstrap';
 // import * as Types from '../types'
 import Dummys from "../dummyData";
+import { useFeed } from "../context/FeedContext";
+import { usePathname } from "next/navigation";
 type propsType = {
     setShowWriteBox: React.Dispatch<React.SetStateAction<boolean>>
   }
@@ -13,6 +15,7 @@ type propsType = {
 export default function CreateBox({ setShowWriteBox } : propsType){
   const user = Dummys.User;
   const feedTypeClass = styles[user.userType] || "";
+  const { refreshMainFeeds, setRefreshMainFeeds } = useFeed();
   const autoResize = (e : React.FormEvent<HTMLTextAreaElement>) => {
     const target = e.target as HTMLTextAreaElement;
     target.style.height = 'auto';  // 먼저 높이를 auto로 리셋
@@ -48,6 +51,12 @@ export default function CreateBox({ setShowWriteBox } : propsType){
       if (response.ok){
         setContent("");
         setShowWriteBox(false);
+        setRefreshMainFeeds(!refreshMainFeeds)
+        const pathname = usePathname();
+        // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
+        if (pathname === "/"){
+          setRefreshMainFeeds(!refreshMainFeeds)
+        }
       } else { 
         alert("잠시 후 다시 시도해주세요.");
       }

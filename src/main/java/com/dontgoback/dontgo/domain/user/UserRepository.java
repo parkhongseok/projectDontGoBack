@@ -1,7 +1,5 @@
-package com.dontgoback.dontgo.domain.user.repository;
+package com.dontgoback.dontgo.domain.user;
 
-import com.dontgoback.dontgo.domain.feed.entity.Feed;
-import com.dontgoback.dontgo.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

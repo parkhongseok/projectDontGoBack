@@ -7,12 +7,13 @@ import CreateFeed from "./components/CreateFeed";
 import Feed from "./components/Feed";
 import Dummys from "./dummyData";
 import * as Types from "./types";
+import { useFeed } from "./context/FeedContext";
 
 
 export default function Home() {
   const user = Dummys.User;
   const [feeds, setFeed] = useState<Types.Feed[]>(Dummys.Feeds);
-  
+  const { refreshMainFeeds } = useFeed();
   const fetchFeeds = () => {
     fetch("http://localhost:8090/api/v1/feeds")
         .then(response => response.json())
@@ -23,7 +24,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchFeeds();
-  }, [])
+  }, [refreshMainFeeds])
 
   return (
     <>

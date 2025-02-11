@@ -6,6 +6,8 @@ interface FeedContextType {
   feedContext: Types.Feed | null; 
   setFeedContext: (feed: Types.Feed) => void;
   updateFeedContext: (updatedFeed: Types.Feed) => void;
+  refreshMainFeeds: boolean;
+  setRefreshMainFeeds : (refrashFeed : boolean) => void;
 } 
 
 // FeedContext 생성
@@ -15,6 +17,10 @@ const FeedContext = createContext< FeedContextType | undefined >(undefined);
 export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
   const [feedContext, setFeedContext] = useState<Types.Feed| null>(null);
   // const [isLoaded, setIsLoaded] = useState(false); // 로컬스토리지에서 복구 완료 여부
+
+  // 전역으로 사용할 의존성 리스트 변경 인자
+  // 단순 불리언 값을, useEffect의 의존성 리스트에 넣어서, 필요한 경우에 이 값을 부정하여 변경
+  const [refreshMainFeeds, setRefreshMainFeeds] = useState(true);
 
   // feedContext가 변경될 때마다 로컬스토리지 저장
   useEffect(() => {
@@ -42,7 +48,9 @@ export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <FeedContext.Provider value={{ feedContext, setFeedContext, updateFeedContext }}>
+    <FeedContext.Provider value={
+      { feedContext, setFeedContext, updateFeedContext, refreshMainFeeds, setRefreshMainFeeds }
+      }>
       {children}
     </FeedContext.Provider>
   );

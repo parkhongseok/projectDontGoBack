@@ -4,6 +4,7 @@ import { Stack } from "react-bootstrap";
 import "../globals.css";
 import styles from "./Feed.module.css"
 import { redirect, useRouter } from "next/navigation";
+import { useFeed } from "../context/FeedContext";
 
 type propsType = { 
   FeedId : number;
@@ -12,6 +13,8 @@ type propsType = {
 
 export default function DeleteBox( { FeedId, setShowDeleteBox } : propsType){
   const router = useRouter();
+  const { refreshMainFeeds, setRefreshMainFeeds } = useFeed();
+
   const closeBox = () => {
     setShowDeleteBox(false)
   };
@@ -28,6 +31,7 @@ export default function DeleteBox( { FeedId, setShowDeleteBox } : propsType){
 
       if (response.ok){
         closeBox();
+        setRefreshMainFeeds(!refreshMainFeeds)
         router.push("/");
       } else { 
         alert("잠시 후 다시 시도해주세요.");

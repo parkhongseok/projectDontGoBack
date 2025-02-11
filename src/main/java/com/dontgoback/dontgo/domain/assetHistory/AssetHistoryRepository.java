@@ -1,6 +1,6 @@
-package com.dontgoback.dontgo.domain.asset;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface AssetRepository extends JpaRepository<Asset, Long> {
-}
+//package com.dontgoback.dontgo.domain.assetHistory;
+//
+//import org.springframework.data.jpa.repository.JpaRepository;
+//
+//public interface AssetHistoryRepository extends JpaRepository<AssetHistory, Long> {
+//}

@@ -1,8 +1,10 @@
-package com.dontgoback.dontgo.domain.feedLike.entity;
+package com.dontgoback.dontgo.domain.feedLike;
 
-import jakarta.persistence.Entity;
+import com.dontgoback.dontgo.domain.feed.Feed;
+import com.dontgoback.dontgo.domain.user.User;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.FeedLikeId;
+import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
@@ -12,8 +14,19 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name="feed_likes")
 public class FeedLike {
-    private long feedId;
-    private long userId;
-    private LocalDateTime createAt;
+
+    @EmbeddedId
+    private FeedLikeId id;
+
+    @MapsId("userId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+
+    @MapsId("feedId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_id", insertable = false, updatable = false)
+    private Feed feed;
 }

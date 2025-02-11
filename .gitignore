@@ -36,5 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-application-scrcet.yml
+application-secret.yml
 .env

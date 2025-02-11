@@ -6,19 +6,24 @@ import {Stack} from 'react-bootstrap';
 import Dummys from "../dummyData";
 import { useFeed } from "../context/FeedContext";
 import { useEffect, useState } from "react";
+import { useParams, usePathname } from "next/navigation";
 
 type propsType = { 
   setShowEditBox: React.Dispatch<React.SetStateAction<boolean>>
   }
 
 export default function EditBox({ setShowEditBox } : propsType){
-  const user = Dummys.User;
-  const { feedContext, setFeedContext } = useFeed();
 
+  const user = Dummys.User;
+  const pathname = usePathname();
+  const { feedContext, setFeedContext, refreshMainFeeds, setRefreshMainFeeds } = useFeed();
+  
   if (!feedContext) {
     return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
   }
+
   const [feed, setFeed] = useState(feedContext);
+
   const feedTypeClass = styles[feedContext.feedType] || "";
 
   const setContent = (newContent : string) =>{
@@ -27,6 +32,7 @@ export default function EditBox({ setShowEditBox } : propsType){
       content: newContent,
     })
   };
+
   const setContentCotext = (newContent : string) =>{
     setFeedContext({
       ...feed,
@@ -57,7 +63,6 @@ export default function EditBox({ setShowEditBox } : propsType){
     const postData = {
       content : feed.content,
     };
-
     try {
       const response = await fetch(`http://localhost:8090/api/v1/feeds/${feed.feedId}`, {
         method: "PATCH",
@@ -70,7 +75,10 @@ export default function EditBox({ setShowEditBox } : propsType){
       if (response.ok){
         setContentCotext(postData.content);
         setShowEditBox(false);
-        // 응답 객체를 context에 반영해야함
+        // main 화면인 경우에만 리프레쉬
+        if (pathname === "/"){
+          setRefreshMainFeeds(!refreshMainFeeds)
+        }
       } else { 
         alert("잠시 후 다시 시도해주세요.");
       }
