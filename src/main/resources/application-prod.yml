@@ -1,0 +1,8 @@
+# 배포를 위한 설정 파일
+# production 환경에서 사용할 설정 파일
+# 특히 file directory 설정이 중요하다.
+#custom:
+#  file:
+#    upload-dir: /home/ubuntu/app/files
+#    download-dir: /home/ubuntu/app/files
+#    download-url: http://localhost:8080/files
