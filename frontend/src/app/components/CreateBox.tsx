@@ -4,7 +4,6 @@ import { useState } from "react";
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Button, Stack} from 'react-bootstrap';
-// import * as Types from '../types'
 import Dummys from "../dummyData";
 import { useFeed } from "../context/FeedContext";
 import { usePathname } from "next/navigation";

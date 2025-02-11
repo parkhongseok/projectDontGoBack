@@ -15,7 +15,7 @@ type propsType = {
 export default function EditBox({ setShowEditBox } : propsType){
 
   const user = Dummys.User;
-  const pathname = usePathname();
+
   const { feedContext, setFeedContext, refreshMainFeeds, setRefreshMainFeeds } = useFeed();
   
   if (!feedContext) {
@@ -75,6 +75,7 @@ export default function EditBox({ setShowEditBox } : propsType){
       if (response.ok){
         setContentCotext(postData.content);
         setShowEditBox(false);
+        const pathname = usePathname();
         // main 화면인 경우에만 리프레쉬
         if (pathname === "/"){
           setRefreshMainFeeds(!refreshMainFeeds)
