@@ -13,10 +13,10 @@ import java.util.Optional;
 public class UserService {
     final UserRepository userRepository;
 
-    public User findById(long id){
-        Optional<User> user = userRepository.findById(id);
-        return user.get();
+    public Optional<User> findById(long id){
+        return userRepository.findById(id);
     }
+
     public User signUp(String userName, String email, RedBlueType type) {
         User user = User.builder()
                 .userName(userName)

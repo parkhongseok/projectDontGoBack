@@ -5,6 +5,11 @@ import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -27,4 +32,7 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private RedBlueType userType;
+
+    @Column(name = "nickname", unique = true)
+    private String nickname;
 }
