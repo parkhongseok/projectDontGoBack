@@ -17,7 +17,7 @@ export default function SideBar(){
       {/* 네비게이션 메뉴 */}
       <div className={styles.navContainer}>
         <Nav defaultActiveKey="/" className="flex-column">
-          <Nav.Link href="#profile">
+          <Nav.Link href="/login">
             <Image src="/profile.svg" alt="profile" className={styles.navImage} />
           </Nav.Link>
           <Nav.Link href="#write">

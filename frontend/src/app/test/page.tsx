@@ -3,7 +3,7 @@
 import FeedDetail from "../components/FeedDetail";
 import "../globals.css";
 
-export default function Home() {
+export default function Test() {
 
   return (
     <>
