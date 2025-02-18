@@ -1,11 +1,9 @@
-package com.example.demo.domain.refreshToken;
+package com.dontgoback.dontgo.domain.refreshToken;
 
-
-import com.example.demo.config.jwt.TokenProvider;
-import com.example.demo.domain.user.entity.User;
-import com.example.demo.domain.user.service.UserService;
+import com.dontgoback.dontgo.config.jwt.TokenProvider;
+import com.dontgoback.dontgo.domain.user.User;
+import com.dontgoback.dontgo.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.Token;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;

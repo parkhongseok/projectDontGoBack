@@ -1,6 +1,7 @@
-package com.example.demo.domain.refreshToken;
-import com.example.demo.domain.refreshToken.dto.CreateAccessTokenRequest;
-import com.example.demo.domain.refreshToken.dto.CreateAccessTokenResponse;
+package com.dontgoback.dontgo.domain.refreshToken;
+
+import com.dontgoback.dontgo.domain.refreshToken.dto.CreateAccessTokenRequest;
+import com.dontgoback.dontgo.domain.refreshToken.dto.CreateAccessTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

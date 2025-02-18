@@ -1,4 +1,4 @@
-package com.example.demo.config.jwt;
+package com.dontgoback.dontgo.config.jwt;
 
 
 import lombok.Getter;

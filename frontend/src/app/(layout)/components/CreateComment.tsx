@@ -3,22 +3,23 @@
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Stack} from 'react-bootstrap';
-import * as Types from '../types'
+import * as Types from '../utils/types'
 import CreateBox from "./CreateBox";
 import { useState } from "react";
+import { useUser } from "../contexts/UserContext";
 
 type userProps = {
   feed : Types.Feed | null;
-  user : Types.User; // Props의 타입 정의
 };
 
-export default function CreateComment({feed, user} : userProps){
+export default function CreateComment({feed} : userProps){
   const [showWriteBox, setShowWriteBox] = useState(false);
+  const { userContext } = useUser();
 
-  if (!feed) {
+  if (!feed || !userContext ) {
     return <div className={`${styles.CreateCommentContainer} cursorPointer px-4`}/> ;
   }
-  const feedTypeClass = styles[(feed.feedType == "blue") ? "blueLight" : "redLight"] || "";
+  const feedTypeClass = styles[(userContext.userType == "BLUE") ? "blueLight" : "redLight"] || "";
   const openWriteBox = () => {
     setShowWriteBox(true)
   };

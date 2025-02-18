@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import {Stack} from 'react-bootstrap';
 import Feed from "../../components/Feed";
 import CreateComment from "../../components/CreateComment";
-import * as Types from "../../types";
-import Dummys from "../../dummyData";
+import * as Types from "../../utils/types";
+import Dummys from "../../utils/dummyData";
 import Comment from '../../components/Comment';
 import { useParams } from "next/navigation";
-import { useFeed } from "../../context/FeedContext"
+import { useFeed } from "../../contexts/FeedContext"
 
 export default function FeedDetile() {
   const user = Dummys.User;
@@ -41,27 +41,6 @@ export default function FeedDetile() {
 
     }, [id]);
 
-
-  // useEffect(()=>{
-  //   if (!feedContext){
-  //     const savedFeed = localStorage.getItem("feedContext");
-  //     if (savedFeed) {
-  //       let myFeed = JSON.parse(savedFeed);
-  //       if (myFeed.id == id){
-  //         setFeedContext(myFeed);
-  //       } else {
-  //         fetch(`http://localhost:8090/api/v1/feeds/${id}`)
-  //         .then((res) => res.json())
-  //         .then((data) => {
-  //           setFeedContext(data)
-  //           localStorage.setItem("feedContext", JSON.stringify(data));
-  //           });
-  //         }
-  
-  //     } 
-  //     }
-  //   }, [id]);
-
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
@@ -83,7 +62,7 @@ export default function FeedDetile() {
             {/* 댓글 */}
               {/* 댓글 생성 쓰기 */}
               <div className="my-3">
-                <CreateComment feed={feedContext} user={user}/>
+                <CreateComment feed={feedContext}/>
               </div>
 
               {/* 댓글 공간 */}

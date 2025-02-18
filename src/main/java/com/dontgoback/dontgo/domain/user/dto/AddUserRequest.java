@@ -1,4 +1,4 @@
-package com.example.demo.domain.user.dto;
+package com.dontgoback.dontgo.domain.user.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class AddUserRequest {
     private String email;
-    private String password;
+//    private String password;
 }

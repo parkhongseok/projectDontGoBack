@@ -3,8 +3,8 @@
 import { Stack } from "react-bootstrap";
 import "../globals.css";
 import styles from "./Feed.module.css"
-import { redirect, useRouter } from "next/navigation";
-import { useFeed } from "../context/FeedContext";
+import { useRouter } from "next/navigation";
+import { useFeed } from "../contexts/FeedContext";
 
 type propsType = { 
   FeedId : number;

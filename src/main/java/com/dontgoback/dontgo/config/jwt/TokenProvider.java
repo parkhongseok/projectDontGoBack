@@ -1,13 +1,12 @@
-package com.example.demo.config.jwt;
+package com.dontgoback.dontgo.config.jwt;
 
 
-import com.example.demo.domain.user.entity.User;
+import com.dontgoback.dontgo.domain.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

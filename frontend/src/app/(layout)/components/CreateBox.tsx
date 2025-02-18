@@ -1,82 +1,62 @@
 'use client'
 
+import { useState } from "react";
 import "../globals.css";
 import styles from "./Feed.module.css"
-import {Stack} from 'react-bootstrap';
-import Dummys from "../dummyData";
-import { useFeed } from "../context/FeedContext";
-import { useEffect, useState } from "react";
-import { useParams, usePathname } from "next/navigation";
+import {Button, Stack} from 'react-bootstrap';
+import { useFeed } from "../contexts/FeedContext";
+import { useUser } from "../contexts/UserContext";
+import { usePathname } from "next/navigation";
 
-type propsType = { 
-  setShowEditBox: React.Dispatch<React.SetStateAction<boolean>>
+type propsType = {
+    setShowWriteBox: React.Dispatch<React.SetStateAction<boolean>>
   }
 
-export default function EditBox({ setShowEditBox } : propsType){
-
-  const user = Dummys.User;
-
-  const { feedContext, setFeedContext, refreshMainFeeds, setRefreshMainFeeds } = useFeed();
-  
-  if (!feedContext) {
-    return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
+export default function CreateBox({ setShowWriteBox } : propsType){
+  const { userContext } = useUser();
+  if (!userContext){
+    return <div className="loading"/>;  
   }
-
-  const [feed, setFeed] = useState(feedContext);
-
-  const feedTypeClass = styles[feedContext.feedType] || "";
-
-  const setContent = (newContent : string) =>{
-    setFeed({
-      ...feed,
-      content: newContent,
-    })
-  };
-
-  const setContentCotext = (newContent : string) =>{
-    setFeedContext({
-      ...feed,
-      content: newContent,
-    })
-  };
-
-  const closeBox = () => {
-    setShowEditBox(false)
-  };
-
+  const feedTypeClass = styles[userContext.userType] || "";
+  const { refreshMainFeeds, setRefreshMainFeeds } = useFeed();
   const autoResize = (e : React.FormEvent<HTMLTextAreaElement>) => {
     const target = e.target as HTMLTextAreaElement;
     target.style.height = 'auto';  // 먼저 높이를 auto로 리셋
     target.style.height = `${target.scrollHeight}px`;  // 텍스트의 높이에 맞게 설정
   };
+    const closeBox = () => {
+      setShowWriteBox(false)
+  };
 
+  const [content, setContent] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value); 
   };
-
   const handleSubmit = async () => {
-    if (!feedContext.content.trim()) {
+    if (!content.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
     // 요청 객체
-    const postData = {
-      content : feed.content,
+    const feedRequest = {
+      content : content,
     };
+
     try {
-      const response = await fetch(`http://localhost:8090/api/v1/feeds/${feed.feedId}`, {
-        method: "PATCH",
+      const response = await fetch("http://localhost:8090/api/v1/feeds", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(postData),
+        body: JSON.stringify(feedRequest),
       });
 
       if (response.ok){
-        setContentCotext(postData.content);
-        setShowEditBox(false);
+        setContent("");
+        setShowWriteBox(false);
+        setRefreshMainFeeds(!refreshMainFeeds)
         const pathname = usePathname();
-        // main 화면인 경우에만 리프레쉬
+        // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
         if (pathname === "/"){
           setRefreshMainFeeds(!refreshMainFeeds)
         }
@@ -87,8 +67,8 @@ export default function EditBox({ setShowEditBox } : propsType){
       console.log("Error : ", error)
       alert("서버 오류가 발생했습니다.")
     }
-  }
 
+  }
   return (
   <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
       <div className="sidebar-space"/>
@@ -119,25 +99,25 @@ export default function EditBox({ setShowEditBox } : propsType){
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
               <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>
-                {feedContext.userName}
+                {userContext.userName}
               </p>
               <textarea 
                 onInput={(e) => autoResize(e)}
                 rows={5} 
                 className={`${styles.textBox} fontWhite`}
                 placeholder="게시글 작성하기"
-                value = {feed.content} 
+                value={content} 
                 onChange={handleChange}
                 // disabled
                 // readOnly
               />
               <>
-              <button 
+              <Button 
               className={`ms-auto ${styles.write}`}
               onClick={handleSubmit}
               >
                 게시
-              </button>
+              </Button>
               </>
             </Stack>
           </Stack>

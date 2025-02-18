@@ -1,4 +1,4 @@
-package com.example.demo.domain.refreshToken;
+package com.dontgoback.dontgo.domain.refreshToken;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

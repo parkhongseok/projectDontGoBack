@@ -1,4 +1,4 @@
-package com.dontgoback.dontgo.global.webMvc;
+package com.dontgoback.dontgo.config.webMvc;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

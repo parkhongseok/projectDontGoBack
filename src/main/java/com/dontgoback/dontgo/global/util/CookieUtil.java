@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.dontgoback.dontgo.global.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,10 +11,12 @@ import java.util.Base64;
 // 유저에게 보낼 응답에 쿠키를 추가하거나, 삭제하거나, 쿠키자체를 변환
 public class CookieUtil {
     // 요청값(이름, 값, 만료 기간)을 바탕으로 쿠키 추가
-    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge){
+    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge,  boolean httpOnly, boolean secure){
         Cookie cookie = new Cookie(name, value);
-        cookie.setPath("/");
         cookie.setMaxAge(maxAge);
+        cookie.setPath("/");
+        cookie.setHttpOnly(httpOnly);  // HttpOnly 설정 (JavaScript 접근 불가)
+        cookie.setSecure(secure);      // Secure 설정 (HTTPS에서만 쿠키 전달)
         response.addCookie(cookie);
     }
 
@@ -52,6 +54,4 @@ public class CookieUtil {
                 Base64.getUrlDecoder().decode(cookie.getValue())
         ));
     }
-
-
 }

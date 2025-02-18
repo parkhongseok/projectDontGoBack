@@ -1,11 +1,12 @@
-package com.example.demo.config.oauth;
+package com.dontgoback.dontgo.config.oauth;
 
-import com.example.demo.config.jwt.TokenProvider;
-import com.example.demo.domain.refreshToken.RefreshToken;
-import com.example.demo.domain.refreshToken.RefreshTokenRepository;
-import com.example.demo.domain.user.entity.User;
-import com.example.demo.domain.user.service.UserService;
-import com.example.demo.util.CookieUtil;
+
+import com.dontgoback.dontgo.config.jwt.TokenProvider;
+import com.dontgoback.dontgo.domain.refreshToken.RefreshToken;
+import com.dontgoback.dontgo.domain.refreshToken.RefreshTokenRepository;
+import com.dontgoback.dontgo.domain.user.User;
+import com.dontgoback.dontgo.domain.user.UserService;
+import com.dontgoback.dontgo.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.time.Duration;
 
+
+// 필터 맥락에서, 사용자에게 로그인 페이지를 전달하고, 사용자는 로그인을 수행, 그리고 로그인 성공 시 실행되는 핸들러
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
-    public static final String REDIRECT_PATH = "/articles";
+    public static final String REDIRECT_PATH = "http://localhost:3000";
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -78,9 +81,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                          String refreshToken) {
         int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME); // 기존 리프레시 토큰 제거 하고
-        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge); // 새로운 거 추가
+        boolean httpOnly = true;
+        boolean httpsOnly = true; //cookie.setSecure(true);
+        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge, httpOnly, httpsOnly); // 새로운 거 추가
     }
-
 
     // 인증 관런 설정값, 쿠키 제거
     // 원래 이 메서드는 세션 기반의 SimpleUrlAuthenticationSuccessHandler에서의 메서드인데, 여기서 오버로딩
@@ -92,12 +96,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     // 액세스 토큰을 패스에 추가
     // 토큰에서 경로를 꺼내서, 거기에 쿠키 집어넣기 (쿼리 파라미터로)
-    private String getTargetUrl(String Token) {
+    private String getTargetUrl(String token) {
         return UriComponentsBuilder.fromUriString(REDIRECT_PATH)
+                .queryParam("access_token", token)
                 .build()
                 .toUriString();
     }
-
-
-
 }

@@ -1,9 +1,7 @@
-package com.example.demo.config.oauth;
+package com.dontgoback.dontgo.config.oauth;
 
-
-
-import com.example.demo.domain.user.entity.User;
-import com.example.demo.domain.user.repository.UserRepository;
+import com.dontgoback.dontgo.domain.user.User;
+import com.dontgoback.dontgo.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -42,6 +40,4 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
                         .build());
         return userRepository.save(user);
     }
-
-
 }

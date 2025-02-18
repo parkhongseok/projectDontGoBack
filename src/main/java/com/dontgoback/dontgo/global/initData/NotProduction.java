@@ -16,9 +16,8 @@ public class NotProduction {
     @Bean
     CommandLineRunner initPostData(FeedService feedService, UserService userService) {
         // 회원 가입
-        User user1 = userService.createDummyUser("User1", "user1@email.com", RedBlueType.BLUE);
-        User user2 = userService.createDummyUser("User2", "user2@email.com", RedBlueType.RED);
-//        User user3 = userService.createDummyUser("User3", "user2@email.com", RedBlueType.RED);
+        User user1 = userService.createDummyUser("BackDummy1", "user1@email.com", RedBlueType.BLUE);
+        User user2 = userService.createDummyUser("BackDummy2", "user2@email.com", RedBlueType.RED);
 
         return (args) -> {
             feedService.createDummyFeed(user1, "내용1");

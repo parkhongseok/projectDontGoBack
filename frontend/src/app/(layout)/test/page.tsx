@@ -1,6 +1,5 @@
 'use client'
 
-import FeedDetail from "../components/FeedDetail";
 import "../globals.css";
 
 export default function Test() {

@@ -1,4 +1,4 @@
-package com.example.demo.domain.refreshToken;
+package com.dontgoback.dontgo.domain.refreshToken;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

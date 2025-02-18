@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState} from 'react';
-import * as Types from "../types"
+import * as Types from "../utils/types"
 
 // FeedContext와 제공할 값 정의
 interface FeedContextType {

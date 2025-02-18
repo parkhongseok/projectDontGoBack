@@ -2,21 +2,21 @@ import "../globals.css";
 import styles from "./Feed.module.css"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Dropdown, Stack} from 'react-bootstrap';
-import * as Types from '../types'
+import * as Types from '../utils/types';
 import Link from "next/link";
-import { useFeed } from "../context/FeedContext";
+import { useFeed } from "../contexts/FeedContext";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import Dummys from "../dummyData";
 import EditBox from "./EditBox";
 import DeleteBox from "./DeleteBox";
+import { useUser } from "../contexts/UserContext";
 
 type FeedProps = {
   feed: Types.Feed | null;  // Props의 타입 정의
 };
 
 export default function Feed({ feed } : FeedProps){
-  const user = Dummys.User;
+  const { userContext } = useUser();
   const { updateFeedContext } = useFeed();
   const { id } = useParams<{ id: string }>();
   const [ showEditBox, setShowEditBox ] = useState(false);
@@ -28,7 +28,7 @@ export default function Feed({ feed } : FeedProps){
     setShowDeleteBox(true);
   }
 
-  if (!feed) {
+  if (!feed || !userContext) {
     return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
   }
   
@@ -70,7 +70,7 @@ export default function Feed({ feed } : FeedProps){
 
             <Dropdown.Menu>
 {
-  (feed.userId == user.userId) ?
+  (feed.userId == userContext.userId) ?
     <>
       <Dropdown.Item onClick={()=>{openEditBox(); handleFeedClick();}}>수정하기</Dropdown.Item>
       <Dropdown.Item onClick={openDeleteBox}>삭제하기</Dropdown.Item>

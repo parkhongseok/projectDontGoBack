@@ -1,58 +1,79 @@
 'use client'
 
-import { useState } from "react";
 import "../globals.css";
 import styles from "./Feed.module.css"
-import {Button, Stack} from 'react-bootstrap';
-import Dummys from "../dummyData";
-import { useFeed } from "../context/FeedContext";
+import {Stack} from 'react-bootstrap';
+import { useFeed } from "../contexts/FeedContext";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
-type propsType = {
-    setShowWriteBox: React.Dispatch<React.SetStateAction<boolean>>
+
+type propsType = { 
+  setShowEditBox: React.Dispatch<React.SetStateAction<boolean>>
   }
 
-export default function CreateBox({ setShowWriteBox } : propsType){
-  const user = Dummys.User;
-  const feedTypeClass = styles[user.userType] || "";
-  const { refreshMainFeeds, setRefreshMainFeeds } = useFeed();
+export default function EditBox({ setShowEditBox } : propsType){
+
+  const { feedContext, setFeedContext, refreshMainFeeds, setRefreshMainFeeds } = useFeed();
+  
+  if (!feedContext) {
+    return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
+  }
+
+  const [feed, setFeed] = useState(feedContext);
+
+  const feedTypeClass = styles[feedContext.feedType] || "";
+
+  const setContent = (newContent : string) =>{
+    setFeed({
+      ...feed,
+      content: newContent,
+    })
+  };
+
+  const setContentCotext = (newContent : string) =>{
+    setFeedContext({
+      ...feed,
+      content: newContent,
+    })
+  };
+
+  const closeBox = () => {
+    setShowEditBox(false)
+  };
+
   const autoResize = (e : React.FormEvent<HTMLTextAreaElement>) => {
     const target = e.target as HTMLTextAreaElement;
     target.style.height = 'auto';  // 먼저 높이를 auto로 리셋
     target.style.height = `${target.scrollHeight}px`;  // 텍스트의 높이에 맞게 설정
   };
-    const closeBox = () => {
-      setShowWriteBox(false)
-  };
 
-  const [content, setContent] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value); 
   };
+
   const handleSubmit = async () => {
-    if (!content.trim()) {
+    if (!feedContext.content.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
     // 요청 객체
-    const feedRequest = {
-      content : content,
+    const postData = {
+      content : feed.content,
     };
-
     try {
-      const response = await fetch("http://localhost:8090/api/v1/feeds", {
-        method: "POST",
+      const response = await fetch(`http://localhost:8090/api/v1/feeds/${feed.feedId}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(feedRequest),
+        body: JSON.stringify(postData),
       });
 
       if (response.ok){
-        setContent("");
-        setShowWriteBox(false);
-        setRefreshMainFeeds(!refreshMainFeeds)
+        setContentCotext(postData.content);
+        setShowEditBox(false);
         const pathname = usePathname();
-        // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
+        // main 화면인 경우에만 리프레쉬
         if (pathname === "/"){
           setRefreshMainFeeds(!refreshMainFeeds)
         }
@@ -63,8 +84,8 @@ export default function CreateBox({ setShowWriteBox } : propsType){
       console.log("Error : ", error)
       alert("서버 오류가 발생했습니다.")
     }
-
   }
+
   return (
   <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
       <div className="sidebar-space"/>
@@ -95,25 +116,25 @@ export default function CreateBox({ setShowWriteBox } : propsType){
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
               <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>
-                {user.userName}
+                {feedContext.userName}
               </p>
               <textarea 
                 onInput={(e) => autoResize(e)}
                 rows={5} 
                 className={`${styles.textBox} fontWhite`}
                 placeholder="게시글 작성하기"
-                value={content} 
+                value = {feed.content} 
                 onChange={handleChange}
                 // disabled
                 // readOnly
               />
               <>
-              <Button 
+              <button 
               className={`ms-auto ${styles.write}`}
               onClick={handleSubmit}
               >
                 게시
-              </Button>
+              </button>
               </>
             </Stack>
           </Stack>

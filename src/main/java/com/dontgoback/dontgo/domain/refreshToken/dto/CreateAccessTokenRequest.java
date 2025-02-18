@@ -1,4 +1,4 @@
-package com.example.demo.domain.refreshToken.dto;
+package com.dontgoback.dontgo.domain.refreshToken.dto;
 
 import lombok.Getter;
 import lombok.Setter;

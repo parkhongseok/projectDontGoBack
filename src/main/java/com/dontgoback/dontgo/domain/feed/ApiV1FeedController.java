@@ -3,9 +3,11 @@ package com.dontgoback.dontgo.domain.feed;
 import com.dontgoback.dontgo.domain.feed.dto.*;
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.UserService;
+import com.dontgoback.dontgo.domain.user.dto.LoginUserResponse;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import com.dontgoback.dontgo.global.resData.ResData;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class ApiV1FeedController {
     private final FeedService feedService;
     private final UserService userService;
 
+    // MainPage
     @GetMapping("")
     public ResData<FeedsResponse> getFeeds(){
         FeedsResponse data = this.feedService.getFeedsResponse();
@@ -47,7 +50,7 @@ public class ApiV1FeedController {
     public ResData<CreateFeedResponse> createFeed(@RequestBody FeedRequest feedRequest) {
         // 파라미터 부분에 validation 어노테이션을 사용하여, 비어있는지 미리 검사 등
         // 그리고 응답 객체에 포장해서 return
-        User user = userService.findById(1L).get();
+        User user = userService.findById(1L);
         ResData<Feed> resData = this.feedService.createFeed(user, feedRequest);
         if (resData.isFail()) return (ResData)resData;
 

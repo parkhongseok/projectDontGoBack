@@ -1,30 +1,31 @@
 package com.dontgoback.dontgo.domain.user;
-
-import com.dontgoback.dontgo.domain.feed.Feed;
+import com.dontgoback.dontgo.domain.user.dto.AddUserRequest;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     final UserRepository userRepository;
 
-    public Optional<User> findById(long id){
-        return userRepository.findById(id);
+    public User save(AddUserRequest dto) {
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            return userRepository.save(User.builder()
+                    .email(dto.getEmail())
+            .build());
+
+}
+
+    public User findById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(()-> new IllegalArgumentException("Unexpected user"));
     }
 
-    public User signUp(String userName, String email, RedBlueType type) {
-        User user = User.builder()
-                .userName(userName)
-                .email(email)
-                .userType(type)
-                .build();
-        this.userRepository.save(user);
-        return user;
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("unexpected user"));
     }
 
     public User createDummyUser(String userName, String email, RedBlueType type) {
