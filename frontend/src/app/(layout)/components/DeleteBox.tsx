@@ -5,6 +5,7 @@ import "../globals.css";
 import styles from "./Feed.module.css"
 import { useRouter } from "next/navigation";
 import { useFeed } from "../contexts/FeedContext";
+import { httpRequest } from "../utils/httpRequest";
 
 type propsType = { 
   FeedId : number;
@@ -21,25 +22,18 @@ export default function DeleteBox( { FeedId, setShowDeleteBox } : propsType){
 
 
   const handleSubmit = async () => {
-    try {
-      const response = await fetch(`http://localhost:8090/api/v1/feeds/${FeedId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
 
-      if (response.ok){
-        closeBox();
-        setRefreshMainFeeds(!refreshMainFeeds)
-        router.push("/");
-      } else { 
-        alert("잠시 후 다시 시도해주세요.");
-      }
-    } catch (error) {
-      console.log("Error : ", error)
-      alert("서버 오류가 발생했습니다.")
+
+    const method = "DELETE";
+    const url = `http://localhost:8090/api/v1/feeds/${FeedId}`;
+    const body = null;
+    const success = () => {
+      closeBox();
+      setRefreshMainFeeds(!refreshMainFeeds)
+      window.location.href = "/"; 
     }
+    const fail = () => {   alert("서버 오류가 발생했습니다.")    }
+    httpRequest(method, url, body, success, fail)
   }
 
 

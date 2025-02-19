@@ -26,11 +26,11 @@ import java.security.Principal;
 public class ApiV1UserController {
     private final UserService userService;
 
-    @PostMapping("/login")
-    public String signup(AddUserRequest request) {
-        userService.save(request);
-        return "";
-    }
+//    @PostMapping("/login")
+//    public String signup(AddUserRequest request) {
+//        userService.save(request);
+//        return "";
+//    }
 
     @GetMapping("/me")
     public ResData<LoginUserResponse> getUserInfo(Principal principal) {
@@ -47,8 +47,8 @@ public class ApiV1UserController {
                 LoginUserResponse.builder()
                         .userId(user.getId())
                         .email(user.getEmail())
-                        .userName("BackDummy")
-                        .userType(RedBlueType.BLUE)
+                        .userName(user.getUsername())
+                        .userType(user.getUserType())
                         .build()
         );
     }

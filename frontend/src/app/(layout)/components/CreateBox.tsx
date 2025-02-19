@@ -1,24 +1,37 @@
 'use client'
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Button, Stack} from 'react-bootstrap';
 import { useFeed } from "../contexts/FeedContext";
 import { useUser } from "../contexts/UserContext";
 import { usePathname } from "next/navigation";
+import { httpRequest } from "../utils/httpRequest";
 
 type propsType = {
-    setShowWriteBox: React.Dispatch<React.SetStateAction<boolean>>
+    setShowWriteBox: Dispatch<SetStateAction<boolean>>;
   }
 
 export default function CreateBox({ setShowWriteBox } : propsType){
-  const { userContext } = useUser();
+  useEffect(() => {
+    // 모달 열리면 body 스크롤 숨기기
+    document.body.style.overflow = "hidden";
+
+    // 모달 닫히면 body 스크롤 복구
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+  const { userContext, updateUserContext } = useUser();
+  const pathname = usePathname() || "";
   if (!userContext){
+    updateUserContext()
     return <div className="loading"/>;  
   }
   const feedTypeClass = styles[userContext.userType] || "";
   const { refreshMainFeeds, setRefreshMainFeeds } = useFeed();
+  // 작성하는 글의 높이 맞춤 설정
   const autoResize = (e : React.FormEvent<HTMLTextAreaElement>) => {
     const target = e.target as HTMLTextAreaElement;
     target.style.height = 'auto';  // 먼저 높이를 auto로 리셋
@@ -32,6 +45,7 @@ export default function CreateBox({ setShowWriteBox } : propsType){
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value); 
   };
+
   const handleSubmit = async () => {
     if (!content.trim()) {
       alert("내용을 입력해주세요.");
@@ -42,33 +56,25 @@ export default function CreateBox({ setShowWriteBox } : propsType){
       content : content,
     };
 
-    try {
-      const response = await fetch("http://localhost:8090/api/v1/feeds", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(feedRequest),
-      });
+    const method = "POST";
+    const url = "http://localhost:8090/api/v1/feeds";
+    const body = feedRequest;
+    
+    const success = (result : any) => { 
+      setContent("");
+      closeBox()
+      console.log(pathname)
+      // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
+      if (pathname === "/")
+        setRefreshMainFeeds(!refreshMainFeeds)    
+      
+    };
+    const fail = () => {    alert("서버 오류가 발생했습니다.")    };
 
-      if (response.ok){
-        setContent("");
-        setShowWriteBox(false);
-        setRefreshMainFeeds(!refreshMainFeeds)
-        const pathname = usePathname();
-        // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
-        if (pathname === "/"){
-          setRefreshMainFeeds(!refreshMainFeeds)
-        }
-      } else { 
-        alert("잠시 후 다시 시도해주세요.");
-      }
-    } catch (error) {
-      console.log("Error : ", error)
-      alert("서버 오류가 발생했습니다.")
-    }
-
+    httpRequest(method, url, body, success, fail);
   }
+
+
   return (
   <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
       <div className="sidebar-space"/>

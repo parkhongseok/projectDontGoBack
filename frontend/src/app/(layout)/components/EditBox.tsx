@@ -6,13 +6,14 @@ import {Stack} from 'react-bootstrap';
 import { useFeed } from "../contexts/FeedContext";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { httpRequest } from "../utils/httpRequest";
 
 type propsType = { 
   setShowEditBox: React.Dispatch<React.SetStateAction<boolean>>
   }
 
 export default function EditBox({ setShowEditBox } : propsType){
-
+  const pathname = usePathname() || "";
   const { feedContext, setFeedContext, refreshMainFeeds, setRefreshMainFeeds } = useFeed();
   
   if (!feedContext) {
@@ -57,33 +58,43 @@ export default function EditBox({ setShowEditBox } : propsType){
       return;
     }
     // 요청 객체
-    const postData = {
+    const updateFeedRequest = {
       content : feed.content,
     };
-    try {
-      const response = await fetch(`http://localhost:8090/api/v1/feeds/${feed.feedId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
 
-      if (response.ok){
-        setContentCotext(postData.content);
-        setShowEditBox(false);
-        const pathname = usePathname();
-        // main 화면인 경우에만 리프레쉬
-        if (pathname === "/"){
-          setRefreshMainFeeds(!refreshMainFeeds)
-        }
-      } else { 
-        alert("잠시 후 다시 시도해주세요.");
-      }
-    } catch (error) {
-      console.log("Error : ", error)
-      alert("서버 오류가 발생했습니다.")
-    }
+    const method = "PATCH";
+    const url = `http://localhost:8090/api/v1/feeds/${feed.feedId}`;
+    const body = updateFeedRequest;
+    const success = () => {
+      setContentCotext(updateFeedRequest.content);
+      setShowEditBox(false);
+      if (pathname === "/"){    setRefreshMainFeeds(!refreshMainFeeds)    }}
+    const fail = () => {    alert("서버 오류가 발생했습니다.")    };
+    httpRequest(method, url, body, success, fail);
+    // try {
+    //   const response = await fetch(`http://localhost:8090/api/v1/feeds/${feed.feedId}`, {
+    //     method: "PATCH",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(postData),
+    //   });
+
+    //   if (response.ok){
+    //     setContentCotext(postData.content);
+    //     setShowEditBox(false);
+    //     const pathname = usePathname();
+    //     // main 화면인 경우에만 리프레쉬
+    //     if (pathname === "/"){
+    //       setRefreshMainFeeds(!refreshMainFeeds)
+    //     }
+    //   } else { 
+    //     alert("잠시 후 다시 시도해주세요.");
+    //   }
+    // } catch (error) {
+    //   console.log("Error : ", error)
+    //   alert("서버 오류가 발생했습니다.")
+    // }
   }
 
   return (
@@ -143,5 +154,3 @@ export default function EditBox({ setShowEditBox } : propsType){
     </div>
   )
 }
-
-

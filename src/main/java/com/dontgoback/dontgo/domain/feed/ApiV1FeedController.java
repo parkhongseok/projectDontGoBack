@@ -3,14 +3,11 @@ package com.dontgoback.dontgo.domain.feed;
 import com.dontgoback.dontgo.domain.feed.dto.*;
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.UserService;
-import com.dontgoback.dontgo.domain.user.dto.LoginUserResponse;
-import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import com.dontgoback.dontgo.global.resData.ResData;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -47,17 +44,15 @@ public class ApiV1FeedController {
 
     // Create
     @PostMapping("")
-    public ResData<CreateFeedResponse> createFeed(@RequestBody FeedRequest feedRequest) {
-        // 파라미터 부분에 validation 어노테이션을 사용하여, 비어있는지 미리 검사 등
-        // 그리고 응답 객체에 포장해서 return
-        User user = userService.findById(1L);
-        ResData<Feed> resData = this.feedService.createFeed(user, feedRequest);
-        if (resData.isFail()) return (ResData)resData;
+    public ResData<CreateFeedResponse> createFeed(@RequestBody CreateFeedRequest feedRequest, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        ResData<CreateFeedResponse> resData = this.feedService.createFeed(user, feedRequest);
+        if (resData.isSuccess()) return resData;
 
         return ResData.of(
                 resData.getResultCode(),
                 resData.getMessage(),
-                new CreateFeedResponse(resData.getData())
+                new CreateFeedResponse()
         );
     }
 
@@ -74,12 +69,12 @@ public class ApiV1FeedController {
         );
 
         // 회원 권한 체크
-        ResData<Feed> resData = this.feedService.updateFeed(optionalFeed.get(), updateFeedRequest);
+        ResData<UpdateFeedResponse> resData = this.feedService.updateFeed(optionalFeed.get(), updateFeedRequest);
 
         return ResData.of(
                 resData.getResultCode(),
                 resData.getMessage(),
-                new UpdateFeedResponse(resData.getData())
+                resData
         );
     }
 
@@ -99,7 +94,11 @@ public class ApiV1FeedController {
         return ResData.of(
                 resData.getResultCode(),
                 resData.getMessage(),
-                new DeleteFeedResponse(optionalFeed.get())
+                DeleteFeedResponse.builder()
+                                .feedId(optionalFeed.get().getId())
+                                .content(optionalFeed.get().getContent())
+                                .feedType(optionalFeed.get().getFeedType())
+                                .build()
         );
     }
 

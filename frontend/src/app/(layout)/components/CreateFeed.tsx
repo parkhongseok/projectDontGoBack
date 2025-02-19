@@ -3,23 +3,26 @@
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Stack} from 'react-bootstrap';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreateBox from "./CreateBox";
-import Dummys from "../utils/dummyData";
 import { useUser } from "../contexts/UserContext";
 
 
 export default function CreateFeed(){
-  const { userContext } = useUser();
+  const { userContext, updateUserContext } = useUser();
+  const [showWriteBox, setShowWriteBox] = useState(false);
+  useEffect(() => {
+    if (!userContext) 
+      updateUserContext();
+  }, [userContext, updateUserContext]);
 
-  if (!userContext){
-    return;
-  }
+  if (!userContext){    return <div className="loading"/>;   }
+
   const feedTypeClass = styles[userContext.userType] || "";
   const openWriteBox = () => {
     setShowWriteBox(true)
   };
-  const [showWriteBox, setShowWriteBox] = useState(false);
+
 
   return (
     < >

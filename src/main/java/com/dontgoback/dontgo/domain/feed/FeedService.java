@@ -6,7 +6,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,7 +24,7 @@ public class FeedService {
 
     // 피드 생성
     @Transactional
-    public ResData<Feed> createFeed(User user, FeedRequest feedRequest) {
+    public ResData<CreateFeedResponse> createFeed(User user, CreateFeedRequest feedRequest) {
        Feed feed = Feed.builder()
                .user(user)
                .content(feedRequest.getContent())
@@ -36,7 +35,11 @@ public class FeedService {
        return ResData.of(
                "S-3",
                "게시물이 생성되었습니다.",
-               feed
+               CreateFeedResponse.builder().
+                       feedId(feed.getId())
+                       .feedType(feed.getFeedType())
+                       .content(feed.getContent())
+                       .build()
        );
     }
 
@@ -54,13 +57,17 @@ public class FeedService {
         return feedRepository.findById(id);
     }
 
-    public ResData<Feed> updateFeed(Feed feed, UpdateFeedRequest updateFeedRequest) {
+    public ResData<UpdateFeedResponse> updateFeed(Feed feed, UpdateFeedRequest updateFeedRequest) {
         feed.setContent(updateFeedRequest.getContent());
         feedRepository.save(feed);
         return ResData.of(
                 "S-4",
                 "%d번 게시글이 수정되었습니다.".formatted(feed.getId()),
-                feed
+                UpdateFeedResponse.builder()
+                        .feedId(feed.getId())
+                        .content(feed.getContent())
+                        .feedType(feed.getFeedType())
+                        .build()
         );
     }
 

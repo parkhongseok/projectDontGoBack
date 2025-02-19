@@ -9,14 +9,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     final UserRepository userRepository;
-
-    public User save(AddUserRequest dto) {
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            return userRepository.save(User.builder()
-                    .email(dto.getEmail())
-            .build());
-
-}
+//
+//    public User save(AddUserRequest dto) {
+////        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//            return userRepository.save(User.builder()
+//                    .userName("BackDummy : Me")
+//                    .userType(RedBlueType.BLUE)
+//                    .email(dto.getEmail())
+//            .build());
+//}
 
     public User findById(Long userId){
         return userRepository.findById(userId)

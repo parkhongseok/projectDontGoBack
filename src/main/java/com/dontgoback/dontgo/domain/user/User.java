@@ -22,8 +22,8 @@ import java.util.List;
 @Table(name="users")
 public class User extends BaseEntity implements UserDetails {
 
-    @OneToMany(mappedBy = "user")
-    private List<Feed> feeds;
+//    @OneToMany(mappedBy = "user")
+//    private List<Feed> feeds;
 
     @Column(nullable = true)
     private String userName;
