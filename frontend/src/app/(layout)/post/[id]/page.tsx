@@ -4,23 +4,26 @@ import "../../globals.css";
 import { useEffect, useState } from "react";
 import {Stack} from 'react-bootstrap';
 import Feed from "../../components/Feed";
-import CreateComment from "../../components/CreateComment";
+import CreateComment from "../../components/comments/CreateComment";
+import Comment from '../../components/comments/Comment';
 import * as Types from "../../utils/types";
 import Dummys from "../../utils/dummyData";
-import Comment from '../../components/Comment';
 import { useParams } from "next/navigation";
 import { useFeed } from "../../contexts/FeedContext"
 import { httpRequest } from "../../utils/httpRequest";
+import { useUser } from "../../contexts/UserContext";
 
 export default function FeedDetile() {
-  const user = Dummys.User;
-  const { feedContext, setFeedContext } = useFeed();
+  // const user = Dummys.User;
+  const { feedContext, updateFeedContext } = useFeed();
+  const { updateUserContext } = useUser();
   const { id } = useParams<{ id: string }>();
   const [comments] = useState<Types.Comment[]>(Dummys.Comments);
 
   useEffect(()=>{
-    let isSaved : boolean = false;
+    updateUserContext();
 
+    let isSaved : boolean = false;
     // 만약 컨텍스트에 저장된 피드가 있고, 이게 현재 url의 id와 동일하다면, 이대로 사용
     if (feedContext && `${feedContext.feedId}` === id){ 
       console.log("정상 상황 : 메인 피드 -> 상세 피드")
@@ -32,40 +35,41 @@ export default function FeedDetile() {
     else {
       // 피드 컨텍스트가 없는 경우 (새로고침하면 언제나 피드 컨텍스트가 날아가는군)
       if (!feedContext){
-        // console.log(" 새로고침 or url로 이동 ")
+        console.log(" 새로고침 or url로 이동 ")
         const savedFeed = localStorage.getItem("feedContext");
         // 로컬 스토리지 있다면 불러와서, 비교
         if (savedFeed) {
           // console.log(" 이 전에 이미 상세 피드에 한 번 들어가거나, 수정해서 로컬 스토리지에 게시글 존재 ")
-          const myFeed = JSON.parse(savedFeed);
-          if(myFeed.feedId == id){
-            // console.log(" 상세 페이지에서 단순 새로 고침한 경우 ")
+          const myFeed : Types.Feed = JSON.parse(savedFeed);
+          if(`${myFeed.feedId}` === id){
+            console.log(" 상세 페이지에서 단순 새로 고침한 경우 ")
+            updateFeedContext(myFeed);
             isSaved = true;
-            setFeedContext(myFeed);
           }
         }
       }
-      
     }
-    
-    // 로컬 스토리지가 비어있거나, 컨텍스트가 비어있거나, 혹은 현재 게시물과 id가 다른 url인 경우
-    if (!isSaved){
+    const fetchFeed = () => {
       const method = "GET";
       const url = `http://localhost:8090/api/v1/feeds/${id}`;
       const body = null;
       const success = (result : any) => { 
-        if (result){
-          setFeedContext(result.data);
-          // 저장은 자동
-          // localStorage.setItem("feedContext", JSON.stringify(result.data));
+        if (result.data){
+          updateFeedContext(result.data);
         }
-        else
-          console.error("data is null") // 예외처리
+        else{
+          alert("존재하지 않는 게시물입니다")
+          window.location.href = "/";}
       };
-      const fail = () => { console.error("fail") }
+      const fail = () => {   console.error("서버 에러")   }
       httpRequest(method, url, body, success, fail);
       }
-    }, [id]);
+    // 로컬 스토리지가 비어있거나, 컨텍스트가 비어있거나, 혹은 현재 게시물과 id가 다른 url인 경우
+    if (!isSaved){
+      fetchFeed()
+    }
+  }, []);
+
 
   return (
     <>

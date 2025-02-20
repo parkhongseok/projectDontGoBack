@@ -24,6 +24,7 @@ public class TokenService {
 
         Long userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();
         User user = userService.findById(userId);
+
         // 두시간짜리 액세스 토큰 발급
         return tokenProvider.generateToken(user, Duration.ofHours(2));
     }

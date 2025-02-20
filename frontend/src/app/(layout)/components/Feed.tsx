@@ -7,8 +7,8 @@ import Link from "next/link";
 import { useFeed } from "../contexts/FeedContext";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import EditBox from "./EditBox";
-import DeleteBox from "./DeleteBox";
+import EditBox from "./EditPopUp";
+import DeleteBox from "./DeletePopUp";
 import { useUser } from "../contexts/UserContext";
 
 type FeedProps = {
@@ -17,7 +17,7 @@ type FeedProps = {
 
 export default function Feed({ feed } : FeedProps){
   const { userContext } = useUser();
-  const { updateFeedContext } = useFeed();
+  const { feedContext, updateFeedContext } = useFeed();
   const { id } = useParams<{ id: string }>();
   const [ showEditBox, setShowEditBox ] = useState(false);
   const [ showDeleteBox, setShowDeleteBox ] = useState(false);
@@ -28,8 +28,12 @@ export default function Feed({ feed } : FeedProps){
     setShowDeleteBox(true);
   }
 
-  if (!feed || !userContext) {
-    return <div className="loading"/>;  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
+  if (!feed ) {
+
+    return <div className="loading">피드 없음</div>;  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
+  }
+  if (!userContext){
+    return <div className="loading">유저 없음</div>
   }
   
   // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""

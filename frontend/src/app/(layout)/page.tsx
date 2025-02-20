@@ -15,14 +15,13 @@ import { useUser } from "./contexts/UserContext";
 export default function Home() {
   const [feeds, setFeeds] = useState<Types.Feed[]>(Dummys.Feeds);
   const { refreshMainFeeds } = useFeed();
-  const { userContext, updateUserContext } = useUser();
+  const { updateUserContext } = useUser();
 
   // 액세스 토큰을 URL에서 쿼리 파라미터로부터 추출하고 로컬 스토리지에 저장
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('access_token');
     if (token) {
-      updateUserContext(token);
       localStorage.setItem("access_token", token);
     }
   }, []);
@@ -31,18 +30,14 @@ export default function Home() {
     const url = "http://localhost:8090/api/v1/feeds";
     const body = null; 
     const success = (result: any) => {      setFeeds(result.data.feeds);    };
-    const fail = () => {      window.location.href = "/login";    };
+    const fail = () => {      alert("feed load fail" )  };
     httpRequest("GET", url, body, success, fail);
   }
 
   useEffect(() => {
-    // // 유저가 존재하지 않거나 액세스 토큰이 없으면 유저 정보를 갱신
-    // if (!userContext) 
-    //   updateUserContext();
-
-     // 피드 데이터를 불러옴
+    updateUserContext();
     fetchFeeds();
-  }, [refreshMainFeeds])
+  }, [refreshMainFeeds]);
 
   return (
     <>
@@ -55,7 +50,7 @@ export default function Home() {
           <div className="">
 
           <CreateFeed/>
-          <hr className="init mt-3 overFlowHidden"/>
+          <hr className="init mt-3"/>
           </div>
           {
             feeds.map((item, idx)=>

@@ -4,10 +4,10 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "../globals.css";
 import styles from "./Feed.module.css"
 import {Button, Stack} from 'react-bootstrap';
-import { useFeed } from "../contexts/FeedContext";
-import { useUser } from "../contexts/UserContext";
+import { useFeed } from "../../contexts/FeedContext";
+import { useUser } from "../../contexts/UserContext";
 import { usePathname } from "next/navigation";
-import { httpRequest } from "../utils/httpRequest";
+import { httpRequest } from "../../utils/httpRequest";
 
 type propsType = {
     setShowWriteBox: Dispatch<SetStateAction<boolean>>;
@@ -23,10 +23,9 @@ export default function CreateBox({ setShowWriteBox } : propsType){
       document.body.style.overflow = "auto";
     };
   }, []);
-  const { userContext, updateUserContext } = useUser();
+  const { userContext } = useUser();
   const pathname = usePathname() || "";
   if (!userContext){
-    updateUserContext()
     return <div className="loading"/>;  
   }
   const feedTypeClass = styles[userContext.userType] || "";
@@ -63,7 +62,7 @@ export default function CreateBox({ setShowWriteBox } : propsType){
     const success = (result : any) => { 
       setContent("");
       closeBox()
-      console.log(pathname)
+      // console.log(pathname)
       // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
       if (pathname === "/")
         setRefreshMainFeeds(!refreshMainFeeds)    
@@ -89,9 +88,9 @@ export default function CreateBox({ setShowWriteBox } : propsType){
             {/* 상단  취소 / 게시글 작성 / ... */}
             <Stack direction="horizontal" className="mx-5">
               <>
-              <button className={`${styles.write}`} onClick={closeBox}>
+              <Button className={`${styles.write} ${styles.exitBtn}`} onClick={closeBox}>
                 취소
-              </button>
+              </Button>
               </>
               <h6 className={`ms-auto fontWhite`}>
                 게시글 쓰기
@@ -119,7 +118,7 @@ export default function CreateBox({ setShowWriteBox } : propsType){
               />
               <>
               <Button 
-              className={`ms-auto ${styles.write}`}
+              className={`ms-auto ${styles.write} ${styles.createBtn} `}
               onClick={handleSubmit}
               >
                 게시

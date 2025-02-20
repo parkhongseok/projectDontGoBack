@@ -21,7 +21,7 @@ public class ApiV1FeedController {
     @GetMapping("")
     public ResData<FeedsResponse> getFeeds(){
         FeedsResponse data = this.feedService.getFeedsResponse();
-        return ResData.of("S-200", "성공", data);
+        return ResData.of("S-200", "메인 피드 조회 성공", data);
     }
 
     @GetMapping("/{id}")
@@ -31,13 +31,13 @@ public class ApiV1FeedController {
                 .map(feedResponse ->
                         ResData.of(
                                 "S-200",
-                                "성공",
+                                "피드 조회 성공",
                                 feedResponse
                         ))
                 .orElseGet(()->
                         ResData.of(
                             "S-400",
-                            "실패",
+                            "피드 조회 실패",
                             null
                 ));
     }

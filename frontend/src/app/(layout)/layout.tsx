@@ -23,7 +23,6 @@ export default function RootLayout({
               <div className="main-layout">
                 <div className="sidebar-space"/>
                 <div className="main-space">
-                {/* Provider 이새끼가 자동으로 overflow hidden 설정을 만드는 거 같은데 왜지 */}
                   {children}
                 </div>
               </div>

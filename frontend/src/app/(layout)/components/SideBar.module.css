@@ -4,13 +4,16 @@
   left: 0;
   height: 100vh;
   width: var(--sidebar-width);
+  min-width: var(--sidebar-min-width);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding-top: 20px;
+  padding-top: 40px;
   padding-bottom: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  background-color: var(--gray1);
+  z-index: 1000;
 }
 
 .logo {
@@ -19,6 +22,7 @@
 
 .logoImage {
   width: var(--sidebar-item-width);
+  min-width:var(--sidebar-item-min-width);
   height: auto;
 }
 
@@ -32,6 +36,7 @@
 
 .navImage{
   width: var(--sidebar-item-width); 
+  min-width:var(--sidebar-item-min-width);
   height: auto;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -46,4 +51,5 @@
 
 .settingImage{
   width: var(--sidebar-item-width);
+  min-width:var(--sidebar-item-min-width);
 }

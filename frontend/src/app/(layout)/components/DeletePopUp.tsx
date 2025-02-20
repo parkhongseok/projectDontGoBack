@@ -3,7 +3,7 @@
 import { Stack } from "react-bootstrap";
 import "../globals.css";
 import styles from "./Feed.module.css"
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useFeed } from "../contexts/FeedContext";
 import { httpRequest } from "../utils/httpRequest";
 
@@ -13,7 +13,7 @@ type propsType = {
   }
 
 export default function DeleteBox( { FeedId, setShowDeleteBox } : propsType){
-  const router = useRouter();
+  const pathname = usePathname() || "";
   const { refreshMainFeeds, setRefreshMainFeeds } = useFeed();
 
   const closeBox = () => {
@@ -30,7 +30,10 @@ export default function DeleteBox( { FeedId, setShowDeleteBox } : propsType){
     const success = () => {
       closeBox();
       setRefreshMainFeeds(!refreshMainFeeds)
-      window.location.href = "/"; 
+      if (pathname !== "/"){
+        window.location.href = "/"; 
+      }
+      
     }
     const fail = () => {   alert("서버 오류가 발생했습니다.")    }
     httpRequest(method, url, body, success, fail)

@@ -1,12 +1,12 @@
 'use client'
 
-import "../globals.css";
-import styles from "./Feed.module.css"
+import "../../globals.css";
+import styles from "./../Feed.module.css"
 import {Stack} from 'react-bootstrap';
-import * as Types from '../utils/types'
-import CreateBox from "./CreateBox";
+import * as Types from '../../utils/types'
+import CreateBox from "./../CreatePopUp";
 import { useState } from "react";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../../contexts/UserContext";
 
 type userProps = {
   feed : Types.Feed | null;

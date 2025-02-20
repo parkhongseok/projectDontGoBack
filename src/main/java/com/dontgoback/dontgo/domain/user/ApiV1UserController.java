@@ -38,16 +38,16 @@ public class ApiV1UserController {
 
         if (user == null) {
             return ResData.of("S-400",
-                    "실패",
+                    "내 정보 조회 실패",
                     null) ;
         }
 
         return ResData.of("S-200",
-               "성공",
+               "내 정보 조회 성공",
                 LoginUserResponse.builder()
                         .userId(user.getId())
                         .email(user.getEmail())
-                        .userName(user.getUsername())
+                        .userName(user.getUserAsset())
                         .userType(user.getUserType())
                         .build()
         );

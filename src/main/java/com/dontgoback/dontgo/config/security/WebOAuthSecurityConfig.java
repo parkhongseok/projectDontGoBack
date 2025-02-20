@@ -43,7 +43,6 @@ public class WebOAuthSecurityConfig {
         return (web) -> web.ignoring()
                 .requestMatchers(toH2Console())
                 .requestMatchers("/img/**", "/css/**", "/js/**");
-
     }
 
     @Bean
@@ -69,7 +68,6 @@ public class WebOAuthSecurityConfig {
         http.exceptionHandling(ex -> ex
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
         );
-
 
         // OAuth 로그인 설정
         http.oauth2Login(oauth2 -> oauth2

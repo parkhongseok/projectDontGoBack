@@ -29,6 +29,9 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
     // 서비스 서버 -> 서비스 DB
     // 유저가 있다면 업데이트, 없으면 유저 생성
+    // 위에서 오버라이드한 DefaultOAuth2UserService의 로드 유저를 통해, 아래 메서드의 파라미터로 들어올 유저 객체를 불러옴
+    // 필요 시 구글에서 가져온 데이터를 사용하여 사진 등을 활용할 수도 있을듯?
+    // getAttributes에서 뭔가 더 꺼내는 방식으로 말이지
     private User saveOrUpdate(OAuth2User oAuth2User) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
@@ -38,7 +41,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
                 .orElse(User.builder()
                         .email(email)
                         .nickname(name)
-                        .userName("ME")
+                        .userAsset("ME : 930,000원")
                         .userType(RedBlueType.BLUE)
                         .build());
         return userRepository.save(user);

@@ -1,8 +1,8 @@
-import "../globals.css";
-import styles from "./Feed.module.css"
+import "../../globals.css";
+import styles from "./../Feed.module.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Dropdown, Stack} from 'react-bootstrap';
-import * as Types  from '../utils/types';
+import * as Types  from '../../utils/types';
 
 type CommentProps = {
   comment: Types.Comment;

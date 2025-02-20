@@ -1,4 +1,4 @@
-//package com.dontgoback.dontgo.global.security;
+//package com.dontgoback.dontgo.config.security;
 //
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.context.annotation.Bean;
@@ -15,7 +15,7 @@
 //@EnableWebSecurity
 //@RequiredArgsConstructor
 //public class ApiSecurityConfig {
-//    private final JwtAuthorizationFilter jwtAuthorizationFilter;
+//    private final com.dontgoback.dontgo.global.security.JwtAuthorizationFilter jwtAuthorizationFilter;
 //    @Bean
 //    public SecurityFilterChain apiFilterChain(HttpSecurity http)  throws Exception {
 //        http

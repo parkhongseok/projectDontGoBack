@@ -13,7 +13,7 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
             "f.id AS feedId, " +
             "u.id AS userId, " +
             "f.content AS content, " +
-            "u.userName AS userName, " +
+            "u.userAsset AS userName, " +
             "f.feedType AS feedType, " +
             "(SELECT COUNT(l) FROM FeedLike l WHERE l.feed = f) AS likeCount, " +
             "(SELECT COUNT(c) FROM Comment c WHERE c.feed = f) AS commentCount, " +
@@ -28,7 +28,7 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
             "f.id AS feedId, " +
             "u.id AS userId, " +
             "f.content AS content, " +
-            "u.userName AS userName, " +
+            "u.userAsset AS userName, " +
             "f.feedType AS feedType, " +
             "(SELECT COUNT(l) FROM FeedLike l WHERE l.feed = f) AS likeCount, " +
             "(SELECT COUNT(c) FROM Comment c WHERE c.feed = f) AS commentCount, " +

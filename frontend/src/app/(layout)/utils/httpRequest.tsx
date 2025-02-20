@@ -12,10 +12,13 @@ export function getCookie(name: string) {
         body: any,
         success: (result: any) => void,
         fail: () => void,
-        accessToken?: string | null 
+        // accessToken?: string | null ,
+        // loginFail?: ()=> void 
     ) {        
-        accessToken = accessToken || localStorage.getItem('access_token');
-    
+        // accessToken = accessToken || localStorage.getItem('access_token');
+        // loginFail = loginFail || fail;
+        let accessToken = localStorage.getItem('access_token');
+
         fetch(url, {
             method,
             credentials: 'include',
@@ -65,7 +68,7 @@ export function getCookie(name: string) {
                     console.log("🔑 새 액세스 토큰 발급 완료");
                     localStorage.setItem('access_token', result.accessToken);
                     // 새 토큰으로 요청 재시도
-                    httpRequest(method, url, body, success, fail, result.accessToken);
+                    httpRequest(method, url, body, success, fail);
                 })
                 .catch(err => {
                     console.error("🔴 토큰 갱신 실패:", err);

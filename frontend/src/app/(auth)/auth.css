@@ -1,7 +1,8 @@
 @import "../(layout)/globals.css";
 
 .login-box{
-  width: 60vw;
+  width: 50vw;
+  min-width: 500px;
   min-height: 60vh;
   /* overflow-y: hidden; */
   margin: auto;
@@ -12,5 +13,20 @@
 }
 
 .login-btn{
+  margin: auto;
+}
+
+.empty{
+  height: 100px;
+}
+.title{
+  font-size: 50px;
+}
+
+.image{
+  display: block;
+  width: 40%;
+  min-width: 173px;
+  height: auto;
   margin: auto;
 }

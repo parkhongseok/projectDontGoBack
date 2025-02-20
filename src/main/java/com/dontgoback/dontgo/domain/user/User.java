@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
+//@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -25,10 +25,10 @@ public class User extends BaseEntity implements UserDetails {
 //    @OneToMany(mappedBy = "user")
 //    private List<Feed> feeds;
 
-    @Column(nullable = true)
-    private String userName;
+    @Column(name = "user_asset", nullable = true)
+    private String userAsset;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Transient // 데이터베이스에 저장되지 않음
@@ -57,7 +57,7 @@ public class User extends BaseEntity implements UserDetails {
     // 사용자 id(고유한 값) 반환
     @Override
     public String getUsername(){
-        return userName;
+        return email;
     }
 
     // 비밀번호 반환

@@ -34,7 +34,7 @@ public class FeedService {
        // 위 부분을 try catch로 감싸서, 각각의 비어있는 필드에 대한 에러 반환도 가능
        return ResData.of(
                "S-3",
-               "게시물이 생성되었습니다.",
+               "게시물이 생성 성공",
                CreateFeedResponse.builder().
                        feedId(feed.getId())
                        .feedType(feed.getFeedType())
@@ -75,7 +75,7 @@ public class FeedService {
        feedRepository.deleteById(id);
         return ResData.of(
                 "S-4",
-                "%d번 게시글이 수정되었습니다.".formatted(id),
+                "%d번 게시글이 삭제되었습니다.".formatted(id),
                 null
         );
     }
