@@ -36,13 +36,13 @@ public class ApiV1FeedController {
                         ))
                 .orElseGet(()->
                         ResData.of(
-                            "S-400",
+                            "F-400",
                             "피드 조회 실패",
                             null
                 ));
     }
 
-    // Create
+    // 생성
     @PostMapping("")
     public ResData<CreateFeedResponse> createFeed(@RequestBody CreateFeedRequest feedRequest, Principal principal) {
         User user = userService.findByEmail(principal.getName());
@@ -56,51 +56,16 @@ public class ApiV1FeedController {
         );
     }
 
-
+    // 수정
     @PatchMapping("/{id}")
-    public ResData<Object> update(@RequestBody UpdateFeedRequest updateFeedRequest, @PathVariable("id") Long id){
-        Optional<Feed> optionalFeed = this.feedService.findById(id);
-
-        // 게시물 존재 여부 확인
-        if (optionalFeed.isEmpty()) return ResData.of(
-                "F-1",
-                "%d번 게시물은 존재하지 않습니다.".formatted(id),
-                null
-        );
-
-        // 회원 권한 체크
-        ResData<UpdateFeedResponse> resData = this.feedService.updateFeed(optionalFeed.get(), updateFeedRequest);
-
-        return ResData.of(
-                resData.getResultCode(),
-                resData.getMessage(),
-                resData
-        );
+    public ResData<UpdateFeedResponse> update(@RequestBody UpdateFeedRequest updateFeedRequest, @PathVariable("id") Long id){
+        return feedService.updateFeed(id, updateFeedRequest);
     }
 
-
+    // 삭제
     @DeleteMapping("/{id}")
     public ResData<DeleteFeedResponse> remove (@PathVariable("id") Long id) {
-        // 바로 삭제 or 찾고 삭제 중에 하나 선택
-        Optional<Feed> optionalFeed = feedService.findById(id);
-
-        if (optionalFeed.isEmpty()) return ResData.of(
-                "F-1",
-                "%d번 게시물은 존재하지 않습니다.".formatted(id),
-                null
-        );
-
-        ResData<Feed> resData = feedService.deleteById(id);
-        return ResData.of(
-                resData.getResultCode(),
-                resData.getMessage(),
-                DeleteFeedResponse.builder()
-                                .feedId(optionalFeed.get().getId())
-                                .content(optionalFeed.get().getContent())
-                                .feedType(optionalFeed.get().getFeedType())
-                                .build()
-        );
+        return feedService.deleteById(id);
     }
-
 
 }

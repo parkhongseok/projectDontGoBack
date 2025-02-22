@@ -64,7 +64,6 @@ public class TokenApiControllerTest {
 //        userRepository.deleteAll();
     }
 
-
     @DisplayName("createNewAccessToken(): 리프레시 토큰으로 새로운 액세스 토큰 발급")
     @Test
     void createNewAccessToken() throws Exception {

@@ -19,7 +19,7 @@ public class TokenService {
     public String createNewAccessToken(String refreshToken){
         // 토큰 유효성 검사에 실패하면 예외 발생
         if (!tokenProvider.validToken(refreshToken)){
-            throw new IllegalArgumentException("Unexpect token");
+            throw new IllegalArgumentException("Unexpect refreshToken token");
         }
 
         Long userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();

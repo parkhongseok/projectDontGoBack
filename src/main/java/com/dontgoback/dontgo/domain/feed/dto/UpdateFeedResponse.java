@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateFeedResponse {
-    private  Long feedId;
+    private Long feedId;
     private String content;
     private RedBlueType feedType;
 }

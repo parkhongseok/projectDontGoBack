@@ -23,11 +23,11 @@ export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
   const [refreshMainFeeds, setRefreshMainFeeds] = useState(true);
 
   // feedContext가 변경될 때마다 로컬스토리지 저장
-  useEffect(() => {
-    if (feedContext) {
-      localStorage.setItem("feedContext", JSON.stringify(feedContext));
-    }
-  }, [feedContext]);
+  // useEffect(() => {
+  //   if (feedContext) {
+  //     localStorage.setItem("feedContext", JSON.stringify(feedContext));
+  //   }
+  // }, [feedContext]);
 
  // feedContext 업데이트 함수 수정
   const updateFeedContext = (newFeed: Types.Feed) => {
@@ -39,13 +39,13 @@ export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
   };
   
   // 로컬스토리지에서 데이터 복구
-  useEffect(() => {
-    const savedFeed = localStorage.getItem("feedContext");
-    if (savedFeed) {
-      updateFeedContext(JSON.parse(savedFeed));
-    }
-    // setIsLoaded(true); // 복구 완료
-  }, []);
+  // useEffect(() => {
+  //   const savedFeed = localStorage.getItem("feedContext");
+  //   if (savedFeed) {
+  //     updateFeedContext(JSON.parse(savedFeed));
+  //   }
+  //   // setIsLoaded(true); // 복구 완료
+  // }, []);
 
   return (
     <FeedContext.Provider value={

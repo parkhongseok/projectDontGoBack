@@ -48,7 +48,6 @@ public class TokenProvider {
             Jwts.parser()
                     .setSigningKey(jwtProperties.getSecretKey()) // 비밀값으로 복호화
                     .parseClaimsJws(token);
-
             return true;
         } catch (Exception e) { // 복호화 시 에러 나면 유효하지 않은 토큰
             return false;

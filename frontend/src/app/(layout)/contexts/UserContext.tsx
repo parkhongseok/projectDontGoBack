@@ -21,9 +21,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             setUserContext(result.data);
         };
         const fail = () => {    
-            localStorage.setItem("access_token", "");
-            console.log("문제발생")
-            window.location.href = "/login";
+            // localStorage.setItem("access_token", "");
+            // console.log("문제발생")
+            // window.location.href = "/login";
         };
         httpRequest("GET", url, body, success, fail);
     }

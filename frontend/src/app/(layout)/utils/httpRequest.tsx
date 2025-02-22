@@ -37,46 +37,47 @@ export function getCookie(name: string) {
                 return;
             }
     
-            // 응답 본문이 있는 경우, JSON을 먼저 파싱
-            let errorData = null;
-            try {
-                errorData = await response.json();
-            } catch (err) {
-                console.error('⚠️ JSON 파싱 실패:', err);
-            }
+            // // 응답 본문이 있는 경우, JSON을 먼저 파싱
+            // let errorData = null;
+            // try {
+            //     errorData = await response.json();
+            // } catch (err) {
+            //     console.error('⚠️ JSON 파싱 실패:', err);
+            // }
     
-            // 401 (Unauthorized) 이면서 refresh_token이 있을 경우, 토큰 갱신 시도
-            const refreshToken = getCookie('refresh_token');
-            if (response.status === 401 && refreshToken) {
-                console.log("🔄 액세스 토큰 만료, 리프레시 토큰으로 재발급 시도");
-    
-                fetch('/api/token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ refreshToken }),
-                })
-                .then(async res => {
-                    if (!res.ok) {
-                        console.error("❌ Refresh token request failed:", await res.json());
-                        throw new Error("Refresh token request failed");
-                    }
-                    return res.json();
-                })
-                .then(result => {
-                    console.log("🔑 새 액세스 토큰 발급 완료");
-                    localStorage.setItem('access_token', result.accessToken);
-                    // 새 토큰으로 요청 재시도
-                    httpRequest(method, url, body, success, fail);
-                })
-                .catch(err => {
-                    console.error("🔴 토큰 갱신 실패:", err);
-                    fail();
-                });
+        // 401 (Unauthorized) 이면서 refresh_token이 있을 경우, 토큰 갱신 시도
+        const refreshToken = getCookie('refresh_token');
+        if (response.status === 401 && refreshToken) {
+            console.log("🔄 액세스 토큰 만료, 리프레시 토큰으로 재발급 시도");
+
+            fetch('http://localhost:8090/api/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refreshToken }),
+            })
+            .then(async res => {
+                if (!res.ok) {
+                    console.error("❌ Refresh token request failed:", await res.json());
+                    throw new Error("Refresh token request failed");
+                }
+                return res.json();
+            })
+            .then(result => {
+                console.log("🔑 새 액세스 토큰 발급 완료");
+                localStorage.setItem('access_token', result.accessToken);
+                // 새 토큰으로 요청 재시도
+                httpRequest(method, url, body, success, fail);
+            })
+            .catch(err => {
+                console.error("🔴 토큰 갱신 실패:", err);
+                fail();
+            });
     
             } else {
-                console.error(`❌ 요청 실패: ${response.status}`, errorData);
+                console.error(`❌ 요청 실패: ${response.status}`);
+                // console.error(`❌ 요청 실패: ${response.status}`, errorData);
                 fail();
             }
         })

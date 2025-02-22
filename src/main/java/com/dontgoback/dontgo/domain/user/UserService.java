@@ -29,6 +29,9 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("unexpected user"));
     }
 
+
+
+
     public User createDummyUser(String userAsset, String email, RedBlueType type) {
         User user = User.builder()
                 .userAsset(userAsset)
