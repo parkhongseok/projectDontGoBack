@@ -18,7 +18,9 @@ export default function FeedDetile() {
   const { feedContext, updateFeedContext } = useFeed();
   const { updateUserContext } = useUser();
   const { id } = useParams<{ id: string }>();
-  const [comments] = useState<Types.Comment[]>(Dummys.Comments);
+  const [comments, setComments] = useState<Types.Comment[]>(Dummys.Comments);
+  
+
 
   useEffect(()=>{
     updateUserContext();
@@ -49,25 +51,37 @@ export default function FeedDetile() {
         }
       }
     }
-    const fetchFeed = () => {
-      const method = "GET";
-      const url = `http://localhost:8090/api/v1/feeds/${id}`;
-      const body = null;
-      const success = (result : any) => { 
-        if (result.data){
-          updateFeedContext(result.data);
-        }
-        else{
-          alert("존재하지 않는 게시물입니다")
-          window.location.href = "/";}
-      };
-      const fail = () => {   console.error("서버 에러")   }
-      httpRequest(method, url, body, success, fail);
-      }
     // 로컬 스토리지가 비어있거나, 컨텍스트가 비어있거나, 혹은 현재 게시물과 id가 다른 url인 경우
     if (!isSaved){
+      const fetchFeed = () => {
+        const method = "GET";
+        const url = `http://localhost:8090/api/v1/feeds/${id}`;
+        const body = null;
+        const success = (result : any) => { 
+          if (result.data){
+            updateFeedContext(result.data);
+          }
+          else{
+            alert("존재하지 않는 게시물입니다")
+            window.location.href = "/";}
+        };
+        const fail = () => {   console.error(`${id}번 게시물 조회 실패`)   }
+        httpRequest(method, url, body, success, fail);
+      }
       fetchFeed()
     }
+
+    const fetchComments = () => {
+      const method = "GET";
+      const url = `http://localhost:8090/api/v1/comments/${id}`;
+      const body = null;
+      const success = (result : any) => {        
+        console.log(result)
+        setComments(result.data.comments)      }
+      const fail = () => {        console.error(`${id}번 게시물의 댓글 조회 실패`)      }
+      httpRequest(method, url, body, success, fail);
+    }
+    fetchComments();
   }, []);
 
 

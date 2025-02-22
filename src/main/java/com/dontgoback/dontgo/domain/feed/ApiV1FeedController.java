@@ -6,9 +6,8 @@ import com.dontgoback.dontgo.domain.user.UserService;
 import com.dontgoback.dontgo.global.resData.ResData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
-import java.util.Optional;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -48,6 +47,7 @@ public class ApiV1FeedController {
         User user = userService.findByEmail(principal.getName());
         ResData<CreateFeedResponse> resData = this.feedService.createFeed(user, feedRequest);
         if (resData.isSuccess()) return resData;
+//        if (resData.isSuccess()) return ResponseEntity.status(HttpStatus.CREATED).body(resData);
 
         return ResData.of(
                 resData.getResultCode(),

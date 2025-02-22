@@ -23,7 +23,6 @@ export default function DeleteBox( { FeedId, setShowDeleteBox } : propsType){
 
   const handleSubmit = async () => {
 
-
     const method = "DELETE";
     const url = `http://localhost:8090/api/v1/feeds/${FeedId}`;
     const body = null;
@@ -35,7 +34,7 @@ export default function DeleteBox( { FeedId, setShowDeleteBox } : propsType){
       }
       
     }
-    const fail = () => {   alert("서버 오류가 발생했습니다.")    }
+    const fail = () => {   alert("게시물을 삭제할 수 없습니다.")    }
     httpRequest(method, url, body, success, fail)
   }
 

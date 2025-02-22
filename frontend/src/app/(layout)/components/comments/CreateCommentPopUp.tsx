@@ -56,7 +56,7 @@ export default function CreateBox({ setShowWriteBox } : propsType){
     };
 
     const method = "POST";
-    const url = "http://localhost:8090/api/v1/feeds";
+    const url = "http://localhost:8090/api/v1/commens";
     const body = feedRequest;
     
     const success = (result : any) => { 
@@ -66,7 +66,6 @@ export default function CreateBox({ setShowWriteBox } : propsType){
       // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
       if (pathname === "/")
         setRefreshMainFeeds(!refreshMainFeeds)    
-      
     };
     const fail = () => {    alert("서버 오류가 발생했습니다.")    };
 

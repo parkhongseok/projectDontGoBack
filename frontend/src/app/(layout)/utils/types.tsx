@@ -27,7 +27,8 @@ export type Comment = {
   userName: string;
   commentType: string;
   likeCount: number;
-  commentCount: number;
+  subCommentCount: number;
   createdAt: string;
   updatedAt?: string;
+  deletedAt?: string;
 };

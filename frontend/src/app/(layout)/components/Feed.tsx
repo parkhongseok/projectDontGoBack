@@ -76,6 +76,7 @@ export default function Feed({ feed } : FeedProps){
 {
   (feed.userId == userContext.userId) ?
     <>
+      <Dropdown.Item >보관하기</Dropdown.Item>
       <Dropdown.Item onClick={()=>{openEditBox(); handleFeedClick();}}>수정하기</Dropdown.Item>
       <Dropdown.Item onClick={openDeleteBox}>삭제하기</Dropdown.Item>
     </>  : 

@@ -45,13 +45,14 @@ public class FeedService {
     }
 
     @Transactional
-    public void createDummyFeed(User user, String content) {
+    public Feed createDummyFeed(User user, String content) {
         Feed feed = Feed.builder()
                 .user(user)
                 .content(content)
                 .feedType(user.getUserType())
                 .build();
         this.feedRepository.save(feed);
+        return feed;
     }
 
     public Optional<Feed> findById(Long id){

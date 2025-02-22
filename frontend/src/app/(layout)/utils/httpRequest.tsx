@@ -37,13 +37,20 @@ export function getCookie(name: string) {
                 return;
             }
     
-            // // 응답 본문이 있는 경우, JSON을 먼저 파싱
-            // let errorData = null;
-            // try {
-            //     errorData = await response.json();
-            // } catch (err) {
-            //     console.error('⚠️ JSON 파싱 실패:', err);
-            // }
+            // 응답 본문이 있는 경우, JSON을 먼저 파싱
+            let errorData = null;
+            // JSON 타입의 응답인지 확인 
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                try {
+                    errorData = await response.json();
+                } catch (err) {
+                    console.error('⚠️ JSON 파싱 실패:', err);
+                }
+            } else {
+                // JSON이 아닌 응답(text/plain, 204 No Content)에서 json() 호출 막음
+                console.warn('⚠️ JSON이 아닌 응답:', await response.text());
+            }
     
         // 401 (Unauthorized) 이면서 refresh_token이 있을 경우, 토큰 갱신 시도
         const refreshToken = getCookie('refresh_token');
@@ -60,6 +67,7 @@ export function getCookie(name: string) {
             .then(async res => {
                 if (!res.ok) {
                     console.error("❌ Refresh token request failed:", await res.json());
+                    
                     throw new Error("Refresh token request failed");
                 }
                 return res.json();
@@ -75,10 +83,15 @@ export function getCookie(name: string) {
                 fail();
             });
     
-            } else {
-                console.error(`❌ 요청 실패: ${response.status}`);
-                // console.error(`❌ 요청 실패: ${response.status}`, errorData);
+            } else if (!refreshToken){
+                // 토큰이 없는 경우
+                window.location.href = "/login"
+                alert("❌ refreshToken 없음")
+                // console.error(`❌ refreshToken 없음 : ${response.status}`, errorData);
+            } else{
+                // 응답 결과가 다른 경우 500 등 
                 fail();
+                console.error(`❌ 요청 실패: ${response.status}`, errorData);
             }
         })
         .catch(err => {

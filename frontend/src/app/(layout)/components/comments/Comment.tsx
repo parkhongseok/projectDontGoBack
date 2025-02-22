@@ -8,7 +8,7 @@ type CommentProps = {
   comment: Types.Comment;
 };
 
-export default function Feed({ comment } : CommentProps){
+export default function Comment({ comment } : CommentProps){
 
   const feedTypeClass = styles[comment.commentType] || "";
 
@@ -54,7 +54,7 @@ export default function Feed({ comment } : CommentProps){
         <div className="vr" />
         <div className="">
           <p className={styles.comment}>
-            댓글 {comment.commentCount}개
+            댓글 {comment.subCommentCount}개
           </p>
         </div>
       </Stack>

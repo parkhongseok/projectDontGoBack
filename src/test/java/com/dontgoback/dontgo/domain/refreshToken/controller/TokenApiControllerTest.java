@@ -1,4 +1,4 @@
-package com.dontgoback.dontgo.controller;
+package com.dontgoback.dontgo.domain.refreshToken.controller;
 
 
 import com.dontgoback.dontgo.config.jwt.JwtProperties;
