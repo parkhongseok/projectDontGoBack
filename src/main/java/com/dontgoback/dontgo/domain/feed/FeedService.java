@@ -15,9 +15,10 @@ public class FeedService {
     private final FeedRepository feedRepository;
 
     // 다건 조회
-    public FeedsResponse getFeedsResponse(){
-        return new FeedsResponse(feedRepository.findFeedsResponse());
+    public FeedsResponse getFeedsResponse(Long lastFeedId, int size){
+        return new FeedsResponse(feedRepository.findFeedsResponse(lastFeedId, size));
     }
+
     // 단건 조회
     public Optional<FeedResponse> getFeedResponse(long id) {
         return feedRepository.findFeedResponseById(id);
@@ -34,12 +35,15 @@ public class FeedService {
        this.feedRepository.save(feed);
        // 위 부분을 try catch로 감싸서, 각각의 비어있는 필드에 대한 에러 반환도 가능
        return ResData.of(
-               "S-3",
+               "S-200",
                "게시물이 생성되었습니다.",
                CreateFeedResponse.builder().
                        feedId(feed.getId())
-                       .feedType(feed.getFeedType())
+                       .userId(user.getId())
                        .content(feed.getContent())
+                       .userName(user.getUserAsset())
+                       .feedType(feed.getFeedType())
+                       .createdAt(feed.getCreatedAt())
                        .build()
        );
     }
@@ -93,8 +97,11 @@ public class FeedService {
             authorizeFeedUser(feed);
             DeleteFeedResponse deleteFeedResponse = DeleteFeedResponse.builder()
                     .feedId(feed.getId())
+                    .userId(0L)
+                    .userName("deleted")
                     .feedType(feed.getFeedType())
                     .content(feed.getContent())
+                    .createdAt(feed.getCreatedAt())
                     .build();
             feedRepository.delete(feed);
             return ResData.of(

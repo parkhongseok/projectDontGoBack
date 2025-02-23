@@ -56,14 +56,19 @@ public class TokenProvider {
 
     // 인증 정보를 가져오는 메서드
     // Authentication 인터페이스 타입의 객체 반환
+    // 유저가 로그인 요청 -> 헤더에서 토큰 get -> [인증] -> 이 함수 파라미터로 전달 -> principal 유저등을 필드로 갖는 객체 반환
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
         // UsernamePasswordAuthenticationToken은 두 객체( principal, credentials ) 와 다른 List를 파라미터로 받음.
         // getPrincipal()메서드는 입력받은 유저 정보를 반환,
         // getCredentials() 메서드는 토큰 반환,
-        return new UsernamePasswordAuthenticationToken(new org.springframework.security.core.userdetails.User(claims.getSubject
-                (), "", authorities), token, authorities);
+        return new UsernamePasswordAuthenticationToken( //인증 유저, 등을 필드로 갖는 객체
+                new org.springframework.security.core.userdetails.User(
+                        claims.getSubject(), "", authorities),
+                token,
+                authorities
+        );
     }
 
     public Long getUserId(String token) {

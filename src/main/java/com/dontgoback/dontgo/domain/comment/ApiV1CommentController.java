@@ -15,7 +15,7 @@ public class ApiV1CommentController {
     public ResData<CommentsResponse> getComments(@PathVariable("feedId") Long feedId){
         CommentsResponse commentsResponse = commentService.getCommentsResponse(feedId);
         return ResData.of("S-200",
-                "조회 성공",
+                "댓글 조회 성공 [fID : %d]".formatted(feedId),
                 commentsResponse);
     }
 

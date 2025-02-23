@@ -1,19 +1,41 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 
 /* 모든 속성 초기화 */
-* {margin: 0; padding: 0; box-sizing: border-box;}
-a {text-decoration: none; color: inherit;}
-ul {list-style: none;}
-h1,h2,h3,h4,h5,h6,p {margin: 0;}
-body {
-    font-family: Arial, "맑은 고딕", sans-serif; 
-    line-height: 1;
-    min-height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-img {border: none;}
-button {background: none; border: none;}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+ul {
+  list-style: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+body {
+  font-family: Arial, "맑은 고딕", sans-serif;
+  line-height: 1;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+img {
+  border: none;
+}
+button {
+  background: none;
+  border: none;
+}
 
 .init {
   margin: 0;
@@ -22,63 +44,63 @@ button {background: none; border: none;}
 :root {
   --white: #f2eeee;
   --black: #000;
-  --gray1: #D8D8D8;
-  --gray2: #A6A6A6;
-  --gray3: #615D5D;
+  --gray1: #d8d8d8;
+  --gray2: #a6a6a6;
+  --gray3: #615d5d;
   --gray4: #313131;
 
-  --text-color-red: #BB4040;
-  --text-color-red-light: #C87474;
-  --text-color-blue: #4958B8;
-  --text-color-blue-light: #8696F9;
+  --text-color-red: #bb4040;
+  --text-color-red-light: #c87474;
+  --text-color-blue: #4958b8;
+  --text-color-blue-light: #8696f9;
 
   --sidebar-width: 4.5vw;
   --sidebar-min-width: 50px;
   --sidebar-item-width: 2.5vw;
   --sidebar-item-min-width: 30px;
-  --post-width : 60vw;
+  --feed-width: 60vw;
+  --feed-min-width: 500px;
 }
 
-
-.fontWhite{
+.fontWhite {
   color: var(--white);
 }
-.fontBlack{
+.fontBlack {
   color: var(----black);
 }
-.fontGray1{
+.fontGray1 {
   color: var(--gray1);
 }
-.fontGray2{
+.fontGray2 {
   color: var(--gray2);
 }
-.fontGray3{
+.fontGray3 {
   color: var(--gray3);
 }
-.fontGray4{
+.fontGray4 {
   color: var(--gray4);
 }
-.fontBlue{
+.fontBlue {
   color: var(--text-color-blue);
 }
-.fontBlueLight{
+.fontBlueLight {
   color: var(--text-color-blue-light);
 }
-.fontRed{
+.fontRed {
   color: var(--text-color-red);
 }
-.fontRedLight{
+.fontRedLight {
   color: var(--text-color-red-light);
 }
 
-.marginAuto{
-  margin : auto;
+.marginAuto {
+  margin: auto;
 }
-.textCener{
+.textCener {
   text-align: center;
 }
-.cursorPointer{
-  cursor: pointer; 
+.cursorPointer {
+  cursor: pointer;
 }
 
 /* layout */
@@ -86,32 +108,30 @@ body {
   background-color: var(--gray1);
   /* color: var(--text-color); */
   font-family: Arial, sans-serif;
-
 }
-.main-layout{
+.main-layout {
   display: flex;
   flex-direction: row;
 }
-.loading{
+.loading {
   min-height: 80px;
 }
 /* page */
-.sidebar-space{
+.sidebar-space {
   width: var(--sidebar-width);
-  min-width:var(--sidebar-item-min-width);
+  min-width: var(--sidebar-item-min-width);
 }
 
-.main-space{
-display: flex;
-flex-direction: column;
-/* width: var(--post-width); */
-margin: auto;
-
+.main-space {
+  display: flex;
+  flex-direction: column;
+  /* width: var(--post-width); */
+  margin: auto;
 }
 
-.feeds-top-manu{
+.feeds-top-manu {
   position: fixed;
-  float:left;
+  float: left;
   /* margin: auto;
   text-align: center; */
   top: 0;
@@ -120,9 +140,9 @@ margin: auto;
   height: 100px;
 }
 
-.feeds-container{
-  width: 60vw;
-  min-width: 500px;
+.feeds-container {
+  width: var(--feed-width);
+  min-width: var(--feed-min-width);
   min-height: 100vh;
   /* overflow-y: hidden; */
   margin: auto;
@@ -130,19 +150,20 @@ margin: auto;
   border-radius: 15px 15px 0 0;
 }
 
-  .feed-underline{
-    margin-top: 30px;
-  }
+.feed-underline {
+  margin-top: 30px;
+}
 
-  .feed-detail-container{
-    width: 60vw;
-    min-height: 60vh;
-    /* overflow-y: hidden; */
-    margin: auto;
-    background-color: var(--gray2);
-    border-radius: 15px;
-  }
+.feed-detail-container {
+  width: var(--feed-width);
+  min-width: var(--feed-min-width);
+  min-height: 60vh;
+  /* overflow-y: hidden; */
+  margin: auto;
+  background-color: var(--gray2);
+  border-radius: 15px;
+}
 
-  .cusorDefault{
-    cursor: text;
-  }
+.cusorDefault {
+  cursor: text;
+}

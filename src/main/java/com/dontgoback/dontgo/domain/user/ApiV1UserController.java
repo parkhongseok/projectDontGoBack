@@ -43,7 +43,7 @@ public class ApiV1UserController {
         }
 
         return ResData.of("S-200",
-               "내 정보 조회 성공",
+               "내 정보 조회 성공 [uID : %d]".formatted(user.getId()),
                 LoginUserResponse.builder()
                         .userId(user.getId())
                         .email(user.getEmail())
@@ -56,7 +56,7 @@ public class ApiV1UserController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-        return "redirect:/login";
+        return "redirect:ㅊ/login";
     }
 
 }

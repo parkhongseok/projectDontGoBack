@@ -26,7 +26,7 @@ public class NotProduction {
         User user1 = userService.createDummyUser("BackDummy1", "user1@email.com", RedBlueType.BLUE);
         User user2 = userService.createDummyUser("BackDummy2", "user2@email.com", RedBlueType.RED);
 
-        List<Integer> nums = IntStream.range(1, 11)
+        List<Integer> nums = IntStream.range(1, 50)
                                             .boxed()
                                             .toList();
         List<Feed> feeds = new ArrayList<>();
@@ -40,7 +40,7 @@ public class NotProduction {
         return (args) -> {
             for (Feed feed : feeds) {
                 // 각 피드에 댓글을 추가 (예시: 1번 피드에 댓글 3개 추가)
-                commentService.createDummyComment(feed, user1, "Server : 자동 생성 댓글 for Feed ID: " + feed.getId());
+                commentService.createDummyComment(feed, user1, "Server : 자동 생 성 댓글 for Feed ID: " + feed.getId());
                 commentService.createDummyComment(feed, user2, "Server : 자동 생성 댓글 for Feed ID: " + feed.getId());
             }
         };

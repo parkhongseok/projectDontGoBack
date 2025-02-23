@@ -106,7 +106,10 @@ public class FeedControllerTest {
         // 현재 ResData 대신 그냥 스프링 제공 ResponseEntity 사용할 지 고민 -> 어차피 반환 코드도 좀 애매하고
         result.andExpect(status().isCreated());
 
-        FeedsResponse feedsResponse = new FeedsResponse(feedRepository.findFeedsResponse());
+
+        FeedsResponse feedsResponse = new FeedsResponse(
+                feedRepository.findFeedsResponse(1L, 10)
+        );
 
         assertThat(feedsResponse.size()).isEqualTo(1);
         assertThat(feedsResponse.getFeeds().get(0).getContent()).isEqualTo(content);

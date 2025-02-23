@@ -1,43 +1,46 @@
-import React, { createContext, useContext, useEffect, useState} from 'react';
-import * as Types from "../utils/types"
+import React, { createContext, useContext, useEffect, useState } from "react";
+import * as Types from "../utils/types";
 
 // FeedContext와 제공할 값 정의
 interface FeedContextType {
-  feedContext: Types.Feed | null; 
+  feedContext: Types.Feed | null;
   setFeedContext: (feed: Types.Feed) => void;
   updateFeedContext: (updatedFeed: Types.Feed) => void;
   refreshMainFeeds: boolean;
-  setRefreshMainFeeds : (refrashFeed : boolean) => void;
-} 
+  setRefreshMainFeeds: (refrashFeed: boolean) => void;
+  crudMyFeed: { C: boolean; R: boolean; U: boolean; D: boolean };
+  setCrudMyFeed: React.Dispatch<
+    React.SetStateAction<{ C: boolean; R: boolean; U: boolean; D: boolean }>
+  >;
+}
 
 // FeedContext 생성
-const FeedContext = createContext< FeedContextType | undefined >(undefined);
+const FeedContext = createContext<FeedContextType | undefined>(undefined);
 
 // FeedProvider 컴포넌트로 상태 관리 제공
 export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
-  const [feedContext, setFeedContext] = useState<Types.Feed| null>(null);
-  // const [isLoaded, setIsLoaded] = useState(false); // 로컬스토리지에서 복구 완료 여부
+  const [feedContext, setFeedContext] = useState<Types.Feed | null>(null);
 
   // 전역으로 사용할 의존성 리스트 변경 인자
-  // 단순 불리언 값을, useEffect의 의존성 리스트에 넣어서, 필요한 경우에 이 값을 부정하여 변경
-  const [refreshMainFeeds, setRefreshMainFeeds] = useState(true);
+  const [refreshMainFeeds, setRefreshMainFeeds] = useState(false);
 
-  // feedContext가 변경될 때마다 로컬스토리지 저장
-  // useEffect(() => {
-  //   if (feedContext) {
-  //     localStorage.setItem("feedContext", JSON.stringify(feedContext));
-  //   }
-  // }, [feedContext]);
+  // 전역으로 사용할 의존성 리스트 변경 인자
+  const [crudMyFeed, setCrudMyFeed] = useState({
+    C: false,
+    R: false,
+    U: false,
+    D: false,
+  });
 
- // feedContext 업데이트 함수 수정
+  // feedContext 업데이트 함수 수정
   const updateFeedContext = (newFeed: Types.Feed) => {
-    setFeedContext(prevFeedContext => {
+    setFeedContext((prevFeedContext) => {
       const updatedFeedContext = { ...prevFeedContext, ...newFeed };
       localStorage.setItem("feedContext", JSON.stringify(updatedFeedContext));
       return updatedFeedContext;
     });
   };
-  
+
   // 로컬스토리지에서 데이터 복구
   // useEffect(() => {
   //   const savedFeed = localStorage.getItem("feedContext");
@@ -48,9 +51,17 @@ export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
   // }, []);
 
   return (
-    <FeedContext.Provider value={
-      { feedContext, setFeedContext, updateFeedContext, refreshMainFeeds, setRefreshMainFeeds }
-      }>
+    <FeedContext.Provider
+      value={{
+        feedContext,
+        setFeedContext,
+        updateFeedContext,
+        refreshMainFeeds,
+        setRefreshMainFeeds,
+        crudMyFeed,
+        setCrudMyFeed,
+      }}
+    >
       {children}
     </FeedContext.Provider>
   );
@@ -60,7 +71,7 @@ export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
 export const useFeed = () => {
   const context = useContext(FeedContext);
   if (!context) {
-    throw new Error('useFeeds must be used within a FeedProvider');
+    throw new Error("useFeeds must be used within a FeedProvider");
   }
   return context;
 };

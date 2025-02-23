@@ -22,7 +22,7 @@
 
 .logoImage {
   width: var(--sidebar-item-width);
-  min-width:var(--sidebar-item-min-width);
+  min-width: var(--sidebar-item-min-width);
   height: auto;
 }
 
@@ -34,22 +34,22 @@
   text-align: center;
 }
 
-.navImage{
-  width: var(--sidebar-item-width); 
-  min-width:var(--sidebar-item-min-width);
+.navImage {
+  width: var(--sidebar-item-width);
+  min-width: var(--sidebar-item-min-width);
   height: auto;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
 .settingsContainer {
-  margin-top: auto; 
-  margin-bottom: 20px; 
+  margin-top: auto;
+  margin-bottom: 20px;
   width: 100%;
   text-align: center;
 }
 
-.settingImage{
+.settingImage {
   width: var(--sidebar-item-width);
-  min-width:var(--sidebar-item-min-width);
+  min-width: var(--sidebar-item-min-width);
 }
