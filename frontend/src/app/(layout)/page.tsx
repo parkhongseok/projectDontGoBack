@@ -5,7 +5,6 @@ import { Stack } from "react-bootstrap";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CreateFeed from "./components/CreateFeed";
 import Feed from "./components/Feed";
-import Dummys from "./utils/dummyData";
 import * as Types from "./utils/types";
 import { useFeed } from "./contexts/FeedContext";
 import { httpRequest } from "./utils/httpRequest";
@@ -33,7 +32,10 @@ export default function Home() {
     const body = null;
     const success = async (result: any) => {
       if (result.data.feeds.length === 0) return;
-      await setFeeds((prevFeeds) => [...prevFeeds, ...result.data.feeds]);
+      await setFeeds((prevFeeds: Types.Feed[]) => [
+        ...prevFeeds,
+        ...result.data.feeds,
+      ]);
       await setLastFeedId(
         result.data.feeds[result.data.feeds.length - 1].feedId
       );
