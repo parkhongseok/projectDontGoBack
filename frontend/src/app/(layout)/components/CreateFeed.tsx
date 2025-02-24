@@ -4,7 +4,7 @@ import "../globals.css";
 import styles from "./Feed.module.css";
 import { Stack } from "react-bootstrap";
 import { useState } from "react";
-import CreateBox from "./CreatePopUp";
+import CreatePopUp from "./CreatePopUp";
 import { useUser } from "../contexts/UserContext";
 
 export default function CreateFeed() {
@@ -44,7 +44,7 @@ export default function CreateFeed() {
           </button>
         </div>
       </Stack>
-      {showWriteBox ? <CreateBox setShowWriteBox={setShowWriteBox} /> : null}
+      {showWriteBox ? <CreatePopUp setShowWriteBox={setShowWriteBox} /> : null}
     </>
   );
 }

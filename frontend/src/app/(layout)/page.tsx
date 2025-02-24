@@ -17,7 +17,7 @@ export default function Home() {
   const [feedLoading, setFeedLoading] = useState(false);
   const lastFeedIdRef = useRef(lastFeedId);
   useEffect(() => {
-    //클로저 방지
+    //클로저
     lastFeedIdRef.current = lastFeedId;
   }, [lastFeedId]);
   const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
@@ -91,7 +91,8 @@ export default function Home() {
     if (crudMyFeed.U) {
       // 수정 작업
       if (feedContext) updateMyFeed(feedContext);
-      console.log("수정 요청 감지: 피드 수정");
+      console.log(feedContext);
+      console.log(`[fID : ${feedContext?.feedId}] 게시물 수정 요청 감지`);
       setCrudMyFeed({ ...crudMyFeed, U: false }); // 수정 후 상태 초기화
       // 서버 요청으로 피드 수정 API 호출
     }
@@ -100,7 +101,7 @@ export default function Home() {
       // 삭제 작업
       if (feedContext) {
         deleteMyFeed(feedContext);
-        console.log(`${feedContext?.feedId} 번 게시물 삭제 요청 감지`);
+        console.log(`[fID : ${feedContext?.feedId}] 게시물 삭제 요청 감지`);
         setCrudMyFeed({ ...crudMyFeed, D: false }); // 삭제 후 상태 초기화
       }
       // 서버 요청으로 피드 삭제 API 호출
@@ -108,7 +109,7 @@ export default function Home() {
     if (crudMyFeed.C) {
       // 생성 작업
       if (feedContext) createMyFeed(feedContext);
-      console.log("생성 요청 감지: 새 피드 추가");
+      console.log(`[fID : ${feedContext?.feedId}] 게시물 생성 요청 감지`);
       setCrudMyFeed({ ...crudMyFeed, C: false }); // 생성 후 상태 초기화
       // 서버 요청으로 피드 생성 API 호출
     }

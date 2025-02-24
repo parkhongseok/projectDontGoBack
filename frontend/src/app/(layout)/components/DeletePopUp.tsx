@@ -13,7 +13,7 @@ type propsType = {
   setShowDeleteBox: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function DeleteBox({ FeedId, setShowDeleteBox }: propsType) {
+export default function DeletePopUp({ FeedId, setShowDeleteBox }: propsType) {
   const pathname = usePathname() || "";
   const { setCrudMyFeed, setFeedContext, feedContext } = useFeed();
   const router = useRouter();

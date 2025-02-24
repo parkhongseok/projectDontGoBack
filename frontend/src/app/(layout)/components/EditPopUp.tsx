@@ -12,7 +12,7 @@ type propsType = {
   setShowEditBox: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function EditBox({ setShowEditBox }: propsType) {
+export default function EditPopUp({ setShowEditBox }: propsType) {
   const pathname = usePathname() || "";
   const { feedContext, setFeedContext, setCrudMyFeed } = useFeed();
 
@@ -32,10 +32,11 @@ export default function EditBox({ setShowEditBox }: propsType) {
     });
   };
 
-  const setContentContext = (newContent: string) => {
+  const setContentContext = (newContent: string, newUpdatedAt: string) => {
     const newFeed = {
       ...feed,
       content: newContent,
+      updatedAt: newUpdatedAt,
     };
     setFeedContext(newFeed);
   };
@@ -68,7 +69,9 @@ export default function EditBox({ setShowEditBox }: propsType) {
     const url = `http://localhost:8090/api/v1/feeds/${feed.feedId}`;
     const body = updateFeedRequest;
     const success = (result: any) => {
-      setContentContext(updateFeedRequest.content);
+      console.log("EditPopUp : ", feedContext);
+      console.log("result.data : ", result.data);
+      setContentContext(result.data.content, result.data.updatedAt);
       setShowEditBox(false);
       if (pathname === "/") {
         setCrudMyFeed({ C: false, R: false, U: true, D: false });
@@ -110,7 +113,7 @@ export default function EditBox({ setShowEditBox }: propsType) {
               <p
                 className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}
               >
-                {feedContext.userName}
+                {feedContext.author}
               </p>
               <textarea
                 onInput={(e) => autoResize(e)}

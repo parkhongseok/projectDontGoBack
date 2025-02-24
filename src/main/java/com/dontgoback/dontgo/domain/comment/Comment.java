@@ -6,6 +6,7 @@ import com.dontgoback.dontgo.domain.feed.Feed;
 //import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.global.jpa.BaseEntity;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -32,6 +33,11 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAREUNT_COMMENT_ID")
     private Comment parentComment;
+
+    // 당연 지사 유저 이름이지만, 유저 이름은 매일 바뀌니까 다로 저장할 필요가 있음
+    private String author;
+    // 당연 지사 피드 타입과 동일하겠지만, 추후 다른 타입에도 댓글을 남길 수 있도록 변경을 고려
+    private RedBlueType commentType;
 
     @Column(nullable = false)
     private String content;

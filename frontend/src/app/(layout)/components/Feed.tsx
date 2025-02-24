@@ -7,9 +7,10 @@ import Link from "next/link";
 import { useFeed } from "../contexts/FeedContext";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import EditBox from "./EditPopUp";
-import DeleteBox from "./DeletePopUp";
+import EditPopUp from "./EditPopUp";
+import DeletePopUp from "./DeletePopUp";
 import { useUser } from "../contexts/UserContext";
+import { timeAgo } from "../utils/timeUtils";
 
 type FeedProps = {
   feed: Types.Feed | null; // Props의 타입 정의
@@ -17,7 +18,7 @@ type FeedProps = {
 
 export default function Feed({ feed }: FeedProps) {
   const { userContext } = useUser();
-  const { feedContext, updateFeedContext } = useFeed();
+  const { updateFeedContext } = useFeed();
   const { id } = useParams<{ id: string }>();
   const [showEditBox, setShowEditBox] = useState(false);
   const [showDeleteBox, setShowDeleteBox] = useState(false);
@@ -28,13 +29,11 @@ export default function Feed({ feed }: FeedProps) {
     setShowDeleteBox(true);
   };
 
-  if (!feed) {
-    return <div className="loading">피드 없음</div>; // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
+  if (!feed || !userContext) {
+    if (feed) console.log("[Feed.tsx] 게시물 정보 로딩 완료 : ", feed);
+    if (userContext) console.log("[Feed.tsx] 유저 정보 로딩 완료 : ", feed);
+    return <div className="loading">피드 또는 유저 로딩중</div>; // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
   }
-  if (!userContext) {
-    return <div className="loading">유저 없음</div>;
-  }
-
   // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
   const feedTypeClass = styles[feed.feedType] || "";
   const handleFeedClick = () => {
@@ -45,21 +44,21 @@ export default function Feed({ feed }: FeedProps) {
     <Stack className="px-5" gap={3}>
       {showEditBox && (
         <div>
-          <EditBox setShowEditBox={setShowEditBox} />
+          <EditPopUp setShowEditBox={setShowEditBox} />
         </div>
       )}
       {showDeleteBox && (
-        <DeleteBox FeedId={feed.feedId} setShowDeleteBox={setShowDeleteBox} />
+        <DeletePopUp FeedId={feed.feedId} setShowDeleteBox={setShowDeleteBox} />
       )}
       <Stack direction="horizontal" gap={3}>
         <div>
-          <p className={`${styles.userName} ${feedTypeClass}`}>
-            {feed.userName}
-          </p>
+          <p className={`${styles.userName} ${feedTypeClass}`}>{feed.author}</p>
         </div>
         <div className="vr" />
         <div className="">
-          <p className={styles.time}>{feed.createdAt}</p>
+          <p className={styles.time}>
+            {timeAgo(feed.createdAt, feed.updatedAt)}
+          </p>
         </div>
         <div className="ms-auto">
           <Dropdown>

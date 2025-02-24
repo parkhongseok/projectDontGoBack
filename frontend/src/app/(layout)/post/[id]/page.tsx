@@ -26,6 +26,7 @@ export default function FeedDetile() {
     if (savedFeed) {
       const myFeed: Types.Feed = JSON.parse(savedFeed);
       if (myFeed.feedId.toString() === id) {
+        console.log("[success] Get Feed in lacal sotrage ");
         updateFeedContext(myFeed);
         return true;
       }
@@ -41,6 +42,7 @@ export default function FeedDetile() {
       const body = null;
       const success = (result: any) => {
         if (result.data) {
+          console.log(result);
           updateFeedContext(result.data);
         } else {
           // window.location.href = "/";
@@ -60,7 +62,7 @@ export default function FeedDetile() {
     const url = `http://localhost:8090/api/v1/comments/${id}`;
     const body = null;
     const success = (result: any) => {
-      console.log(result);
+      // console.log(result);
       setComments(result.data.comments);
     };
     const fail = () => {
@@ -71,9 +73,7 @@ export default function FeedDetile() {
 
   const fetchUserAndFeed = async () => {
     try {
-      if (!userContext || !userContext.userId) {
-        await fetchUserContext(); // 유저가 있다면 아래 요청 수행
-      }
+      if (!userContext?.userId) await fetchUserContext();
       await Promise.all([fetchFeed(), fetchComments()]);
     } catch (error) {
       console.error("데이터 불러오기 중 오류 발생", error);

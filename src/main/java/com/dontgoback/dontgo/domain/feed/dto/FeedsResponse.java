@@ -10,7 +10,4 @@ import java.util.List;
 public class FeedsResponse {
     private final List<FeedResponse> feeds;
 
-    public int size(){
-        return this.size();
-    }
 }

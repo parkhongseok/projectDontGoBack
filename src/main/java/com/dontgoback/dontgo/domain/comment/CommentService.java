@@ -19,6 +19,8 @@ public class CommentService {
         Comment comment = Comment.builder()
                                 .feed(feed)
                                 .user(user)
+                                .author(user.getUserAsset())
+                                .commentType(user.getUserType())
                                 .content(content)
                                 .build();
         commentRepository.save(comment);

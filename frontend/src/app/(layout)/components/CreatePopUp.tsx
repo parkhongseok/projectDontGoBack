@@ -14,7 +14,7 @@ type propsType = {
   setShowWriteBox: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function CreateBox({ setShowWriteBox }: propsType) {
+export default function CreatePopUp({ setShowWriteBox }: propsType) {
   useEffect(() => {
     // 모달 열리면 body 스크롤 숨기기
     document.body.style.overflow = "hidden";

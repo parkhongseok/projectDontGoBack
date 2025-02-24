@@ -4,10 +4,15 @@ import com.dontgoback.dontgo.domain.feed.dto.*;
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.UserService;
 import com.dontgoback.dontgo.global.resData.ResData;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+
+import static org.springframework.http.ResponseEntity.status;
 
 
 @RestController
@@ -17,64 +22,67 @@ public class ApiV1FeedController {
     private final FeedService feedService;
     private final UserService userService;
 
-    // MainPage
+    // 다건 조회 : 페이징 처리된 메인 피드
     @GetMapping("")
     public ResData<FeedsResponse> getFeeds(
             @RequestParam(name = "lastFeedId", required = false, defaultValue = "0") Long lastFeedId,   // 기본값 0
             @RequestParam(name = "size", required = false, defaultValue = "10") int size  // 기본값 10
     ) {
-
-        FeedsResponse data = this.feedService.getFeedsResponse(lastFeedId, size);
+        FeedsResponse data = feedService.getFeedsResponse(lastFeedId, size);
         if (lastFeedId == 0)
             return ResData.of("S-200", "메인 피드 조회 성공", data);
-        else
-            return ResData.of("S-200", "[from %d] 피드 추가 조회 성공".formatted(lastFeedId), data);
-
+        else {
+            if (!data.getFeeds().isEmpty())
+                return ResData.of("S-200", "[fID %d ~] 메인 피드 추가 조회 성공".formatted(lastFeedId), data);
+            else
+                return ResData.of("S-200", "메인 피드 없음", data);
+        }
     }
 
+    // 단건 조회
     @GetMapping("/{id}")
     public ResData<FeedResponse> getFeed(@PathVariable("id") Long id) {
-        return this.feedService
-                .getFeedResponse(id)
-                .map(feedResponse ->
-                        ResData.of(
-                                "S-200",
-                                "[id : %d] 피드 조회 성공".formatted(id),
-                                feedResponse
-                        ))
-                .orElseGet(() ->
-                        ResData.of(
-                                "F-400",
-                                "피드 조회 실패",
-                                null
-                        ));
+        FeedResponse data = feedService.getFeedResponse(id);
+        return ResData.of(
+                "S-200",
+                "[fID : %d] 피드 조회 성공".formatted(id),
+                data
+        );
+        // 예외는 서비스에서 던짐, 예외 객체에 body 따로 없음, 필요 시 try catch 가능
     }
 
     // 생성
     @PostMapping("")
-    public ResData<CreateFeedResponse> createFeed(@RequestBody CreateFeedRequest feedRequest, Principal principal) {
-        User user = userService.findByEmail(principal.getName());
-        ResData<CreateFeedResponse> resData = this.feedService.createFeed(user, feedRequest);
-        if (resData.isSuccess()) return resData;
-//        if (resData.isSuccess()) return ResponseEntity.status(HttpStatus.CREATED).body(resData);
-
-        return ResData.of(
-                "F-500",
-                "게시물 생성 실패",
-                new CreateFeedResponse()
-        );
+    public ResponseEntity<ResData<CreateFeedResponse>> createFeed(@Valid @RequestBody CreateFeedRequest feedRequest, Principal principal) {
+        User user = userService.findByEmail(principal.getName()); // 여기서 실패 시 에러 반환
+        CreateFeedResponse data = feedService.createFeed(user, feedRequest);
+        ResData<CreateFeedResponse> resdata = ResData.of(
+                    "S-200",
+                    "[fID %d] 게시물이 생성되었습니다.".formatted(data.getFeedId()),
+                    data);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resdata);
     }
 
     // 수정
     @PatchMapping("/{id}")
-    public ResData<UpdateFeedResponse> update(@RequestBody UpdateFeedRequest updateFeedRequest, @PathVariable("id") Long id) {
-        return feedService.updateFeed(id, updateFeedRequest);
+    public ResData<UpdateFeedResponse> update(@Valid @RequestBody UpdateFeedRequest updateFeedRequest, @PathVariable("id") Long id) {
+        UpdateFeedResponse data = feedService.updateFeed(id, updateFeedRequest);
+        return ResData.of(
+                "S-feedUpdate",
+                "%d번 게시글이 수정되었습니다.".formatted(id),
+                data
+                );
     }
 
     // 삭제
     @DeleteMapping("/{id}")
     public ResData<DeleteFeedResponse> remove(@PathVariable("id") Long id) {
-        return feedService.deleteById(id);
+        DeleteFeedResponse data = feedService.deleteById(id);
+        return ResData.of(
+                "S-2",
+                "%d번 게시글이 삭제되었습니다.".formatted(id),
+                data
+        );
     }
 
 }

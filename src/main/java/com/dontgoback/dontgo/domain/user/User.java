@@ -36,6 +36,7 @@ public class User extends BaseEntity implements UserDetails {
     private String password = "";
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_type", nullable = true)
     private RedBlueType userType;
 
     // OAuth2 를 위해
@@ -48,6 +49,7 @@ public class User extends BaseEntity implements UserDetails {
         this.nickname = nickname;
         return this;
     }
+
     // 권한 반환
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){

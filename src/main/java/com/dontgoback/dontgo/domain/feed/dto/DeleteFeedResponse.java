@@ -5,20 +5,13 @@ import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Getter
+@SuperBuilder
 @AllArgsConstructor
-@Builder
-public class DeleteFeedResponse {
-    private Long feedId;
-    private Long userId = 0L;
-    private String content = "null";
-    private String userName = "null";
-    private RedBlueType feedType;
-    private int likeCount = 0;
-    private int commentCount = 0;
-    private LocalDateTime createdAt;
-    private LocalDateTime deletedAt;
+public class DeleteFeedResponse extends FeedTypeDto {
+
 }

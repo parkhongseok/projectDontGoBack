@@ -2,12 +2,12 @@ export type Feed = {
   feedId: number;
   userId: number;
   content: string;
-  userName: string;
+  author: string;
   feedType: string;
   likeCount: number;
   commentCount: number;
   createdAt: string;
-  updatedAt?: string;
+  updatedAt: string;
   deletedAt?: string;
 };
 
@@ -23,12 +23,12 @@ export type Comment = {
   commentId: number;
   feedId: number;
   userId: number;
+  author: string;
   content: string;
-  userName: string;
   commentType: string;
   likeCount: number;
   subCommentCount: number;
   createdAt: string;
-  updatedAt?: string;
+  updatedAt: string;
   deletedAt?: string;
 };

@@ -36,7 +36,6 @@ public class NotProduction {
             feeds.add(feedService.createDummyFeed(user, "Server : 자동 생성 피드%d".formatted(i)));
         }
 
-
         return (args) -> {
             for (Feed feed : feeds) {
                 // 각 피드에 댓글을 추가 (예시: 1번 피드에 댓글 3개 추가)

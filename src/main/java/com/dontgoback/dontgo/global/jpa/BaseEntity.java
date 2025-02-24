@@ -22,9 +22,11 @@ public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // DB에게 키 생성 역을 넘김
     private Long id;
+
     @CreatedDate
     private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
+    @LastModifiedDate
+    protected LocalDateTime updatedAt;
+    // Feed 엔티티에서 이 값을 강제로 바꾸는 경우 존재
 }

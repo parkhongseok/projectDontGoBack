@@ -44,9 +44,9 @@ button {
 :root {
   --white: #f2eeee;
   --black: #000;
-  --gray1: #d8d8d8;
-  --gray2: #a6a6a6;
-  --gray3: #615d5d;
+  --gray1: #c0c0c0;
+  --gray2: #8f8f8f;
+  --gray3: #4e4e4e;
   --gray4: #313131;
 
   --text-color-red: #bb4040;
@@ -58,8 +58,10 @@ button {
   --sidebar-min-width: 50px;
   --sidebar-item-width: 2.5vw;
   --sidebar-item-min-width: 30px;
-  --feed-width: 60vw;
+  --feed-width: 50vw;
   --feed-min-width: 500px;
+  --popup-width: 45vw;
+  --popup-min-width: 450px;
 }
 
 .fontWhite {

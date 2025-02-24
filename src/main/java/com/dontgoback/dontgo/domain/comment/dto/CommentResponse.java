@@ -7,7 +7,7 @@ public interface CommentResponse {
     Long getFeedId(); // 컬럼 별칭 "feedId"와 매핑
     Long getUserId(); // 컬럼 별칭 "userId"와 매핑
     String getContent();
-    String getUserName();
+    String getAuthor();
     String getCommentType();
     int getLikeCount();
     int getSubCommentCount();
