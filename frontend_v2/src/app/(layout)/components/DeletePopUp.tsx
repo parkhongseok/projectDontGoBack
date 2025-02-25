@@ -47,12 +47,14 @@ export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) 
         <p className="text-center mb-4 pt-3"></p>
         {/* 본격 사용 가능 공간 */}
         <Stack gap={4} className={`${styles.deleteBoxContainer}  pt-4`}>
-          <div className={` pt-2 fontGray1`}>정말 삭제하시겠습니까</div>
-          <div className={`fontGray2 pb-2`}>삭제한 게시물은 복원할 수 없습니다.</div>
+          <div className={` pt-2 fontBlack`}>
+            <h5>정말 삭제하시겠습니까</h5>
+          </div>
+          <div className={`fontGray4 pb-2`}>삭제한 게시물은 복원할 수 없습니다.</div>
           {/* 상단  취소 / 게시글 작성 / ... */}
           <Stack className={`${styles.deleteBtns} `} direction="horizontal">
             <div className={`${styles.deleteBtn} ms-auto `}>
-              <button className={` fontWhite`} onClick={handleClosePopUp}>
+              <button className={` fontGray4`} onClick={handleClosePopUp}>
                 취소
               </button>
             </div>

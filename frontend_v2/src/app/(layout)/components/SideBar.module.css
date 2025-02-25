@@ -11,8 +11,9 @@
   align-items: center;
   padding-top: 40px;
   padding-bottom: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  background-color: var(--gray1);
+  /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
+  background-color: var(--white);
+  border-right: 2px solid var(--gray4);
   z-index: 1000;
 }
 
@@ -21,9 +22,11 @@
 }
 
 .logoImage {
+  color: #000;
   width: var(--sidebar-item-width);
   min-width: var(--sidebar-item-min-width);
   height: auto;
+  fill: var(--gray1);
 }
 
 .navContainer {
@@ -40,6 +43,7 @@
   height: auto;
   margin-top: 10px;
   margin-bottom: 10px;
+  /* fill: var(--gray1); */
 }
 
 .settingsContainer {

@@ -12,8 +12,8 @@ export default function Login() {
 
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
       <Stack as="div" className="login-box mt-5 ">
-        <h1 className="login-btn fontGray4 title mb-4 ">Dont Go Back</h1>
-        <div className="text">
+        <h1 className="login-btn fontGray4 title mb-5 ">Dont Go Back</h1>
+        <div className="text ">
           <h4 className="login-btn fontGray4  text">간편 로그인으로</h4>
           <h4 className="login-btn fontGray4 text">서비스 시작하기</h4>
         </div>

@@ -88,7 +88,12 @@ export default function Feed({ feed }: FeedProps) {
       {id ? (
         <p className={`px-5 ${styles.content}`}>{feed.content}</p>
       ) : (
-        <Link className={`px-5`} href={`/post/${feed.feedId}`} onClick={handleFeedClick}>
+        <Link
+          className={`px-5 `}
+          href={`/post/${feed.feedId}`}
+          onClick={handleFeedClick}
+          legacyBehavior
+        >
           <p className={styles.content}>{feed.content}</p>
         </Link>
       )}

@@ -2,7 +2,7 @@
 
 import "../globals.css";
 import styles from "./Feed.module.css";
-import { Stack } from "react-bootstrap";
+import { Button, Stack } from "react-bootstrap";
 import { useFeed } from "../contexts/FeedContext";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
@@ -98,14 +98,14 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
             {/* 상단  취소 / 게시글 작성 / ... */}
             <Stack direction="horizontal" className="mx-5">
               <>
-                <button className={`${styles.write}`} onClick={handleClosePopUp}>
+                <button className={`${styles.write} custom-button`} onClick={handleClosePopUp}>
                   취소
                 </button>
               </>
-              <h6 className={`ms-auto fontWhite`}>게시글 쓰기</h6>
-              <h6 className={`ms-auto fontWhite pb-2`}>. . .</h6>
+              <h6 className={`ms-auto ${styles.createBoxTop}`}>게시글 수정하기</h6>
+              <h6 className={`ms-auto ${styles.createBoxTop} pb-2`}>. . .</h6>
             </Stack>
-            <hr className="feed-underline fontWhite" />
+            <hr className="feed-underline fontGray4 mt-4" />
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
@@ -123,7 +123,10 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
                 // readOnly
               />
               <>
-                <button className={`ms-auto ${styles.write}`} onClick={handleSubmit}>
+                <button
+                  className={`ms-auto mb-1 ${styles.write} custom-button`}
+                  onClick={handleSubmit}
+                >
                   게시
                 </button>
               </>

@@ -61,8 +61,9 @@ button {
   padding: 0;
 }
 :root {
-  --white: #f2eeee;
   --black: #000;
+  --white: #f0f0f0;
+  --gray0: #e7e7e7;
   --gray1: #c0c0c0;
   --gray2: #8f8f8f;
   --gray3: #4e4e4e;
@@ -73,14 +74,14 @@ button {
   --text-color-blue: #4958b8;
   --text-color-blue-light: #8696f9;
 
-  --sidebar-width: 3.5vw;
+  --sidebar-width: 4.5vw;
   --sidebar-min-width: 50px;
-  --sidebar-item-width: 2.2vw;
+  --sidebar-item-width: 2.1vw;
   --sidebar-item-min-width: 30px;
-  --feed-width: 45vw;
+  --feed-width: 47vw;
   --login-box-width: 30vw;
   --feed-min-width: 500px;
-  --popup-width: 45vw;
+  --popup-width: 40vw;
   --popup-min-width: 450px;
 }
 
@@ -88,7 +89,7 @@ button {
   color: var(--white);
 }
 .fontBlack {
-  color: var(----black);
+  color: var(--black);
 }
 .fontGray1 {
   color: var(--gray1);
@@ -129,7 +130,6 @@ button {
 body {
   background-color: var(--gray1);
   /* color: var(--text-color); */
-  font-family: Arial, sans-serif;
 }
 .main-layout {
   display: flex;
@@ -143,11 +143,12 @@ body {
   width: var(--sidebar-width);
   min-width: var(--sidebar-item-min-width);
 }
-
+.topTitleText {
+  color: var(--gray4);
+}
 .main-space {
   display: flex;
   flex-direction: column;
-  /* width: var(--post-width); */
   margin: auto;
 }
 
@@ -160,6 +161,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100px;
+  /* color: var(--white); */
 }
 
 .feeds-container {
@@ -168,12 +170,9 @@ body {
   min-height: 100vh;
   /* overflow-y: hidden; */
   margin: auto;
-  background-color: var(--gray2);
-  border-radius: 15px 15px 0 0;
-}
-
-.feed-underline {
-  margin-top: 30px;
+  background-color: var(--white);
+  border: 2px solid var(--gray3);
+  border-radius: 28px 28px 0 0;
 }
 
 .feed-detail-container {
@@ -182,10 +181,28 @@ body {
   min-height: 60vh;
   /* overflow-y: hidden; */
   margin: auto;
-  background-color: var(--gray2);
+  background-color: var(--white);
+  border: 2px solid var(--gray3);
   border-radius: 15px;
 }
 
 .cusorDefault {
   cursor: text;
+}
+
+.feedUnderLine {
+  color: var(--gray2);
+}
+.createFeedUnderLine {
+  color: var(--gray3);
+}
+
+.feedDetileMiddleLine {
+  height: 0;
+  background-color: var(--gray1);
+  border-top: 2px solid var(--gray3);
+}
+
+.custom-button {
+  height: 30px;
 }

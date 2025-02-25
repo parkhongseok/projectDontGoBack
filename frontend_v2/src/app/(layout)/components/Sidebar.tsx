@@ -10,20 +10,20 @@ export default function SideBar() {
       {/* 로고 */}
       <div className={styles.logo}>
         <Nav.Link href="/">
-          <Image src="/logo.svg" alt="Logo" className={styles.logoImage} />
+          <Image src="sidebar/logo.svg" alt="Logo" className={styles.logoImage} />
         </Nav.Link>
       </div>
       {/* 네비게이션 메뉴 */}
       <div className={styles.navContainer}>
         <Nav defaultActiveKey="/" className="flex-column">
           <Nav.Link href="/login">
-            <Image src="/profile.svg" alt="profile" className={styles.navImage} />
+            <Image src="/sidebar/profile.svg" alt="profile" className={styles.navImage} />
           </Nav.Link>
           <Nav.Link href="#write">
-            <Image src="/plus.svg" alt="Write" className={styles.navImage} />
+            <Image src="/sidebar/plus.svg" alt="Write" className={styles.navImage} />
           </Nav.Link>
           <Nav.Link href="/test">
-            <Image src="/like.svg" alt="Likes" className={styles.navImage} />
+            <Image src="/sidebar/like.svg" alt="Likes" className={styles.navImage} />
           </Nav.Link>
         </Nav>
       </div>
@@ -31,7 +31,7 @@ export default function SideBar() {
       {/* 설정 버튼 */}
       <div className="settingsContainer">
         <Nav.Link href="#profile">
-          <Image src="/setting.svg" alt="setting" className={styles.settingImage} />
+          <Image src="/sidebar/setting.svg" alt="setting" className={styles.settingImage} />
         </Nav.Link>
       </div>
     </div>

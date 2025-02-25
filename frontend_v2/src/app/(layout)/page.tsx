@@ -62,7 +62,9 @@ export default function Home() {
 
   // 나의 피드 수정 반영 함수
   const updateMyFeed = (updatedFeed: Types.Feed) => {
-    setFeeds((prevFeeds) => prevFeeds.map((feed) => (feed.feedId === updatedFeed.feedId ? updatedFeed : feed)));
+    setFeeds((prevFeeds) =>
+      prevFeeds.map((feed) => (feed.feedId === updatedFeed.feedId ? updatedFeed : feed))
+    );
   };
   // 나의 피드 삭제 반영 함수
   const deleteMyFeed = (deletedFeed: Types.Feed) => {
@@ -80,21 +82,18 @@ export default function Home() {
       setCrudMyFeed({ ...crudMyFeed, C: false });
       if (feedContext) createMyFeed(feedContext);
       console.log(`[fID : ${feedContext?.feedId}] 게시물 생성 요청 감지`);
-
     }
     // 수정
     if (crudMyFeed.U) {
       setCrudMyFeed({ ...crudMyFeed, U: false });
       if (feedContext) updateMyFeed(feedContext);
       console.log(`[fID : ${feedContext?.feedId}] 게시물 수정 요청 감지`);
-
     }
     // 삭제
     if (crudMyFeed.D) {
       setCrudMyFeed({ ...crudMyFeed, D: false });
       if (feedContext) deleteMyFeed(feedContext);
       console.log(`[fID : ${feedContext?.feedId}] 게시물 삭제 요청 감지`);
-
     }
   }, [crudMyFeed]);
 
@@ -123,19 +122,19 @@ export default function Home() {
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <p className="text-center mb-4 pt-4">Post</p>
+      <h5 className="text-center mb-4 pt-4 topTitleText">Hello World</h5>
       <div className="pt-4 feeds-container">
         {/* 사이드바가 차지하지 않는 나머지 공간 */}
         <Stack gap={4} direction="vertical">
           {/* 글쓰기 영역 user기능 */}
           <div className="">
             <CreateFeed />
-            <hr className="init mt-3" />
+            <hr className="init mt-4 createFeedUnderLine" />
           </div>
           {feeds.map((item, idx) => (
             <div key={idx}>
               <Feed feed={item} />
-              <hr className="init mt-3 fontGray1" />
+              <hr className="init mt-3 feedUnderLine" />
             </div>
           ))}
         </Stack>

@@ -89,14 +89,17 @@ export default function CreatePopUp({ setShowWriteBox }: propsType) {
             {/* 상단  취소 / 게시글 작성 / ... */}
             <Stack direction="horizontal" className="mx-5">
               <>
-                <Button className={`${styles.write} ${styles.exitBtn}`} onClick={closeBox}>
+                <button
+                  className={`${styles.write} ${styles.exitBtn} custom-button`}
+                  onClick={closeBox}
+                >
                   취소
-                </Button>
+                </button>
               </>
-              <h6 className={`ms-auto fontWhite`}>글 작성하기</h6>
-              <h6 className={`ms-auto fontWhite pb-2`}>. . .</h6>
+              <h6 className={`ms-auto ${styles.createBoxTop}`}>글 작성하기</h6>
+              <h6 className={`ms-auto more ${styles.createBoxTop} pb-2`}>. . .</h6>
             </Stack>
-            <hr className="feed-underline fontWhite" />
+            <hr className="feed-underline fontGray4 mt-4" />
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
@@ -106,7 +109,7 @@ export default function CreatePopUp({ setShowWriteBox }: propsType) {
               <textarea
                 onInput={(e) => autoResize(e)}
                 rows={5}
-                className={`${styles.textBox} fontWhite`}
+                className={`${styles.textBox} fontGray4`}
                 placeholder="게시글 작성하기"
                 value={userInput}
                 onChange={handleChange}
@@ -114,12 +117,12 @@ export default function CreatePopUp({ setShowWriteBox }: propsType) {
                 // readOnly
               />
               <>
-                <Button
-                  className={`ms-auto ${styles.write} ${styles.createBtn} `}
+                <button
+                  className={`ms-auto mb-1 ${styles.write} custom-button`}
                   onClick={handleSubmit}
                 >
                   게시
-                </Button>
+                </button>
               </>
             </Stack>
           </Stack>

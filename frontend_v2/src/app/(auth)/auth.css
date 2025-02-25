@@ -23,6 +23,7 @@
   font-size: 50px;
 }
 .text {
+  /* margin-top: px; */
   text-align: center;
   font-size: 25px;
 }
@@ -30,13 +31,13 @@
   border-top: 2px solid var(--gray4);
 }
 .foot {
-  margin-top: 60px;
+  margin-top: 50px;
   height: 150px;
   display: flex;
 }
 .image {
   display: block;
-  width: 40%;
+  width: 220px;
   min-width: 173px;
   height: auto;
   margin: auto;

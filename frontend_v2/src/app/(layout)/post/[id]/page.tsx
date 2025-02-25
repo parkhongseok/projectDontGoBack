@@ -130,7 +130,7 @@ export default function FeedDetile() {
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <p className="text-center mb-4 pt-4">Post</p>
+      <h5 className="text-center mb-4 pt-4 topTitleText">POST</h5>
 
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
@@ -140,11 +140,9 @@ export default function FeedDetile() {
           {/* 본문 */}
           <Feed feed={feedContext} />
           {/* 댓글 경계 */}
-          <Stack gap={2}>
-            <hr className="init fontGray1" />
-            <h5 className=" px-5 fontWhite">답글</h5>
-            <hr className="init" />
-          </Stack>
+          <div className="feedDetileMiddleLine mt-2">
+            {/* <h5 className=" px-5 fontGray3">답글</h5> */}
+          </div>
           {/* 댓글 */}
           {/* 댓글 생성 쓰기 */}
           <div className="my-3">
@@ -154,8 +152,8 @@ export default function FeedDetile() {
           {/* 댓글 공간 */}
           {comments.map((item, idx) => (
             <div key={idx}>
+              <hr className="init mb-3 feedUnderLine" />
               <Comment comment={item} />
-              <hr className="init mt-3 fontGray1" />
             </div>
           ))}
         </Stack>

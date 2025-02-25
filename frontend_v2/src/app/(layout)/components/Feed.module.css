@@ -1,7 +1,7 @@
 .userName {
   margin: 0;
   padding: 0;
-  /* font-size: 15px; */
+  font-size: 15px;
   font-weight: bolder;
 }
 
@@ -21,20 +21,13 @@
   color: var(--text-color-red-light);
 }
 
-.time {
-  margin: 0;
-  padding: 0;
-  font-size: 12px;
-  color: var(--gray1);
-}
-
 .more {
   /* width: 30px; */
   height: 15px;
   background-color: inherit;
   border: none;
   font-size: 12px;
-  color: var(--white);
+  color: var(--gray4);
   font-weight: bolder;
   cursor: pointer;
   text-align: center;
@@ -50,34 +43,42 @@
   margin: 0;
   padding: 0;
   /* font-size: 12px; */
-  color: var(--white);
+  color: var(--gray4);
 }
-
+.content:hover {
+  cursor: pointer;
+}
+.time {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  color: var(--gray2);
+}
 .like,
 .comment {
   margin: 0;
   padding: 0;
   font-size: 12px;
-  color: var(--gray1);
+  color: var(--gray2);
 }
 
 .write {
   margin: 0;
   padding: 5px 10px;
   background-color: inherit;
-  border: 1px solid var(--white);
   border-radius: 10px;
   background-color: transparent;
-  color: var(--white);
+  border: 1px solid var(--gray4);
+  color: var(--gray4);
   font-size: 13px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .write:hover {
+  color: var(--white);
   border: 1px solid var(--gray3);
   background-color: var(--gray3);
-  color: var(--gray1);
 }
 
 .overay {
@@ -92,23 +93,26 @@
 .CreateFeedContainer {
   /* height: auto; */
   margin: auto;
-  width: 95%;
-  border: solid var(--gray2);
+  width: 93%;
   border-radius: 15px;
   transition: all 0.3s ease;
+  border: solid var(--gray2);
 }
 .CreateFeedContainer:hover {
   width: 96%;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+  border: solid var(--gray3);
+  /* box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1); */
 }
-
+.createTextholder {
+  color: var(--gray2);
+}
 .createBoxBackground {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 1000;
   cursor: default;
   overflow: hidden;
@@ -122,6 +126,10 @@
   overflow: hidden;
 }
 
+.createBoxTop {
+  color: var(--gray4);
+}
+
 .createBoxContainer {
   width: var(--popup-width);
   min-width: var(--popup-min-width);
@@ -131,13 +139,14 @@
   overflow-y: auto;
   overflow-x: hidden;
   margin: auto;
-  background-color: var(--gray4);
-  border-radius: 15px;
+  background-color: var(--white);
+  border-radius: 20px;
   position: relative; /* 위치 기준을 설정 */
   top: -5vh;
 }
 
 .textBox {
+  color: var(--gray4);
   background-color: transparent;
   border: none;
   resize: none;
@@ -148,59 +157,55 @@
   cursor: text;
 }
 
-.FeedDetailContainer {
+/* .FeedDetailContainer {
   width: 60vw;
   min-height: 60vh;
-  /* overflow-y: hidden; */
   margin: auto;
-  background-color: var(--gray2);
+  background-color: var(--gray3);
   border-radius: 15px;
-}
+} */
 
 .CreateCommentContainer {
-  width: 95%;
-  height: 35px;
+  width: 93%;
+  height: 40px;
   margin: auto;
   display: flex;
   align-items: center;
-  background-color: var(--gray3);
-  /* border : solid 1px var(--gray2); */
+  background-color: var(--white);
+  border: solid 1px var(--gray4);
   border-radius: 15px;
   transition: all 0.3s ease;
 }
 
 .CreateCommentContainer:hover {
   /* border : solid 1px var(--gray1); */
-  width: 96%;
-  height: 37px;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+  width: 94%;
+  /* height: 37px; */
+  /* box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); */
 }
-/* .exitBtn{
-    
-}
-
-.createBtn:hover{
-  background-color: var(--gray4);
-} */
 
 .deleteBoxContainer {
-  width: 30vw;
+  width: 23vw;
   height: auto;
   min-height: 10vh;
   max-height: 60vh;
   /* overflow-y: auto; */
   margin: auto;
-  background-color: var(--gray4);
+  background-color: var(--white);
   border-radius: 15px;
   position: relative; /* 위치 기준을 설정 */
   top: -5vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-top: solid 2px var(--gray3);
 }
 .deleteBtns {
   height: 60px;
-  border-top: solid 1px var(--gray2);
+  border-top: solid 2px var(--gray2);
+}
+.deleteBtnLine {
+  border-left: solid 2px var(--gray2);
 }
 
 .deleteBtn {
@@ -210,8 +215,4 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.deleteBtnLine {
-  border-left: solid 1px var(--gray2);
 }

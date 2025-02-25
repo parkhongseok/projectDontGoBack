@@ -98,7 +98,7 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
             {/* 상단  취소 / 게시글 작성 / ... */}
             <Stack direction="horizontal" className="mx-5">
               <>
-                <button className={`${styles.write}`} onClick={handleClosePopUp}>
+                <button className={`${styles.write} custom-button`} onClick={handleClosePopUp}>
                   취소
                 </button>
               </>
@@ -123,7 +123,7 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
                 // readOnly
               />
               <>
-                <button className={`ms-auto ${styles.write}`} onClick={handleSubmit}>
+                <button className={`ms-auto ${styles.write} custom-button`} onClick={handleSubmit}>
                   게시
                 </button>
               </>
