@@ -3,12 +3,12 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import "../../globals.css";
+import { usePathname } from "next/navigation";
+import { Button, Stack } from "react-bootstrap";
 import * as Types from "../../utils/types";
 import styles from "../Feed.module.css";
-import { Button, Stack } from "react-bootstrap";
 import { useFeed } from "../../contexts/FeedContext";
 import { useUser } from "../../contexts/UserContext";
-import { usePathname } from "next/navigation";
 import { httpRequest } from "../../utils/httpRequest";
 
 type propsType = { setShowWriteBox: Dispatch<SetStateAction<boolean>>; feed: Types.Feed };

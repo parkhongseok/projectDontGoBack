@@ -1,4 +1,5 @@
 import "../globals.css";
+
 import styles from "./Feed.module.css";
 import { Dropdown, Stack } from "react-bootstrap";
 import * as Types from "../utils/types";
@@ -19,35 +20,33 @@ export default function Feed({ feed }: FeedProps) {
   const { userContext } = useUser();
   const { updateFeedContext } = useFeed();
   const { id } = useParams<{ id: string }>();
-  const [showEditBox, setShowEditBox] = useState(false);
-  const [showDeleteBox, setShowDeleteBox] = useState(false);
-  const openEditBox = () => {
-    setShowEditBox(true);
-  };
-  const openDeleteBox = () => {
-    setShowDeleteBox(true);
-  };
+  // 이름좀 바꾸자
+  const [isFeedEditOpen, setIsFeedEditOpen] = useState(false);
+  const [isFeedDeleteOpen, setIsFeedDeleteOpen] = useState(false);
 
   if (!feed || !userContext) {
     if (feed) console.log("[Feed.tsx] 게시물 정보 로딩 완료 : ", feed);
     if (userContext) console.log("[Feed.tsx] 유저 정보 로딩 완료 : ", feed);
     return <div className="loading">피드 또는 유저 로딩중</div>; // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
   }
-  // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
-  const feedTypeClass = styles[feed.feedType] || "";
+  const handleFeedDeleteClick = () => {
+    setIsFeedDeleteOpen(true);
+  };
+  const handleFeedEditClick = () => {
+    setIsFeedEditOpen(true);
+    updateFeedContext(feed);
+  };
   const handleFeedClick = () => {
     updateFeedContext(feed);
   };
+  // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
+  const feedTypeClass = styles[feed.feedType] || "";
 
   return (
     <Stack className="px-5" gap={3}>
-      {showEditBox && (
-        <div>
-          <EditPopUp setShowEditBox={setShowEditBox} />
-        </div>
-      )}
-      {showDeleteBox && (
-        <DeletePopUp FeedId={feed.feedId} setShowDeleteBox={setShowDeleteBox} />
+      {isFeedEditOpen && <EditPopUp setIsFeedEditOpen={setIsFeedEditOpen} />}
+      {isFeedDeleteOpen && (
+        <DeletePopUp feedId={feed.feedId} setIsFeedDeleteOpen={setIsFeedDeleteOpen} />
       )}
       <Stack direction="horizontal" gap={3}>
         <div>
@@ -55,9 +54,7 @@ export default function Feed({ feed }: FeedProps) {
         </div>
         <div className="vr" />
         <div className="">
-          <p className={styles.time}>
-            {timeAgo(feed.createdAt, feed.updatedAt)}
-          </p>
+          <p className={styles.time}>{timeAgo(feed.createdAt, feed.updatedAt)}</p>
         </div>
         <div className="ms-auto">
           <Dropdown>
@@ -74,17 +71,8 @@ export default function Feed({ feed }: FeedProps) {
               {feed.userId == userContext.userId ? (
                 <>
                   <Dropdown.Item>보관하기</Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      openEditBox();
-                      handleFeedClick();
-                    }}
-                  >
-                    수정하기
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={openDeleteBox}>
-                    삭제하기
-                  </Dropdown.Item>
+                  <Dropdown.Item onClick={handleFeedEditClick}>수정하기</Dropdown.Item>
+                  <Dropdown.Item onClick={handleFeedDeleteClick}>삭제하기</Dropdown.Item>
                 </>
               ) : (
                 <>
@@ -100,11 +88,7 @@ export default function Feed({ feed }: FeedProps) {
       {id ? (
         <p className={`px-5 ${styles.content}`}>{feed.content}</p>
       ) : (
-        <Link
-          className={`px-5`}
-          href={`/post/${feed.feedId}`}
-          onClick={handleFeedClick}
-        >
+        <Link className={`px-5`} href={`/post/${feed.feedId}`} onClick={handleFeedClick}>
           <p className={styles.content}>{feed.content}</p>
         </Link>
       )}

@@ -24,6 +24,7 @@ export default function CreateComment({ feed }: userProps) {
     setShowWriteBox(true);
   };
 
+  const isMyPost = feed?.userId == userContext?.userId;
   return (
     <div className={`${styles.CreateCommentContainer} cursorPointer px-4`}>
       <Stack direction="horizontal" gap={3}>
@@ -32,7 +33,7 @@ export default function CreateComment({ feed }: userProps) {
         </div>
         <div>
           <p className={`${styles.commentPlaceHolder} fontGray2`} onClick={openWriteBox}>
-            {feed.author} 님에게 답글 남기기 ...
+            {isMyPost ? `나에게` : `${feed.author} 님에게`} 답글 남기기 ...
           </p>
         </div>
       </Stack>

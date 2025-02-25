@@ -1,47 +1,47 @@
 "use client";
 
-import "../globals.css";
-import styles from "./Feed.module.css";
+import "../../globals.css";
+import styles from "../Feed.module.css";
 import { Stack } from "react-bootstrap";
-import { useFeed } from "../contexts/FeedContext";
+import { useFeed } from "../../contexts/FeedContext";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { httpRequest } from "../utils/httpRequest";
+import { httpRequest } from "../../utils/httpRequest";
 
 type propsType = {
-  setIsFeedEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsCommentEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
-  const pathname = usePathname() || "";
-  const { feedContext, setFeedContext, setCrudMyFeed } = useFeed();
+export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
+  // const pathname = usePathname() || "";
+  const { commentContext, setCommentContext, setCrudMyComment } = useFeed();
 
-  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
-  if (!feedContext) return <div className="loading" />;
+  // 내용이 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
+  if (!commentContext) return <div className="loading" />;
 
-  const [feed, setFeed] = useState(feedContext);
+  const [comment, setComment] = useState(commentContext);
 
-  const feedTypeClass = styles[feedContext.feedType] || "";
+  const commentTypeClass = styles[commentContext.commentType] || "";
 
   const setUserInput = (newContent: string) => {
     // 구조분해 할당
-    setFeed({
-      ...feed,
+    setComment({
+      ...comment,
       content: newContent,
     });
   };
 
   const setContentContext = (newContent: string, newUpdatedAt: string) => {
-    const newFeed = {
-      ...feed,
+    const newComment = {
+      ...comment,
       content: newContent,
       updatedAt: newUpdatedAt,
     };
-    setFeedContext(newFeed);
+    setCommentContext(newComment);
   };
 
   const handleClosePopUp = () => {
-    setIsFeedEditOpen(false);
+    setIsCommentEditOpen(false);
   };
 
   const autoResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
@@ -55,28 +55,28 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
   };
 
   const handleSubmit = async () => {
-    if (!feed.content.trim()) {
+    if (!comment.content.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
     // 요청 객체
-    const updateFeedRequest = {
-      content: feed.content,
+    const updateRequest = {
+      content: comment.content,
     };
 
     const method = "PATCH";
-    const url = `http://localhost:8090/api/v1/feeds/${feed.feedId}`;
-    const body = updateFeedRequest;
+    const url = `http://localhost:8090/api/v1/comments/${comment.commentId}`;
+    const body = updateRequest;
     const success = (result: any) => {
-      // console.log("EditPopUp : ", feedContext);
+      // console.log("EditPopUp : ", commentContext);
       // console.log("result.data : ", result.data);
-      if (result.data.feedId == feedContext.feedId)
+      if (result.data.commentId == commentContext.commentId)
         setContentContext(result.data.content, result.data.updatedAt);
       else console.error("EditPopUp : 즉시 갱신 실패");
-      setIsFeedEditOpen(false);
-      if (pathname === "/") {
-        setCrudMyFeed({ C: false, R: false, U: true, D: false });
-      }
+      setIsCommentEditOpen(false);
+      setCrudMyComment({ C: false, R: false, U: true, D: false });
+      // if (pathname === "/") {
+      // }
     };
     const fail = () => {
       alert("게시물을 수정할 수 없습니다.");
@@ -102,22 +102,22 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
                   취소
                 </button>
               </>
-              <h6 className={`ms-auto fontWhite`}>게시글 쓰기</h6>
+              <h6 className={`ms-auto fontWhite`}>답글 쓰기</h6>
               <h6 className={`ms-auto fontWhite pb-2`}>. . .</h6>
             </Stack>
             <hr className="feed-underline fontWhite" />
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
-              <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>
-                {feedContext.author}
+              <p className={`${commentTypeClass} ${styles.userName} fontRedLight init mt-2`}>
+                {commentContext.author}
               </p>
               <textarea
                 onInput={(e) => autoResize(e)}
                 rows={5}
                 className={`${styles.textBox} fontWhite`}
                 placeholder="게시글 작성하기"
-                value={feed.content}
+                value={comment.content}
                 onChange={handleChange}
                 // disabled
                 // readOnly

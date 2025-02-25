@@ -1,37 +1,37 @@
 "use client";
 
+import "../../globals.css";
 import { Stack } from "react-bootstrap";
-import "../globals.css";
-import styles from "./Feed.module.css";
+import styles from "../Feed.module.css";
 import { usePathname, useRouter } from "next/navigation";
-import { useFeed } from "../contexts/FeedContext";
-import { httpRequest } from "../utils/httpRequest";
-import * as Types from "../utils/types";
+import { useFeed } from "../../contexts/FeedContext";
+import { httpRequest } from "../../utils/httpRequest";
+import * as Types from "../../utils/types";
 
 type propsType = {
-  feedId: number;
-  setIsFeedDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  commentId: number;
+  setIsCommentDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) {
+export default function DeleteCommentPopUp({ commentId, setIsCommentDeleteOpen }: propsType) {
   const pathname = usePathname() || "";
-  const { setCrudMyFeed, setFeedContext } = useFeed();
-  const router = useRouter();
+  const { setCrudMyComment, setCommentContext } = useFeed();
+  // const router = useRouter();
   const handleClosePopUp = () => {
-    setIsFeedDeleteOpen(false);
+    setIsCommentDeleteOpen(false);
   };
 
   const handleSubmit = async () => {
     const method = "DELETE";
-    const url = `http://localhost:8090/api/v1/feeds/${feedId}`;
+    const url = `http://localhost:8090/api/v1/comments/${commentId}`;
     const body = null;
     const success = (result: any) => {
       handleClosePopUp();
-      setCrudMyFeed({ C: false, R: false, U: false, D: true });
-      setFeedContext(result.data);
-      if (pathname !== "/") {
-        router.push("/");
-      }
+      setCrudMyComment({ C: false, R: false, U: false, D: true });
+      setCommentContext(result.data);
+      // if (pathname !== "/") {
+      //   router.push("/");
+      // }
     };
     const fail = () => {
       alert("게시물을 삭제할 수 없습니다.");
@@ -48,7 +48,7 @@ export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) 
         {/* 본격 사용 가능 공간 */}
         <Stack gap={4} className={`${styles.deleteBoxContainer}  pt-4`}>
           <div className={` pt-2 fontGray1`}>정말 삭제하시겠습니까</div>
-          <div className={`fontGray2 pb-2`}>삭제한 게시물은 복원할 수 없습니다.</div>
+          <div className={`fontGray2 pb-2`}>삭제한 답글은 복원할 수 없습니다.</div>
           {/* 상단  취소 / 게시글 작성 / ... */}
           <Stack className={`${styles.deleteBtns} `} direction="horizontal">
             <div className={`${styles.deleteBtn} ms-auto `}>
