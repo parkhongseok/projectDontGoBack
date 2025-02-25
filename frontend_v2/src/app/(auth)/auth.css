@@ -1,13 +1,16 @@
 @import "../(layout)/globals.css";
-
+.body {
+  background-color: var(--gray3);
+}
 .login-box {
-  width: 50vw;
-  min-width: 500px;
-  min-height: 60vh;
+  width: var(--login-box-width);
+  min-width: var(--feed-min-width);
+  min-height: 55vh;
   /* overflow-y: hidden; */
   margin: auto;
-  background-color: var(--gray2);
-  border-radius: 15px;
+  background-color: var(--white);
+  border-radius: 30px;
+  border: 2px solid var(--gray4);
   display: flex;
   vertical-align: center;
 }
@@ -16,17 +19,38 @@
   margin: auto;
 }
 
-.empty {
-  height: 100px;
-}
 .title {
   font-size: 50px;
 }
-
+.text {
+  text-align: center;
+  font-size: 25px;
+}
+.line {
+  border-top: 2px solid var(--gray4);
+}
+.foot {
+  margin-top: 60px;
+  height: 150px;
+  display: flex;
+}
 .image {
   display: block;
   width: 40%;
   min-width: 173px;
   height: auto;
   margin: auto;
+  border: 1px solid var(--gray2);
+  border-radius: 30px;
+}
+
+.image:hover {
+  border: 2px solid var(--gray4);
+}
+
+.imageLink {
+  margin: auto;
+  /* display: block; */
+  height: auto;
+  min-width: 173px;
 }

@@ -11,42 +11,43 @@ import { useUser } from "../../contexts/UserContext";
 import { usePathname } from "next/navigation";
 import { httpRequest } from "../../utils/httpRequest";
 
-type propsType = { setShowWriteBox: Dispatch<SetStateAction<boolean>>;
-  feed: Types.Feed;
-};
+type propsType = { setShowWriteBox: Dispatch<SetStateAction<boolean>>; feed: Types.Feed };
 
 export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType) {
-  const pathname = usePathname() || "";
+  // const pathname = usePathname() || "";
+  const [userInput, setUserInput] = useState("");
+  const { setCrudMyComment, setCommentContext } = useFeed();
   const { userContext } = useUser();
   if (!userContext) {
     return <div className="loading" />;
   }
   const feedTypeClass = styles[userContext.userType] || "";
-  const [content, setContent] = useState("");
-  const {} = useFeed();
-
   const closeBox = () => {
     setShowWriteBox(false);
   };
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {setContent(e.target.value);};
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setUserInput(e.target.value);
+  };
   const handleSubmit = async () => {
-    if (!content.trim()) {
+    if (!userInput.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
-    const commentRequest = {
-      content: content,
+    const CreateCommentRequest = {
+      feedId: feed.feedId,
+      content: userInput,
+      parentCommentId: null,
     };
+    console.log(CreateCommentRequest);
     const method = "POST";
-    const url = "http://localhost:8090/api/v1/commens";
-    const body = commentRequest;
+    const url = "http://localhost:8090/api/v1/comments";
+    const body = CreateCommentRequest;
     const success = (result: any) => {
-      setContent("");
+      setUserInput("");
       closeBox();
-      // console.log(pathname)
-      // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
-      // if (pathname === "/")
+      console.log(result.data);
+      setCommentContext(result.data);
+      setCrudMyComment({ C: true, R: false, U: false, D: false });
     };
     const fail = () => {
       alert("서버 오류가 발생했습니다.");
@@ -93,19 +94,24 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
-              <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>{userContext.userName}</p>
+              <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>
+                {userContext.userName}
+              </p>
               <textarea
                 onInput={(e) => autoResize(e)}
                 rows={5}
                 className={`${styles.textBox} fontWhite`}
                 placeholder={`${feed.author} 님에게 답글 남기기 ...`}
-                value={content}
+                value={userInput}
                 onChange={handleChange}
                 // disabled
                 // readOnly
               />
               <>
-                <Button className={`ms-auto ${styles.write} ${styles.createBtn} `} onClick={handleSubmit}>
+                <Button
+                  className={`ms-auto ${styles.write} ${styles.createBtn} `}
+                  onClick={handleSubmit}
+                >
                   게시
                 </Button>
               </>

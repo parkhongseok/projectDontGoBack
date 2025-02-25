@@ -77,7 +77,8 @@ button {
   --sidebar-min-width: 50px;
   --sidebar-item-width: 2.2vw;
   --sidebar-item-min-width: 30px;
-  --feed-width: 50vw;
+  --feed-width: 45vw;
+  --login-box-width: 30vw;
   --feed-min-width: 500px;
   --popup-width: 45vw;
   --popup-min-width: 450px;

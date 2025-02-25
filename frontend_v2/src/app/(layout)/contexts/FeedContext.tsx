@@ -6,10 +6,18 @@ interface FeedContextType {
   feedContext: Types.Feed | null;
   setFeedContext: (feed: Types.Feed) => void;
   updateFeedContext: (updatedFeed: Types.Feed) => void;
-  refreshMainFeeds: boolean;
-  setRefreshMainFeeds: (refrashFeed: boolean) => void;
   crudMyFeed: { C: boolean; R: boolean; U: boolean; D: boolean };
-  setCrudMyFeed: React.Dispatch<React.SetStateAction<{ C: boolean; R: boolean; U: boolean; D: boolean }>>;
+  setCrudMyFeed: React.Dispatch<
+    React.SetStateAction<{ C: boolean; R: boolean; U: boolean; D: boolean }>
+  >;
+
+  //답글
+  commentContext: Types.Comment | null;
+  setCommentContext: (feed: Types.Comment) => void;
+  crudMyComment: { C: boolean; R: boolean; U: boolean; D: boolean };
+  setCrudMyComment: React.Dispatch<
+    React.SetStateAction<{ C: boolean; R: boolean; U: boolean; D: boolean }>
+  >;
 }
 
 // FeedContext 생성
@@ -20,10 +28,11 @@ export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
   const [feedContext, setFeedContext] = useState<Types.Feed | null>(null);
 
   // 전역으로 사용할 의존성 리스트 변경 인자
-  const [refreshMainFeeds, setRefreshMainFeeds] = useState(false);
-
-  // 전역으로 사용할 의존성 리스트 변경 인자
   const [crudMyFeed, setCrudMyFeed] = useState({ C: false, R: false, U: false, D: false });
+
+  // 답글
+  const [commentContext, setCommentContext] = useState<Types.Comment | null>(null);
+  const [crudMyComment, setCrudMyComment] = useState({ C: false, R: false, U: false, D: false });
 
   // feedContext 업데이트 함수 수정
   const updateFeedContext = (newFeed: Types.Feed) => {
@@ -34,16 +43,23 @@ export const FeedProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  // 로컬스토리지에서 데이터 복구
-  // useEffect(() => {
-  //   const savedFeed = localStorage.getItem("feedContext");
-  //   if (savedFeed) {
-  //     updateFeedContext(JSON.parse(savedFeed));
-  //   }
-  //   // setIsLoaded(true); // 복구 완료
-  // }, []);
-
-  return <FeedContext.Provider value={{ feedContext, setFeedContext, updateFeedContext, refreshMainFeeds, setRefreshMainFeeds, crudMyFeed, setCrudMyFeed }}>{children}</FeedContext.Provider>;
+  return (
+    <FeedContext.Provider
+      value={{
+        feedContext,
+        setFeedContext,
+        crudMyFeed,
+        setCrudMyFeed,
+        updateFeedContext,
+        commentContext,
+        setCommentContext,
+        crudMyComment,
+        setCrudMyComment,
+      }}
+    >
+      {children}
+    </FeedContext.Provider>
+  );
 };
 
 // FeedContext를 쉽게 사용할 수 있도록 커스텀 훅

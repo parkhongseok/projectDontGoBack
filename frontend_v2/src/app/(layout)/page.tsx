@@ -64,42 +64,37 @@ export default function Home() {
   const updateMyFeed = (updatedFeed: Types.Feed) => {
     setFeeds((prevFeeds) => prevFeeds.map((feed) => (feed.feedId === updatedFeed.feedId ? updatedFeed : feed)));
   };
-
   // 나의 피드 삭제 반영 함수
   const deleteMyFeed = (deletedFeed: Types.Feed) => {
     setFeeds((prevFeeds) => prevFeeds.filter((feed) => feed.feedId !== deletedFeed.feedId));
   };
-
+  // 나의 피스 생성 반영 함수
   const createMyFeed = (createdFeed: Types.Feed) => {
     setFeeds((prevFeeds) => [createdFeed, ...prevFeeds]);
   };
 
   // 자신 피드의 수정 삭제를 감지하여, 이를 반영
   useEffect(() => {
-    if (crudMyFeed.U) {
-      // 수정 작업
-      if (feedContext) updateMyFeed(feedContext);
-      console.log(feedContext);
-      console.log(`[fID : ${feedContext?.feedId}] 게시물 수정 요청 감지`);
-      setCrudMyFeed({ ...crudMyFeed, U: false }); // 수정 후 상태 초기화
-      // 서버 요청으로 피드 수정 API 호출
-    }
-    if (crudMyFeed.D) {
-      console.log(feedContext);
-      // 삭제 작업
-      if (feedContext) {
-        deleteMyFeed(feedContext);
-        console.log(`[fID : ${feedContext?.feedId}] 게시물 삭제 요청 감지`);
-        setCrudMyFeed({ ...crudMyFeed, D: false }); // 삭제 후 상태 초기화
-      }
-      // 서버 요청으로 피드 삭제 API 호출
-    }
+    // 생성
     if (crudMyFeed.C) {
-      // 생성 작업
+      setCrudMyFeed({ ...crudMyFeed, C: false });
       if (feedContext) createMyFeed(feedContext);
       console.log(`[fID : ${feedContext?.feedId}] 게시물 생성 요청 감지`);
-      setCrudMyFeed({ ...crudMyFeed, C: false }); // 생성 후 상태 초기화
-      // 서버 요청으로 피드 생성 API 호출
+
+    }
+    // 수정
+    if (crudMyFeed.U) {
+      setCrudMyFeed({ ...crudMyFeed, U: false });
+      if (feedContext) updateMyFeed(feedContext);
+      console.log(`[fID : ${feedContext?.feedId}] 게시물 수정 요청 감지`);
+
+    }
+    // 삭제
+    if (crudMyFeed.D) {
+      setCrudMyFeed({ ...crudMyFeed, D: false });
+      if (feedContext) deleteMyFeed(feedContext);
+      console.log(`[fID : ${feedContext?.feedId}] 게시물 삭제 요청 감지`);
+
     }
   }, [crudMyFeed]);
 

@@ -15,55 +15,37 @@ type propsType = {
 };
 
 export default function CreatePopUp({ setShowWriteBox }: propsType) {
-  useEffect(() => {
-    // 모달 열리면 body 스크롤 숨기기
-    document.body.style.overflow = "hidden";
-
-    // 모달 닫히면 body 스크롤 복구
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
-
-  const { userContext } = useUser();
-  const pathname = usePathname() || "";
   const router = useRouter();
+  const pathname = usePathname() || "";
+  const { setCrudMyFeed, setFeedContext } = useFeed();
+  const [userInput, setUserInput] = useState("");
+  const { userContext } = useUser();
   if (!userContext) {
     return <div className="loading" />;
   }
-  const feedTypeClass = styles[userContext.userType] || "";
-  const { setCrudMyFeed, setFeedContext } = useFeed();
-  // 작성하는 글의 높이 맞춤 설정
-  const autoResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    const target = e.target as HTMLTextAreaElement;
-    target.style.height = "auto"; // 먼저 높이를 auto로 리셋
-    target.style.height = `${target.scrollHeight}px`; // 텍스트의 높이에 맞게 설정
-  };
+
   const closeBox = () => {
     setShowWriteBox(false);
   };
 
-  const [content, setContent] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+    setUserInput(e.target.value);
   };
 
   const handleSubmit = async () => {
-    if (!content.trim()) {
+    if (!userInput.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
     // 요청 객체
-    const feedRequest = {
-      content: content,
+    const createFeedRequest = {
+      content: userInput,
     };
-
     const method = "POST";
     const url = "http://localhost:8090/api/v1/feeds";
-    const body = feedRequest;
-
+    const body = createFeedRequest;
     const success = (result: any) => {
-      setContent("");
+      setUserInput("");
       closeBox();
       // console.log(pathname)
       // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
@@ -79,6 +61,20 @@ export default function CreatePopUp({ setShowWriteBox }: propsType) {
     httpRequest(method, url, body, success, fail);
   };
 
+  // 작성하는 글의 높이 맞춤 설정
+  const autoResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    const target = e.target as HTMLTextAreaElement;
+    target.style.height = "auto"; // 먼저 높이를 auto로 리셋
+    target.style.height = `${target.scrollHeight}px`; // 텍스트의 높이에 맞게 설정
+  };
+  // 모달 body 스크롤 토글
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+  const feedTypeClass = styles[userContext.userType] || "";
   return (
     <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
       <div className="sidebar-space" />
@@ -104,19 +100,24 @@ export default function CreatePopUp({ setShowWriteBox }: propsType) {
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
-              <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>{userContext.userName}</p>
+              <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>
+                {userContext.userName}
+              </p>
               <textarea
                 onInput={(e) => autoResize(e)}
                 rows={5}
                 className={`${styles.textBox} fontWhite`}
                 placeholder="게시글 작성하기"
-                value={content}
+                value={userInput}
                 onChange={handleChange}
                 // disabled
                 // readOnly
               />
               <>
-                <Button className={`ms-auto ${styles.write} ${styles.createBtn} `} onClick={handleSubmit}>
+                <Button
+                  className={`ms-auto ${styles.write} ${styles.createBtn} `}
+                  onClick={handleSubmit}
+                >
                   게시
                 </Button>
               </>
