@@ -19,11 +19,11 @@ type CommentProps = {
 
 export default function Comment({ comment }: CommentProps) {
   const { userContext } = useUser();
-  if (!userContext) return <div>유저 로딩 중</div>;
   const [isCommentEditOpen, setIsCommentEditOpen] = useState(false);
   const [isCommentDeleteOpen, setIsCommentDeleteOpen] = useState(false);
   const [commentLikeState, setCommentLikeState] = useState(comment.likeCount || 0);
   const [isActiveCommentLike, setIsActiveCommentLike] = useState(false);
+  if (!userContext) return <div>유저 로딩 중</div>;
   const handleCommentEditClick = () => {
     setIsCommentEditOpen(true);
     // updateFeedContext(feed);

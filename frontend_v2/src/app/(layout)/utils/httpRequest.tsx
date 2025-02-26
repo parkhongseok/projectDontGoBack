@@ -6,7 +6,13 @@ export function getCookie(name: string) {
   return undefined;
 }
 
-export function httpRequest(method: string, url: string, body: any, success: (result: any) => void, fail: () => void) {
+export function httpRequest(
+  method: string,
+  url: string,
+  body: any,
+  success: (result: any) => void,
+  fail: () => void
+) {
   let accessToken = localStorage.getItem("access_token");
 
   fetch(url, {
@@ -56,8 +62,7 @@ export function httpRequest(method: string, url: string, body: any, success: (re
         })
           .then(async (res) => {
             if (!res.ok) {
-              console.error("❌ Refresh token request failed:", await res.json());
-              // 로그인 페이지로 이동
+              console.error("❌ Refresh token request failed", await res.json());
               throw new Error("Refresh token request failed");
             }
             return res.json();
@@ -69,14 +74,15 @@ export function httpRequest(method: string, url: string, body: any, success: (re
             httpRequest(method, url, body, success, fail);
           })
           .catch((err) => {
+            // window.history.replaceState(null, "", "/login"); // 현재 페이지 url만 변경, 히스토리에 기록, 페이지 이동 x
+            window.location.replace("/login"); // ✅ 즉시 로그인 페이지로 이동 (히스토리 기록 없음)
             console.error("🔴 토큰 갱신 실패:", err);
-            window.history.replaceState(null, "", "/login");
             fail(); // ✅ 리프레시 토큰이 유효하지 않음
           });
       } else if (!refreshToken) {
         // 토큰이 없는 경우
         console.error("❌ Refresh Token 없음");
-        window.history.replaceState(null, "", "/login");
+        window.location.replace("/login"); // ✅ 즉시 로그인 페이지로 이동 (히스토리 기록 없음)
         fail(); // ✅ 리프레시 토큰이 없음
       } else {
         // 응답 결과가 다른 경우 500 등

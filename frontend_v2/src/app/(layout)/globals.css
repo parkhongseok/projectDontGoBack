@@ -207,3 +207,7 @@ body {
 .custom-button {
   height: 30px;
 }
+
+.pointer {
+  cursor: pointer;
+}

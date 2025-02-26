@@ -6,6 +6,7 @@ export type Feed = {
   feedType: string;
   likeCount: number;
   commentCount: number;
+  isLiked?: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;

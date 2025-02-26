@@ -7,27 +7,33 @@ import Feed from "../../components/Feed";
 import CreateComment from "../../components/comments/CreateComment";
 import Comment from "../../components/comments/Comment";
 import * as Types from "../../utils/types";
-import Dummys from "../../utils/dummyData";
 import { useParams, useRouter } from "next/navigation";
 import { useFeed } from "../../contexts/FeedContext";
 import { httpRequest } from "../../utils/httpRequest";
 import { useUser } from "../../contexts/UserContext";
 
 export default function FeedDetile() {
-  const { feedContext, updateFeedContext, commentContext, crudMyComment, setCrudMyComment } =
-    useFeed();
+  const {
+    feedContext,
+    setFeedContext,
+    updateFeedContext,
+    commentContext,
+    crudMyComment,
+    setCrudMyComment,
+  } = useFeed();
+
   const { userContext, fetchUserContext } = useUser();
-  const { id } = useParams<{ id: string }>();
+  const { feedId } = useParams<{ feedId: string }>();
   const router = useRouter();
   const [comments, setComments] = useState<Types.Comment[]>([]);
   const getFeedInLocal = () => {
-    if (feedContext?.feedId?.toString() === id) return true;
+    if (feedContext?.feedId?.toString() === feedId) return true;
     const savedFeed = localStorage.getItem("feedContext");
     if (savedFeed) {
-      const myFeed: Types.Feed = JSON.parse(savedFeed);
-      if (myFeed.feedId.toString() === id) {
-        console.log("[success] Get Feed in lacal sotrage ");
-        updateFeedContext(myFeed);
+      const lacalStorageFeed: Types.Feed = JSON.parse(savedFeed);
+      if (lacalStorageFeed.feedId.toString() === feedId) {
+        setFeedContext(lacalStorageFeed);
+        console.log("[post/id/page] Success to Get Feed in lacal sotrage ");
         return true;
       }
     }
@@ -35,57 +41,65 @@ export default function FeedDetile() {
   };
 
   // 로컬 스토리지가 비어있거나, 컨텍스트가 비어있거나, 혹은 현재 게시물과 id가 다른 url인 경우
-  const fetchFeed = (id: string) => {
+  const fetchFeed = async (feedId: string) => {
+    if (getFeedInLocal()) return;
+
     const method = "GET";
-    const url = `http://localhost:8090/api/v1/feeds/${id}`;
+    const url = `http://localhost:8090/api/v1/feeds/${feedId}`;
     const body = null;
-    const success = (result: any) => {
-      if (result.data) {
-        console.log(result);
-        updateFeedContext(result.data);
-      } else {
-        // window.location.href = "/";
-        router.push("/");
-        alert("존재하지 않는 게시물입니다");
-      }
-    };
-    const fail = () => {
-      console.error(`${id}번 게시물 조회 실패`);
-    };
-    if (!getFeedInLocal()) {
+
+    return new Promise<void>((resolve, reject) => {
+      const success = (result: any) => {
+        if (result.data) {
+          console.log("[post/id/page] 게시물 조회 성공", result);
+          updateFeedContext(result.data);
+          resolve();
+        } else {
+          router.push("/");
+          alert("존재하지 않는 게시물입니다");
+          reject();
+        }
+      };
+
+      const fail = () => {
+        console.error(`${feedId}번 게시물 조회 실패`);
+        reject();
+      };
+
       httpRequest(method, url, body, success, fail);
-    }
+    });
   };
 
-  const fetchComments = (id: string) => {
+  const fetchComments = (feedId: string) => {
     const method = "GET";
-    const url = `http://localhost:8090/api/v1/comments/${id}`;
+    const url = `http://localhost:8090/api/v1/comments/${feedId}`;
     const body = null;
     const success = (result: any) => {
       // console.log(result);
       setComments(result.data.comments);
     };
     const fail = () => {
-      console.error(`${id}번 게시물의 댓글 조회 실패`);
+      console.error(`${feedId}번 게시물의 댓글 조회 실패`);
     };
     httpRequest(method, url, body, success, fail);
   };
 
-  const fetchUserAndFeed = async (id: string) => {
+  const fetchUserAndFeed = async (feedId: string) => {
     try {
       if (!userContext?.userId) await fetchUserContext();
-      await Promise.all([fetchFeed(id), fetchComments(id)]);
+      await fetchFeed(feedId); // 데이터가 다 불러와질 때까지 기다리기
+      fetchComments(feedId);
     } catch (error) {
       console.error("데이터 불러오기 중 오류 발생", error);
     }
   };
 
   useEffect(() => {
-    fetchUserAndFeed(id);
+    fetchUserAndFeed(feedId);
   }, []);
 
   // 답글 부분 comment
-  // 나의 피스 생성 반영 함수
+  // 나의 피드 생성 반영 함수
   const createMyComment = (createdComment: Types.Comment) => {
     setComments((prevComments) => [createdComment, ...prevComments]);
     if (feedContext) {

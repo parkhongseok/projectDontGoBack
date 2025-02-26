@@ -42,11 +42,7 @@
 .content {
   margin: 0;
   padding: 0;
-  /* font-size: 12px; */
   color: var(--gray4);
-}
-.content:hover {
-  cursor: pointer;
 }
 .time {
   margin: 0;
@@ -62,8 +58,7 @@
   color: var(--gray2);
 }
 
-.like,
-.comment:hover {
+.like {
   cursor: pointer;
 }
 
