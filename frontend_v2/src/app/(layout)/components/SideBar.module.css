@@ -23,7 +23,7 @@
 
 .logoImage {
   color: #000;
-  width: var(--sidebar-item-width);
+  width: var(--sidebar-logo-width);
   min-width: var(--sidebar-item-min-width);
   height: auto;
   fill: var(--gray1);

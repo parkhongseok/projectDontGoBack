@@ -5,6 +5,12 @@ import "./globals.css";
 import SideBar from "../(layout)/components/Sidebar";
 import { FeedProvider } from "./contexts/FeedContext";
 import { UserProvider } from "./contexts/UserContext";
+
+// fontAwesome
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css"; // CSS 직접 불러오기
+config.autoAddCss = false;
+
 // import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 // const geistSans = Geist({

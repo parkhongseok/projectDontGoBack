@@ -62,6 +62,19 @@
   color: var(--gray2);
 }
 
+.like,
+.comment:hover {
+  cursor: pointer;
+}
+
+.likeActive {
+  font-weight: 700;
+  color: var(--gray3);
+}
+.likeBtn {
+  font-size: 14px;
+}
+
 .write {
   margin: 0;
   padding: 5px 10px;
@@ -186,6 +199,7 @@
 
 .deleteBoxContainer {
   width: 23vw;
+  min-width: 300px;
   height: auto;
   min-height: 10vh;
   max-height: 60vh;

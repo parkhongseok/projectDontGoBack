@@ -11,6 +11,9 @@ import EditPopUp from "./EditPopUp";
 import DeletePopUp from "./DeletePopUp";
 import { useUser } from "../contexts/UserContext";
 import { timeAgo } from "../utils/timeUtils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faComment } from "@fortawesome/free-solid-svg-icons";
 
 type FeedProps = {
   feed: Types.Feed | null; // Props의 타입 정의
@@ -20,9 +23,10 @@ export default function Feed({ feed }: FeedProps) {
   const { userContext } = useUser();
   const { updateFeedContext } = useFeed();
   const { id } = useParams<{ id: string }>();
-  // 이름좀 바꾸자
   const [isFeedEditOpen, setIsFeedEditOpen] = useState(false);
   const [isFeedDeleteOpen, setIsFeedDeleteOpen] = useState(false);
+  const [feedLikeState, setFeedLikeState] = useState(feed?.likeCount || 0);
+  const [isActiveFeedLike, setIsActiveFeedLike] = useState(false);
 
   if (!feed || !userContext) {
     if (feed) console.log("[Feed.tsx] 게시물 정보 로딩 완료 : ", feed);
@@ -38,6 +42,16 @@ export default function Feed({ feed }: FeedProps) {
   };
   const handleFeedClick = () => {
     updateFeedContext(feed);
+  };
+  const handleFeedLike = () => {
+    if (isActiveFeedLike) {
+      setFeedLikeState((prev) => prev - 1);
+      setIsActiveFeedLike(false);
+      // 요청 보내기
+    } else {
+      setFeedLikeState((prev) => prev + 1);
+      setIsActiveFeedLike(true);
+    }
   };
   // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
   const feedTypeClass = styles[feed.feedType] || "";
@@ -88,22 +102,33 @@ export default function Feed({ feed }: FeedProps) {
       {id ? (
         <p className={`px-5 ${styles.content}`}>{feed.content}</p>
       ) : (
-        <Link
-          className={`px-5 `}
-          href={`/post/${feed.feedId}`}
-          onClick={handleFeedClick}
-          legacyBehavior
-        >
-          <p className={styles.content}>{feed.content}</p>
+        <Link className={`px-5 `} href={`/post/${feed.feedId}`} legacyBehavior>
+          <p onClick={handleFeedClick} className={styles.content}>
+            {feed.content}
+          </p>
         </Link>
       )}
       <Stack className="px-5" direction="horizontal" gap={3}>
-        <div className="">
-          <p className={styles.like}>좋아요 {feed.likeCount}개</p>
+        <div className={`flex items-center gap-2 text-xl leading-none`}>
+          <FontAwesomeIcon
+            icon={faHeart}
+            className={`${styles.like} ${styles.likeBtn} ${isActiveFeedLike && styles.likeActive} `}
+            onClick={handleFeedLike}
+          />
+          <span className={`${styles.like} ms-1`}>{feedLikeState}</span>
         </div>
+
         <div className="vr" />
-        <div className="">
-          <p className={styles.comment}>댓글 {feed.commentCount}개</p>
+
+        <div className={`flex items-center gap-2 text-xl leading-none`}>
+          <FontAwesomeIcon
+            icon={faComment}
+            // size="2x"
+            className={` ${styles.comment} ${styles.likeBtn} `}
+          />
+          <Link href={`/post/${feed.feedId}`} legacyBehavior>
+            <span className={`${styles.comment} ms-1`}>{feed.commentCount}</span>
+          </Link>
         </div>
       </Stack>
     </Stack>

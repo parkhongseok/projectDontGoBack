@@ -34,7 +34,7 @@ export default function DeleteCommentPopUp({ commentId, setIsCommentDeleteOpen }
       // }
     };
     const fail = () => {
-      alert("게시물을 삭제할 수 없습니다.");
+      alert("답글을 삭제할 수 없습니다.");
     };
     httpRequest(method, url, body, success, fail);
   };
@@ -50,7 +50,7 @@ export default function DeleteCommentPopUp({ commentId, setIsCommentDeleteOpen }
           <div className={` pt-2 fontBlack`}>
             <h5>정말 삭제하시겠습니까</h5>
           </div>
-          <div className={`fontGray4 pb-2`}>삭제한 게시물은 복원할 수 없습니다.</div>
+          <div className={`fontGray4 pb-2`}>삭제한 답글은 복원할 수 없습니다.</div>
           {/* 상단  취소 / 게시글 작성 / ... */}
           <Stack className={`${styles.deleteBtns} `} direction="horizontal">
             <div className={`${styles.deleteBtn} ms-auto `}>

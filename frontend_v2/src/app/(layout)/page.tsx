@@ -14,6 +14,7 @@ export default function Home() {
   const [feeds, setFeeds] = useState<Types.Feed[]>([]);
   const [lastFeedId, setLastFeedId] = useState(0);
   const [feedLoading, setFeedLoading] = useState(false);
+
   const lastFeedIdRef = useRef(lastFeedId);
   useEffect(() => {
     //클로저

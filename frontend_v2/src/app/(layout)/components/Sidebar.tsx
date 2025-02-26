@@ -10,7 +10,7 @@ export default function SideBar() {
       {/* 로고 */}
       <div className={styles.logo}>
         <Nav.Link href="/">
-          <Image src="sidebar/logo.svg" alt="Logo" className={styles.logoImage} />
+          <Image src="/sidebar/logo.svg" alt="Logo" className={styles.logoImage} />
         </Nav.Link>
       </div>
       {/* 네비게이션 메뉴 */}

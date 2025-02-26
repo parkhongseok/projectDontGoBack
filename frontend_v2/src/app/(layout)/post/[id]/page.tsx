@@ -85,6 +85,14 @@ export default function FeedDetile() {
   }, []);
 
   // 답글 부분 comment
+  // 나의 피스 생성 반영 함수
+  const createMyComment = (createdComment: Types.Comment) => {
+    setComments((prevComments) => [createdComment, ...prevComments]);
+    if (feedContext) {
+      // 댓글 개수 프론트에서도 즉시 반영
+      updateFeedContext({ ...feedContext, commentCount: feedContext?.commentCount + 1 });
+    }
+  };
   // 나의 피드 수정 반영 함수
   const updateMyComment = (updatedComment: Types.Comment) => {
     setComments((prevComments) =>
@@ -93,16 +101,15 @@ export default function FeedDetile() {
       )
     );
   };
-
   // 나의 피드 삭제 반영 함수
   const deleteMyComment = (deletedComment: Types.Comment) => {
     setComments((prevComments) =>
       prevComments.filter((comment) => comment.commentId !== deletedComment.commentId)
     );
-  };
-  // 나의 피스 생성 반영 함수
-  const createMyComment = (createdComment: Types.Comment) => {
-    setComments((prevComments) => [createdComment, ...prevComments]);
+    if (feedContext) {
+      // 댓글 개수 프론트에서도 즉시 반영
+      updateFeedContext({ ...feedContext, commentCount: feedContext?.commentCount - 1 });
+    }
   };
 
   // 자신 답글의 수정 삭제를 감지하여, 이를 반영
