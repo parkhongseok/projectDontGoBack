@@ -116,7 +116,7 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
                 onInput={(e) => autoResize(e)}
                 rows={5}
                 className={`${styles.textBox} fontWhite`}
-                placeholder="게시글 작성하기"
+                placeholder="게시글 수정하기"
                 value={feed.content}
                 onChange={handleChange}
                 // disabled

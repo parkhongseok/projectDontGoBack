@@ -29,6 +29,7 @@ export type Comment = {
   commentType: string;
   likeCount: number;
   subCommentCount: number;
+  isLiked?: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;

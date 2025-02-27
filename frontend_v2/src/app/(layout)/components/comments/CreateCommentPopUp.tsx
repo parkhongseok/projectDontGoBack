@@ -45,7 +45,6 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
     const success = (result: any) => {
       setUserInput("");
       closeBox();
-      console.log(result.data);
       setCommentContext(result.data);
       setCrudMyComment({ C: true, R: false, U: false, D: false });
     };

@@ -20,8 +20,10 @@ export default function Home() {
     //클로저
     lastFeedIdRef.current = lastFeedId;
   }, [lastFeedId]);
+
   const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
   const { userContext, fetchUserContext } = useUser();
+
   const fetchFeeds = () => {
     if (feedLoading) return;
     setFeedLoading(true); // 로딩 시작
@@ -61,6 +63,10 @@ export default function Home() {
     fetchUserAndFeeds();
   }, []);
 
+  // 나의 피스 생성 반영 함수
+  const createMyFeed = (createdFeed: Types.Feed) => {
+    setFeeds((prevFeeds) => [createdFeed, ...prevFeeds]);
+  };
   // 나의 피드 수정 반영 함수
   const updateMyFeed = (updatedFeed: Types.Feed) => {
     setFeeds((prevFeeds) =>
@@ -70,10 +76,6 @@ export default function Home() {
   // 나의 피드 삭제 반영 함수
   const deleteMyFeed = (deletedFeed: Types.Feed) => {
     setFeeds((prevFeeds) => prevFeeds.filter((feed) => feed.feedId !== deletedFeed.feedId));
-  };
-  // 나의 피스 생성 반영 함수
-  const createMyFeed = (createdFeed: Types.Feed) => {
-    setFeeds((prevFeeds) => [createdFeed, ...prevFeeds]);
   };
 
   // 자신 피드의 수정 삭제를 감지하여, 이를 반영

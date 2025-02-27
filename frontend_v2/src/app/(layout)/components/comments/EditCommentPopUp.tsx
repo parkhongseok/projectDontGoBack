@@ -102,10 +102,10 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
                   취소
                 </button>
               </>
-              <h6 className={`ms-auto fontWhite`}>답글 쓰기</h6>
-              <h6 className={`ms-auto fontWhite pb-2`}>. . .</h6>
+              <h6 className={`ms-auto ${styles.createBoxTop}`}>답글 수정하기</h6>
+              <h6 className={`ms-auto ${styles.createBoxTop} pb-2`}>. . .</h6>
             </Stack>
-            <hr className="feed-underline fontWhite" />
+            <hr className="feed-underline fontGray4 mt-4" />
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
@@ -116,7 +116,7 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
                 onInput={(e) => autoResize(e)}
                 rows={5}
                 className={`${styles.textBox} fontWhite`}
-                placeholder="게시글 작성하기"
+                placeholder="답글 수정하기"
                 value={comment.content}
                 onChange={handleChange}
                 // disabled
