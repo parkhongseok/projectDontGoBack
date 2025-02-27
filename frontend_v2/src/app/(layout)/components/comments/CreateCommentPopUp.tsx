@@ -3,18 +3,18 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import "../../globals.css";
-import { usePathname } from "next/navigation";
-import { Button, Stack } from "react-bootstrap";
+
+import { Stack } from "react-bootstrap";
 import * as Types from "../../utils/types";
 import styles from "../Feed.module.css";
 import { useFeed } from "../../contexts/FeedContext";
 import { useUser } from "../../contexts/UserContext";
 import { httpRequest } from "../../utils/httpRequest";
+import { MAX_TEXT_LENGTH } from "../../utils/values";
 
 type propsType = { setShowWriteBox: Dispatch<SetStateAction<boolean>>; feed: Types.Feed };
 
 export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType) {
-  // const pathname = usePathname() || "";
   const [userInput, setUserInput] = useState("");
   const { setCrudMyComment, setCommentContext } = useFeed();
   const { userContext } = useUser();
@@ -26,7 +26,19 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
     setShowWriteBox(false);
   };
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setUserInput(e.target.value);
+    const textarea = e.target;
+    let text = textarea.value;
+
+    const cursorPosition = textarea.selectionStart; // 현재 커서 위치 저장
+
+    text = text.replace(/\n{3,}/g, "\n\n");
+    if (text.length <= MAX_TEXT_LENGTH) {
+      setUserInput(text);
+    }
+    // 상태 업데이트 이후 커서 위치 복구
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+    }, 0);
   };
   const handleSubmit = async () => {
     if (!userInput.trim()) {
@@ -68,6 +80,7 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
     target.style.height = "auto"; // 먼저 높이를 auto로 리셋
     target.style.height = `${target.scrollHeight}px`; // 텍스트의 높이에 맞게 설정
   };
+  const PLACEHOLER = feed?.userId == userContext?.userId ? `나에게` : `${feed.author} 님에게`;
   return (
     <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
       <div className="sidebar-space" />
@@ -102,13 +115,15 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
               <textarea
                 onInput={(e) => autoResize(e)}
                 rows={5}
-                className={`${styles.textBox} fontWhite`}
-                placeholder={`${feed.author} 님에게 답글 남기기 ...`}
+                className={`${styles.textBox} fontGray4`}
+                placeholder={`${PLACEHOLER} 답글 남기기 ...`}
                 value={userInput}
                 onChange={handleChange}
-                // disabled
-                // readOnly
+                maxLength={MAX_TEXT_LENGTH}
               />
+              <p className={`ms-auto mb-1 ${styles.maxLength}`}>
+                {userInput.length} / {MAX_TEXT_LENGTH}
+              </p>
               <>
                 <button
                   className={`ms-auto mb-1 ${styles.write} custom-button`}

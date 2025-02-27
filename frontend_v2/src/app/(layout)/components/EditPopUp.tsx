@@ -4,9 +4,10 @@ import "../globals.css";
 import styles from "./Feed.module.css";
 import { Button, Stack } from "react-bootstrap";
 import { useFeed } from "../contexts/FeedContext";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
+import { MAX_TEXT_LENGTH } from "../utils/values";
 
 type propsType = {
   setIsFeedEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,25 +16,19 @@ type propsType = {
 export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
   const pathname = usePathname() || "";
   const { feedContext, setFeedContext, setCrudMyFeed } = useFeed();
-
-  // feed가 없으면 로딩 중인 상태 표시 공간 컴포넌트로 대체 고민
   if (!feedContext) return <div className="loading" />;
+  const [userInput, setUserInput] = useState(feedContext?.content);
 
-  const [feed, setFeed] = useState(feedContext);
-
-  const feedTypeClass = styles[feedContext.feedType] || "";
-
-  const setUserInput = (newContent: string) => {
-    // 구조분해 할당
-    setFeed({
-      ...feed,
-      content: newContent,
-    });
-  };
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null); // 초기 높이 설정
+  useEffect(() => {
+    if (textareaRef.current) {
+      autoResize({ target: textareaRef.current } as any); // 초기 높이 설정
+    }
+  }, []);
 
   const setContentContext = (newContent: string, newUpdatedAt: string) => {
     const newFeed = {
-      ...feed,
+      ...feedContext,
       content: newContent,
       updatedAt: newUpdatedAt,
     };
@@ -46,30 +41,40 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
 
   const autoResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const target = e.target as HTMLTextAreaElement;
-    target.style.height = "auto"; // 먼저 높이를 auto로 리셋
-    target.style.height = `${target.scrollHeight}px`; // 텍스트의 높이에 맞게 설정
+    target.style.height = "auto";
+    target.style.height = `${target.scrollHeight}px`;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setUserInput(e.target.value);
+    const textarea = e.target;
+    let text = textarea.value;
+
+    const cursorPosition = textarea.selectionStart; // 현재 커서 위치 저장
+
+    text = text.replace(/\n{3,}/g, "\n\n");
+    if (text.length <= MAX_TEXT_LENGTH) {
+      setUserInput(text);
+    }
+    // 상태 업데이트 이후 커서 위치 복구
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+    }, 0);
   };
 
   const handleSubmit = async () => {
-    if (!feed.content.trim()) {
+    if (!userInput.trim()) {
       alert("내용을 입력해주세요.");
       return;
     }
     // 요청 객체
     const updateFeedRequest = {
-      content: feed.content,
+      content: userInput,
     };
 
     const method = "PATCH";
-    const url = `http://localhost:8090/api/v1/feeds/${feed.feedId}`;
+    const url = `http://localhost:8090/api/v1/feeds/${feedContext.feedId}`;
     const body = updateFeedRequest;
     const success = (result: any) => {
-      // console.log("EditPopUp : ", feedContext);
-      // console.log("result.data : ", result.data);
       if (result.data.feedId == feedContext.feedId)
         setContentContext(result.data.content, result.data.updatedAt);
       else console.error("EditPopUp : 즉시 갱신 실패");
@@ -83,7 +88,7 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
     };
     httpRequest(method, url, body, success, fail);
   };
-
+  const feedTypeClass = styles[feedContext.feedType] || "";
   return (
     <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
       <div className="sidebar-space" />
@@ -113,15 +118,18 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
                 {feedContext.author}
               </p>
               <textarea
+                ref={textareaRef}
                 onInput={(e) => autoResize(e)}
                 rows={5}
-                className={`${styles.textBox} fontWhite`}
+                className={`${styles.textBox} fontGray4`}
                 placeholder="게시글 수정하기"
-                value={feed.content}
+                value={userInput}
                 onChange={handleChange}
-                // disabled
-                // readOnly
+                maxLength={MAX_TEXT_LENGTH}
               />
+              <p className={`ms-auto mb-1 ${styles.maxLength}`}>
+                {userInput.length} / {MAX_TEXT_LENGTH}
+              </p>
               <>
                 <button
                   className={`ms-auto mb-1 ${styles.write} custom-button`}

@@ -9,15 +9,15 @@ import { useUser } from "../contexts/UserContext";
 
 export default function CreateFeed() {
   const { userContext } = useUser();
-  const [showWriteBox, setShowWriteBox] = useState(false);
+  const [isFeedCreaterOpen, setIsFeedCreaterOpen] = useState(false);
 
   if (!userContext) {
     return <div className="loading" />;
   }
 
   const feedTypeClass = styles[userContext.userType] || "";
-  const openWriteBox = () => {
-    setShowWriteBox(true);
+  const handleCreateFeed = () => {
+    setIsFeedCreaterOpen(true);
   };
 
   return (
@@ -32,17 +32,17 @@ export default function CreateFeed() {
         </div>
         <div className="vr" />
         <div>
-          <p className={`${styles.createTextholder}`} onClick={openWriteBox}>
+          <p className={`${styles.createTextholder}`} onClick={handleCreateFeed}>
             글쓰기
           </p>
         </div>
         <div className="ms-auto">
-          <button className={`${styles.write} custom-button`} onClick={openWriteBox}>
+          <button className={`${styles.write} custom-button`} onClick={handleCreateFeed}>
             게시
           </button>
         </div>
       </Stack>
-      {showWriteBox ? <CreatePopUp setShowWriteBox={setShowWriteBox} /> : null}
+      {isFeedCreaterOpen ? <CreatePopUp setIsFeedCreaterOpen={setIsFeedCreaterOpen} /> : null}
     </>
   );
 }

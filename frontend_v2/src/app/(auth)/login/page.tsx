@@ -2,27 +2,73 @@
 
 import "../auth.css";
 import Link from "next/link";
-import { Image, Stack } from "react-bootstrap";
+import { Image, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
 
 export default function Login() {
+  const access_token =
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGVtYWlsLmNvbSIsImlhdCI6MTc0MDY2OTQ3MSwiZXhwIjoxNzQxODc5MDcxfQ.J8O74yZaap-ptorzzoAYVIRqQAd8mZXgUPg9iDH6GR8";
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
       <p className="text-center mb-4 pt-4"></p>
 
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
-      <Stack as="div" className="login-box mt-5 ">
-        <h1 className="login-btn fontGray4 title mb-5 ">Dont Go Back</h1>
-        <div className="text ">
+
+      <Stack gap={4} className="col-md-5 mx-auto login-box pt-8">
+        <Image
+          src="/logoLong.svg"
+          alt="Logo"
+          className="login-btn title m-0 p-0 border-0 mx-auto mb-4"
+        />
+        <div className="text">
           <h4 className="login-btn fontGray4  text">간편 로그인으로</h4>
           <h4 className="login-btn fontGray4 text">서비스 시작하기</h4>
         </div>
-        <div className="line foot">
-          <Link className="imageLink" href="http://localhost:8090/oauth2/authorization/google">
-            <Image className="image" src="/googleLogin.svg" alt="LogInBtn" />
+        <div className="line mt-4 mb-3"></div>
+        <Link
+          className="imageLink mx-auto"
+          href="http://localhost:8090/oauth2/authorization/google"
+        >
+          <Image className="image" src="/googleLogin.svg" alt="LogInBtn" />
+        </Link>
+        <OverlayTrigger
+          key={"bottom"}
+          placement={"bottom"}
+          overlay={
+            <Tooltip id={`tooltip-${"bottom"}`}>
+              <strong>{"로그인 없이"}</strong> 둘러보기!
+            </Tooltip>
+          }
+        >
+          <Link
+            className="imageLink2 mx-auto"
+            href={`http://localhost:3000/?access_token=${access_token}`}
+          >
+            <p className="imageText">둘러보기</p>
           </Link>
-        </div>
+        </OverlayTrigger>
       </Stack>
     </>
   );
+}
+
+{
+  /* <div className="login-box mt-5 ">
+<Image src="/logoLong.svg" alt="Logo" className="login-btn  title mb-5 mt-6" />
+<div className="text mt-2">
+  <h4 className="login-btn fontGray4  text">간편 로그인으로</h4>
+  <h4 className="login-btn fontGray4 text mb-4">서비스 시작하기</h4>
+</div>
+<div className="line foot flex mt-4 mb-4 pt-4">
+  <Link className="imageLink " href="http://localhost:8090/oauth2/authorization/google">
+    <Image className="image" src="/googleLogin.svg" alt="LogInBtn" />
+  </Link>
+  <Link
+    className="imageLink2"
+    href="http://localhost:3000/?access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDA2NjU3MzAsImV4cCI6MTc0MDc1MjEzMCwic3ViIjoiMTIzcWtyZ2hkdGpyQGdtYWlsLmNvbSIsImlkIjoyMX0.aQfTURrMY5KvFlIH-PgxtlAtv_jZvxvY_vD44nFHmc8"
+  >
+    <p className="imageText">둘러보기</p>
+  </Link>
+</div>
+</div> */
 }

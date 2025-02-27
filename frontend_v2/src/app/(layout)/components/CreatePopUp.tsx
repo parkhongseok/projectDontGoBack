@@ -9,30 +9,45 @@ import { useUser } from "../contexts/UserContext";
 import { usePathname, useRouter } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
 import * as Types from "../utils/types";
+import { MAX_TEXT_LENGTH } from "../utils/values";
 
 type propsType = {
-  setShowWriteBox: Dispatch<SetStateAction<boolean>>;
+  setIsFeedCreaterOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function CreatePopUp({ setShowWriteBox }: propsType) {
+export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
   const router = useRouter();
   const pathname = usePathname() || "";
   const { setCrudMyFeed, setFeedContext } = useFeed();
   const [userInput, setUserInput] = useState("");
   const { userContext } = useUser();
+
   if (!userContext) {
     return <div className="loading" />;
   }
 
-  const closeBox = () => {
-    setShowWriteBox(false);
+  const handlerClose = () => {
+    setIsFeedCreaterOpen(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setUserInput(e.target.value);
+    const textarea = e.target;
+    let text = textarea.value;
+
+    const cursorPosition = textarea.selectionStart; // 현재 커서 위치 저장
+
+    text = text.replace(/\n{3,}/g, "\n\n");
+    if (text.length <= MAX_TEXT_LENGTH) {
+      setUserInput(text);
+    }
+    // 상태 업데이트 이후 커서 위치 복구
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+    }, 0);
   };
 
   const handleSubmit = async () => {
+    if (userInput.length == 20) alert("내용을 입력해주세요.");
     if (!userInput.trim()) {
       alert("내용을 입력해주세요.");
       return;
@@ -46,7 +61,7 @@ export default function CreatePopUp({ setShowWriteBox }: propsType) {
     const body = createFeedRequest;
     const success = (result: any) => {
       setUserInput("");
-      closeBox();
+      handlerClose();
       // console.log(pathname)
       // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
       if (pathname === "/") {
@@ -91,7 +106,7 @@ export default function CreatePopUp({ setShowWriteBox }: propsType) {
               <>
                 <button
                   className={`${styles.write} ${styles.exitBtn} custom-button`}
-                  onClick={closeBox}
+                  onClick={handlerClose}
                 >
                   취소
                 </button>
@@ -107,6 +122,7 @@ export default function CreatePopUp({ setShowWriteBox }: propsType) {
                 {userContext.userName}
               </p>
               <textarea
+                maxLength={MAX_TEXT_LENGTH}
                 onInput={(e) => autoResize(e)}
                 rows={5}
                 className={`${styles.textBox} fontGray4`}
@@ -116,6 +132,9 @@ export default function CreatePopUp({ setShowWriteBox }: propsType) {
                 // disabled
                 // readOnly
               />
+              <p className={`ms-auto mb-1 ${styles.maxLength}`}>
+                {userInput.length} / {MAX_TEXT_LENGTH}
+              </p>
               <>
                 <button
                   className={`ms-auto mb-1 ${styles.write} custom-button`}
