@@ -12,38 +12,6 @@ import { useUser } from "./contexts/UserContext";
 import { ACCESS_TOKEN_NAME } from "./utils/values";
 
 export default function Home() {
-  const [feeds, setFeeds] = useState<Types.Feed[]>([]);
-  const [lastFeedId, setLastFeedId] = useState(0);
-  const [feedLoading, setFeedLoading] = useState(false);
-
-  const lastFeedIdRef = useRef(lastFeedId);
-  useEffect(() => {
-    //클로저
-    lastFeedIdRef.current = lastFeedId;
-  }, [lastFeedId]);
-
-  const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
-  const { userContext, fetchUserContext } = useUser();
-
-  const fetchFeeds = () => {
-    if (feedLoading) return;
-    setFeedLoading(true); // 로딩 시작
-    const url = `http://localhost:8090/api/v1/feeds?lastFeedId=${lastFeedIdRef.current}&size=${10}`;
-    const body = null;
-    const success = async (result: any) => {
-      if (result.data.feeds.length === 0) return;
-      await setFeeds((prevFeeds: Types.Feed[]) => [...prevFeeds, ...result.data.feeds]);
-      await setLastFeedId(result.data.feeds[result.data.feeds.length - 1].feedId);
-      setFeedLoading(false);
-    };
-    const fail = () => {
-      console.error("피드 불러오기 실패");
-      setFeedLoading(false);
-      // alert("feed load fail");
-    };
-    httpRequest("GET", url, body, success, fail);
-  };
-
   // 액세스 토큰을 URL에서 쿼리 파라미터로부터 추출하고 로컬 스토리지에 저장
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -54,6 +22,39 @@ export default function Home() {
       localStorage.setItem(ACCESS_TOKEN_NAME, token);
     }
   }, []);
+
+  const [feeds, setFeeds] = useState<Types.Feed[]>([]);
+
+  const [lastFeedId, setLastFeedId] = useState(0);
+  const [feedsLoading, setFeedsLoading] = useState(false);
+  const lastFeedIdRef = useRef(lastFeedId);
+  useEffect(() => {
+    //클로저
+    lastFeedIdRef.current = lastFeedId;
+  }, [lastFeedId]);
+  // 피드 페이징
+  const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
+  const { userContext, fetchUserContext } = useUser();
+
+  const fetchFeeds = async () => {
+    if (feedsLoading) return;
+    setFeedsLoading(true); // 로딩 시작
+    const url = `http://localhost:8090/api/v1/feeds?lastFeedId=${lastFeedIdRef.current}&size=${10}`;
+    const body = null;
+    const success = async (result: any) => {
+      setFeedsLoading(false);
+      let newFeeds = result.data.feeds;
+      if (newFeeds.length === 0) return;
+      setFeeds((prevFeeds: Types.Feed[]) => [...prevFeeds, ...newFeeds]);
+      setLastFeedId(newFeeds[newFeeds.length - 1].feedId);
+    };
+    const fail = () => {
+      setFeedsLoading(false);
+      console.error("피드 불러오기 실패");
+      // alert("feed load fail");
+    };
+    httpRequest("GET", url, body, success, fail);
+  };
 
   // 메인 피드에 필요한 데이터만 fetch
   useEffect(() => {
@@ -112,7 +113,7 @@ export default function Home() {
       timeoutId = setTimeout(() => {
         const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
-        if (scrollTop + clientHeight >= scrollHeight - 100 && !feedLoading) {
+        if (scrollTop + clientHeight >= scrollHeight - 100 && !feedsLoading) {
           fetchFeeds();
         }
       }, 200); // 200ms 디바운스
@@ -123,7 +124,7 @@ export default function Home() {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(timeoutId);
     };
-  }, [feedLoading, lastFeedId]);
+  }, [feedsLoading, lastFeedId]);
 
   return (
     <>

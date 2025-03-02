@@ -22,6 +22,7 @@ type CommentProps = {
 export default function Comment({ comment }: CommentProps) {
   const { userContext } = useUser();
   const { setCommentContext, setCrudMyComment } = useFeed();
+  
   const [isCommentEditOpen, setIsCommentEditOpen] = useState(false);
   const [isCommentDeleteOpen, setIsCommentDeleteOpen] = useState(false);
 

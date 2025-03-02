@@ -16,17 +16,23 @@ export default function FeedDetile() {
   const {
     feedContext,
     setFeedContext,
-    // updateFeedContext,
     commentContext,
     setCommentContext,
     crudMyComment,
     setCrudMyComment,
   } = useFeed();
-
   const { userContext, fetchUserContext } = useUser();
   const { feedId } = useParams<{ feedId: string }>();
-  const router = useRouter();
+  // const router = useRouter();
   const [comments, setComments] = useState<Types.Comment[]>([]);
+  // 댓글 패이징
+  const [lastCommentId, setLastCommentId] = useState(0);
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const lastCommentIdRef = useRef(lastCommentId);
+  useEffect(() => {
+    //클로저
+    lastCommentIdRef.current = lastCommentId;
+  }, [lastCommentId]);
 
   const fetchFeed = async () => {
     const method = "GET";
@@ -35,7 +41,6 @@ export default function FeedDetile() {
     const success = (result: any) => {
       if (result.data) {
         setFeedContext(result.data);
-        // console.log("[post/id/page] 게시물 조회 성공", result.data);
       } else {
         alert("존재하지 않는 게시물입니다");
       }
@@ -46,32 +51,37 @@ export default function FeedDetile() {
     httpRequest(method, url, body, success, fail);
   };
 
-  const fetchComments = () => {
+  const fetchComments = async () => {
+    if (commentsLoading) return;
+    setCommentsLoading(true); // 로딩 시작
+
     const method = "GET";
-    const url = `http://localhost:8090/api/v1/comments/${feedId}`;
+    const url = `http://localhost:8090/api/v1/comments/${feedId}?lastCommentId=${
+      lastCommentIdRef.current
+    }&size=${5}`;
     const body = null;
-    const success = (result: any) => {
-      // console.log(result);
-      setComments(result.data.comments);
+    const success = async (result: any) => {
+      setCommentsLoading(false); // 로딩 끝
+      let newComments = result.data.comments;
+      if (newComments.length == 0) return;
+      setComments((prevComments: Types.Comment[]) => [...prevComments, ...newComments]);
+      setLastCommentId(newComments[newComments.length - 1].commentId);
     };
     const fail = () => {
+      setCommentsLoading(false); // 로딩 끝
       console.error(`${feedId}번 게시물의 댓글 조회 실패`);
     };
     httpRequest(method, url, body, success, fail);
   };
 
-  const fetchUserFeedAfterComment = async () => {
-    try {
-      if (!userContext?.userId) await fetchUserContext();
-      await fetchFeed();
-      fetchComments();
-    } catch (error) {
-      console.error("데이터 불러오기 중 오류 발생", error);
-    }
-  };
-
+  // 상세 피드에 필요한 데이터만 fetch
   useEffect(() => {
-    fetchUserFeedAfterComment();
+    const fetchInitialData = async () => {
+      if (!userContext?.userId) await fetchUserContext();
+      if (!feedContext?.feedId) await fetchFeed();
+      if (lastCommentId == 0) await fetchComments();
+    };
+    fetchInitialData();
   }, []);
 
   // 답글 부분 comment
@@ -133,6 +143,28 @@ export default function FeedDetile() {
       console.log(`[f${commentContext?.feedId}-c${commentContext?.commentId}] 답글 삭제 요청 감지`);
     }
   }, [crudMyComment]);
+
+  // [댓글 패이징] 스크롤을 감지하여 마지막에 다다르면 피드를 불러옴
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+        if (scrollTop + clientHeight >= scrollHeight - 100 && !commentsLoading) {
+          fetchComments();
+        }
+      }, 200); // 200ms 디바운스
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [commentsLoading, lastCommentId]);
 
   return (
     <>
