@@ -37,7 +37,6 @@ export default function FeedDetile() {
         setFeedContext(result.data);
         // console.log("[post/id/page] 게시물 조회 성공", result.data);
       } else {
-        router.push("/");
         alert("존재하지 않는 게시물입니다");
       }
     };
@@ -115,6 +114,8 @@ export default function FeedDetile() {
     if (crudMyComment.C) {
       setCrudMyComment({ ...crudMyComment, C: false });
       if (commentContext) createMyComment(commentContext);
+      if (feedContext)
+        setFeedContext({ ...feedContext, commentCount: feedContext.commentCount + 1 });
       console.log(`[f${commentContext?.feedId}-c${commentContext?.commentId}] 답글 생성 요청 감지`);
     }
     // 수정 작업
@@ -127,6 +128,8 @@ export default function FeedDetile() {
     if (crudMyComment.D) {
       setCrudMyComment({ ...crudMyComment, D: false });
       if (commentContext) deleteMyComment(commentContext);
+      if (feedContext)
+        setFeedContext({ ...feedContext, commentCount: feedContext.commentCount - 1 });
       console.log(`[f${commentContext?.feedId}-c${commentContext?.commentId}] 답글 삭제 요청 감지`);
     }
   }, [crudMyComment]);

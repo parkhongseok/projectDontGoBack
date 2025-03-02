@@ -57,3 +57,8 @@
   width: var(--sidebar-item-width);
   min-width: var(--sidebar-item-min-width);
 }
+
+.logout {
+  color: var(--text-color-red);
+  font-weight: 700;
+}

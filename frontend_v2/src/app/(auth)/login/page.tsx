@@ -1,5 +1,6 @@
 "use client";
 
+import { ACCESS_TOKEN_NAME } from "@/app/(layout)/utils/values";
 import "../auth.css";
 import Link from "next/link";
 import { Image, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
@@ -42,7 +43,7 @@ export default function Login() {
         >
           <Link
             className="imageLink2 mx-auto"
-            href={`http://localhost:3000/?access_token=${access_token}`}
+            href={`http://localhost:3000/?${ACCESS_TOKEN_NAME}=${access_token}`}
           >
             <p className="imageText">둘러보기</p>
           </Link>
@@ -50,25 +51,4 @@ export default function Login() {
       </Stack>
     </>
   );
-}
-
-{
-  /* <div className="login-box mt-5 ">
-<Image src="/logoLong.svg" alt="Logo" className="login-btn  title mb-5 mt-6" />
-<div className="text mt-2">
-  <h4 className="login-btn fontGray4  text">간편 로그인으로</h4>
-  <h4 className="login-btn fontGray4 text mb-4">서비스 시작하기</h4>
-</div>
-<div className="line foot flex mt-4 mb-4 pt-4">
-  <Link className="imageLink " href="http://localhost:8090/oauth2/authorization/google">
-    <Image className="image" src="/googleLogin.svg" alt="LogInBtn" />
-  </Link>
-  <Link
-    className="imageLink2"
-    href="http://localhost:3000/?access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDA2NjU3MzAsImV4cCI6MTc0MDc1MjEzMCwic3ViIjoiMTIzcWtyZ2hkdGpyQGdtYWlsLmNvbSIsImlkIjoyMX0.aQfTURrMY5KvFlIH-PgxtlAtv_jZvxvY_vD44nFHmc8"
-  >
-    <p className="imageText">둘러보기</p>
-  </Link>
-</div>
-</div> */
 }

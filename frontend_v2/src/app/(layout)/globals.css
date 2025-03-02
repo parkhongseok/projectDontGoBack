@@ -211,3 +211,24 @@ body {
 .pointer {
   cursor: pointer;
 }
+
+.main-top-drop-down {
+  background-color: black !important;
+  border-radius: 50% !important;
+  width: 30px; /* 버튼 크기 */
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* 내부 패딩 제거 */
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.main-top-drop-down::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

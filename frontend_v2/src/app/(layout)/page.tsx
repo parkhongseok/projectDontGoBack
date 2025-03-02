@@ -1,14 +1,15 @@
 "use client";
 
 import "./globals.css";
-import { Stack } from "react-bootstrap";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Dropdown, Stack, Tab, Tabs } from "react-bootstrap";
+import { useEffect, useRef, useState } from "react";
 import CreateFeed from "./components/CreateFeed";
 import Feed from "./components/Feed";
 import * as Types from "./utils/types";
 import { useFeed } from "./contexts/FeedContext";
 import { httpRequest } from "./utils/httpRequest";
 import { useUser } from "./contexts/UserContext";
+import { ACCESS_TOKEN_NAME } from "./utils/values";
 
 export default function Home() {
   const [feeds, setFeeds] = useState<Types.Feed[]>([]);
@@ -46,9 +47,11 @@ export default function Home() {
   // 액세스 토큰을 URL에서 쿼리 파라미터로부터 추출하고 로컬 스토리지에 저장
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const token = params.get("access_token");
+    window.history.replaceState(null, "", "/"); // 빈틈이 사실 존재함 하지만 둘러보기를 위해서, 우선 해당 방식/ url변경
+    document.title = "DONT GO BACK"; // 크롬의 경우, 탭 이름까지 변경
+    const token = params.get(ACCESS_TOKEN_NAME);
     if (token) {
-      localStorage.setItem("access_token", token);
+      localStorage.setItem(ACCESS_TOKEN_NAME, token);
     }
   }, []);
 
@@ -126,6 +129,7 @@ export default function Home() {
     <>
       {/* dropdown 버튼이 들어올 자리 */}
       <h5 className="text-center mb-4 pt-4 topTitleText">Hello World</h5>
+
       <div className="pt-4 feeds-container">
         {/* 사이드바가 차지하지 않는 나머지 공간 */}
         <Stack gap={4} direction="vertical">

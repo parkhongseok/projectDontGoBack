@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useFeed } from "../contexts/FeedContext";
 import { httpRequest } from "../utils/httpRequest";
 import * as Types from "../utils/types";
+import Dummys from "../utils/dummyData";
 
 type propsType = {
   feedId: number;
@@ -28,7 +29,7 @@ export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) 
     const success = (result: any) => {
       handleClosePopUp();
       setCrudMyFeed({ C: false, R: false, U: false, D: true });
-      setFeedContext(result.data);
+      setFeedContext({ ...Dummys.Feed, feedId: result.data.feedId });
       if (pathname !== "/") {
         router.push("/");
       }

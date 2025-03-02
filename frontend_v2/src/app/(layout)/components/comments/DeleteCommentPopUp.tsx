@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useFeed } from "../../contexts/FeedContext";
 import { httpRequest } from "../../utils/httpRequest";
 import * as Types from "../../utils/types";
+import Dummys from "../../utils/dummyData";
 
 type propsType = {
   commentId: number;
@@ -28,10 +29,7 @@ export default function DeleteCommentPopUp({ commentId, setIsCommentDeleteOpen }
     const success = (result: any) => {
       handleClosePopUp();
       setCrudMyComment({ C: false, R: false, U: false, D: true });
-      setCommentContext(result.data);
-      // if (pathname !== "/") {
-      //   router.push("/");
-      // }
+      setCommentContext({ ...Dummys.Comment, commentId: result.data.commentId });
     };
     const fail = () => {
       alert("답글을 삭제할 수 없습니다.");
