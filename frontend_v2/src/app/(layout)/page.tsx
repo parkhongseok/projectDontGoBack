@@ -1,43 +1,38 @@
 "use client";
 
 import "./globals.css";
-import { Dropdown, Stack, Tab, Tabs } from "react-bootstrap";
+import { Stack } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
 import CreateFeed from "./components/CreateFeed";
 import Feed from "./components/Feed";
 import * as Types from "./utils/types";
 import { useFeed } from "./contexts/FeedContext";
 import { httpRequest } from "./utils/httpRequest";
+import Loading from "./components/Loading";
 import { useUser } from "./contexts/UserContext";
-import { ACCESS_TOKEN_NAME } from "./utils/values";
 
 export default function Home() {
   // 액세스 토큰을 URL에서 쿼리 파라미터로부터 추출하고 로컬 스토리지에 저장
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
     window.history.replaceState(null, "", "/"); // 빈틈이 사실 존재함 하지만 둘러보기를 위해서, 우선 해당 방식/ url변경
     document.title = "DONT GO BACK"; // 크롬의 경우, 탭 이름까지 변경
-    const token = params.get(ACCESS_TOKEN_NAME);
-    if (token) {
-      localStorage.setItem(ACCESS_TOKEN_NAME, token);
-    }
   }, []);
 
   const [feeds, setFeeds] = useState<Types.Feed[]>([]);
-
   const [lastFeedId, setLastFeedId] = useState(0);
   const [feedsLoading, setFeedsLoading] = useState(false);
   const lastFeedIdRef = useRef(lastFeedId);
+  const { userContext } = useUser();
+
   useEffect(() => {
     //클로저
     lastFeedIdRef.current = lastFeedId;
   }, [lastFeedId]);
   // 피드 페이징
   const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
-  const { userContext, fetchUserContext } = useUser();
 
   const fetchFeeds = async () => {
-    if (feedsLoading) return;
+    if (feedsLoading) return <Loading />;
     setFeedsLoading(true); // 로딩 시작
     const url = `http://localhost:8090/api/v1/feeds?lastFeedId=${lastFeedIdRef.current}&size=${10}`;
     const body = null;
@@ -58,13 +53,12 @@ export default function Home() {
 
   // 메인 피드에 필요한 데이터만 fetch
   useEffect(() => {
-    const fetchUserAndFeeds = async () => {
-      if (!userContext?.userId) await fetchUserContext();
+    const initData = async () => {
       if (lastFeedIdRef.current == 0) {
         await fetchFeeds();
       }
     };
-    fetchUserAndFeeds();
+    initData();
   }, []);
 
   // 나의 피스 생성 반영 함수
@@ -125,7 +119,8 @@ export default function Home() {
       clearTimeout(timeoutId);
     };
   }, [feedsLoading, lastFeedId]);
-
+  
+  if (!userContext) return <Loading />;
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}

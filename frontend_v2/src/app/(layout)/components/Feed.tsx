@@ -16,11 +16,11 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { httpRequest } from "../utils/httpRequest";
 
-type FeedProps = {
+type PropsType = {
   feed: Types.Feed | null; // Props의 타입 정의
 };
 
-export default function Feed({ feed }: FeedProps) {
+export default function Feed({ feed }: PropsType) {
   const { feedId } = useParams<{ feedId: string }>();
   const { feedContext, setFeedContext, setCrudMyFeed } = useFeed();
   const { userContext } = useUser();
@@ -92,7 +92,9 @@ export default function Feed({ feed }: FeedProps) {
       )}
       <Stack direction="horizontal" gap={3}>
         <div>
-          <p className={`${styles.userName} ${feedTypeClass}`}>{feed.author}</p>
+          <Link className={`px-5 `} href={`/profile/${feed.userId}`} legacyBehavior>
+            <p className={`${styles.userName} ${feedTypeClass} pointer`}>{feed.author}</p>
+          </Link>
         </div>
         <div className="vr" />
         <div className="">
@@ -128,13 +130,17 @@ export default function Feed({ feed }: FeedProps) {
         </div>
       </Stack>
       {feedId ? (
-        <p className={`px-5 ${styles.content}`}>{feed.content}</p>
+        <div>
+          <p className={`px-5 ${styles.content}`}>{feed.content}</p>
+        </div>
       ) : (
-        <Link className={`px-5 `} href={`/post/${feed.feedId}`} legacyBehavior>
-          <p onClick={handleFeedClick} className={`${styles.content} pointer`}>
-            {feed.content}
-          </p>
-        </Link>
+        <div className={`${styles.contentContainer}`}>
+          <Link className={`px-5 `} href={`/post/${feed.feedId}`} legacyBehavior>
+            <p onClick={handleFeedClick} className={`${styles.content} pointer`}>
+              {feed.content}
+            </p>
+          </Link>
+        </div>
       )}
       <Stack className="px-5" direction="horizontal" gap={3}>
         <div className={`flex items-center gap-2 text-xl leading-none`}>

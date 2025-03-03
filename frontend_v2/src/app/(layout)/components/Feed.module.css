@@ -5,6 +5,46 @@
   font-weight: bolder;
 }
 
+.ProfileuserName {
+  margin: 0;
+  padding: 0;
+  min-width: 10rem;
+  font-size: 20px;
+  font-weight: bolder;
+}
+
+/* .profileSettingBtn {
+  padding: 0;
+  height: 28px;
+  background-color: var(--gray2);
+  width: 96%;
+  margin: auto;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+} */
+.profileSetting {
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  font-size: 20px;
+  color: var(--gray2);
+  cursor: pointer;
+}
+
+.smallBadge {
+  font-size: 0.7rem; /* 글자 크기 줄이기 */
+  padding: 0.3rem 0.5rem; /* 내부 여백 줄이기 */
+  vertical-align: middle;
+}
+.profileSettingContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+.profileSettingBtn:hover {
+  background-color: var(--gray3);
+}
+
 .RED {
   color: var(--text-color-red);
 }
@@ -39,15 +79,19 @@
   font-size: 20px;
 } */
 
+.contentContainer {
+  min-width: var(--feed-width);
+
+  box-sizing: border-box;
+  max-height: 300px;
+  overflow-y: auto;
+}
 .content {
+  max-width: 85%;
   margin: 0;
   padding: 0;
   color: var(--gray4);
-
-  max-width: var(--feed-width);
-  min-height: 35px;
-  max-height: 300px;
-  overflow-y: auto;
+  line-height: 1.2; /* 이게 없으면 자꾸 스크롤이 생김 */
   word-wrap: break-word; /* 긴 단어가 자동으로 줄바꿈됨 */
   overflow-wrap: break-word;
   white-space: pre-wrap; /* 줄바꿈 문자(\n)를 유지하면서 자동 줄바꿈 */
@@ -110,18 +154,18 @@
 }
 
 .CreateFeedContainer {
-  /* height: auto; */
+  height: auto;
   margin: auto;
   width: 93%;
   border-radius: 15px;
   transition: all 0.3s ease;
   border: solid var(--gray2);
+  cursor: text;
 }
-.CreateFeedContainer:hover {
+/* .CreateFeedContainer:hover {
   width: 96%;
   border: solid var(--gray3);
-  /* box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1); */
-}
+} */
 .createTextholder {
   color: var(--gray2);
 }
@@ -194,6 +238,7 @@
   background-color: var(--white);
   border: solid 1px var(--gray4);
   border-radius: 15px;
+  cursor: text;
   /* transition: all 0.3s ease; */
 }
 
@@ -236,4 +281,28 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.chartImgContainer {
+  margin: auto;
+  height: 320px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chartImgContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지 비율 유지하면서 꽉 차게 */
+  object-position: center; /* 중앙 정렬 */
+}
+
+.settingName {
+  width: 150px;
+  line-height: 0;
+}
+.settingSwitch {
+  margin-bottom: 4px;
 }

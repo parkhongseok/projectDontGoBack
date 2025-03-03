@@ -1,27 +1,33 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "../globals.css";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "./Feed.module.css";
-import { Button, Stack } from "react-bootstrap";
+import { Stack } from "react-bootstrap";
 import { useFeed } from "../contexts/FeedContext";
 import { useUser } from "../contexts/UserContext";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
-import * as Types from "../utils/types";
 import { MAX_TEXT_LENGTH } from "../utils/values";
+import * as Types from "../utils/types";
 
 type propsType = {
   setIsFeedCreaterOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
-  const router = useRouter();
+  // const router = useRouter();
   const pathname = usePathname() || "";
   const { setCrudMyFeed, setFeedContext } = useFeed();
   const [userInput, setUserInput] = useState("");
   const { userContext } = useUser();
-
+  // 모달 body 스크롤 토글
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
   if (!userContext) {
     return <div className="loading" />;
   }
@@ -59,7 +65,7 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
     const method = "POST";
     const url = "http://localhost:8090/api/v1/feeds";
     const body = createFeedRequest;
-    const success = (result: any) => {
+    const success = (result: { data: Types.Feed }) => {
       setUserInput("");
       handlerClose();
       // console.log(pathname)
@@ -82,13 +88,7 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
     target.style.height = "auto"; // 먼저 높이를 auto로 리셋
     target.style.height = `${target.scrollHeight}px`; // 텍스트의 높이에 맞게 설정
   };
-  // 모달 body 스크롤 토글
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+
   const feedTypeClass = styles[userContext.userType] || "";
   return (
     <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>

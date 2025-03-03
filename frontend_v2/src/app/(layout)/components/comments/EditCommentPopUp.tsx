@@ -15,7 +15,7 @@ type propsType = {
 export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
   const { commentContext, setCommentContext, setCrudMyComment } = useFeed();
   if (!commentContext) return <div className="loading" />;
-  const [userInput, setUserInput] = useState(commentContext?.content);
+  const [userInput, setUserInput] = useState(commentContext?.content || "");
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   useEffect(() => {

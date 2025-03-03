@@ -2,7 +2,7 @@
 
 import "../globals.css";
 import styles from "./Feed.module.css";
-import { Button, Stack } from "react-bootstrap";
+import { Stack } from "react-bootstrap";
 import { useFeed } from "../contexts/FeedContext";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -14,12 +14,12 @@ type propsType = {
 };
 
 export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null); // 초기 높이 설정
   const pathname = usePathname() || "";
   const { feedContext, setFeedContext, setCrudMyFeed } = useFeed();
+  const [userInput, setUserInput] = useState(feedContext?.content || "");
   if (!feedContext) return <div className="loading" />;
-  const [userInput, setUserInput] = useState(feedContext?.content);
 
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null); // 초기 높이 설정
   useEffect(() => {
     if (textareaRef.current) {
       autoResize({ target: textareaRef.current } as any); // 초기 높이 설정

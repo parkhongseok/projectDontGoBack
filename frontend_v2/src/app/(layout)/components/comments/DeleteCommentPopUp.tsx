@@ -3,7 +3,7 @@
 import "../../globals.css";
 import { Stack } from "react-bootstrap";
 import styles from "../Feed.module.css";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useFeed } from "../../contexts/FeedContext";
 import { httpRequest } from "../../utils/httpRequest";
 import * as Types from "../../utils/types";
@@ -15,7 +15,7 @@ type propsType = {
 };
 
 export default function DeleteCommentPopUp({ commentId, setIsCommentDeleteOpen }: propsType) {
-  const pathname = usePathname() || "";
+  // const pathname = usePathname() || "";
   const { setCrudMyComment, setCommentContext } = useFeed();
   // const router = useRouter();
   const handleClosePopUp = () => {
@@ -26,7 +26,7 @@ export default function DeleteCommentPopUp({ commentId, setIsCommentDeleteOpen }
     const method = "DELETE";
     const url = `http://localhost:8090/api/v1/comments/${commentId}`;
     const body = null;
-    const success = (result: any) => {
+    const success = (result: { data: any }) => {
       handleClosePopUp();
       setCrudMyComment({ C: false, R: false, U: false, D: true });
       setCommentContext({ ...Dummys.Comment, commentId: result.data.commentId });

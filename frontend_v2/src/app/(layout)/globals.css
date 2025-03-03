@@ -87,7 +87,7 @@ button {
 }
 
 .fontWhite {
-  color: var(--white);
+  color: var(--white) !important;
 }
 .fontBlack {
   color: var(--black);
@@ -99,10 +99,10 @@ button {
   color: var(--gray2);
 }
 .fontGray3 {
-  color: var(--gray3);
+  color: var(--gray3) !important;
 }
 .fontGray4 {
-  color: var(--gray4);
+  color: var(--gray4) !important;
 }
 .fontBlue {
   color: var(--text-color-blue);
@@ -231,4 +231,34 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.logoLongImg {
+  width: 20rem;
+  margin: auto;
+}
+
+.loadingFeedContainer {
+  background-color: var(--gray1);
+  border-radius: 1rem;
+}
+.loadingProfile {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--white);
+  border-radius: 50%;
+}
+.loadingTitle {
+  min-width: 7rem;
+  height: 1rem;
+  background-color: var(--white);
+  border-radius: 3rem;
+}
+
+.loadingContant {
+  width: 90%;
+  min-width: 20rem;
+  height: 1rem;
+  background-color: var(--white);
+  border-radius: 3rem;
 }

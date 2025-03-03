@@ -1,13 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // components/SideBar.js
 import styles from "./SideBar.module.css";
 import { Nav, Image, Dropdown } from "react-bootstrap";
 import CreatePopUp from "./CreatePopUp";
+import { useUser } from "../contexts/UserContext";
+import { ACCESS_TOKEN_NAME } from "../utils/values";
+import SideBarLoading from "./SidebarLoading";
 
 export default function SideBar() {
   const [isFeedCreaterOpen, setIsFeedCreaterOpen] = useState(false);
+  const { userContext, fetchUserContext } = useUser();
+
+  // 액세스 토큰을 URL에서 쿼리 파라미터로부터 추출하고 로컬 스토리지에 저장
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get(ACCESS_TOKEN_NAME);
+    if (token) {
+      localStorage.setItem(ACCESS_TOKEN_NAME, token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userContext) {
+      fetchUserContext();
+    }
+  }, [userContext]);
+
+  if (!userContext) return <SideBarLoading />;
+  const handleSetting = () => {};
   const handleCreateFeed = () => {
     setIsFeedCreaterOpen(true);
   };
@@ -45,8 +67,6 @@ export default function SideBar() {
     }
   };
 
-  const handleSetting = () => {};
-
   return (
     <>
       {isFeedCreaterOpen && <CreatePopUp setIsFeedCreaterOpen={setIsFeedCreaterOpen} />}
@@ -60,7 +80,7 @@ export default function SideBar() {
         {/* 네비게이션 메뉴 */}
         <div className={styles.navContainer}>
           <Nav defaultActiveKey="/" className="flex-column">
-            <Nav.Link href="/login">
+            <Nav.Link href={`/profile/${userContext?.userId}`}>
               <Image src="/sidebar/profile.svg" alt="profile" className={styles.navImage} />
             </Nav.Link>
             <Nav.Link href="#write">

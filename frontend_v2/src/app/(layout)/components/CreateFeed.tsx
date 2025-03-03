@@ -2,7 +2,7 @@
 
 import "../globals.css";
 import styles from "./Feed.module.css";
-import { Button, Stack } from "react-bootstrap";
+import { Stack } from "react-bootstrap";
 import { useState } from "react";
 import CreatePopUp from "./CreatePopUp";
 import { useUser } from "../contexts/UserContext";
