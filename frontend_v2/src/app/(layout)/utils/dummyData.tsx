@@ -40,13 +40,13 @@ export const Dummys = {
     },
   ] as Types.Feed[],
 
-  Feed: {
+  DeletedFeed: {
     feedId: 0,
     userId: 0,
-    author: "deleted",
-    feedType: "deleted",
-    createdAt: "deleted",
-    content: "deleted",
+    author: "Copybara",
+    feedType: "",
+    createdAt: "",
+    content: "존재하지 않는 게시물입니다.",
     likeCount: 0,
     commentCount: 0,
   } as Types.Feed, // 단일 피드 예제

@@ -6,22 +6,23 @@ import { faGear } from "@fortawesome/free-solid-svg-icons";
 import * as Types from "../../utils/types";
 import { useState } from "react";
 import ProfileSetting from "./ProfileSetting";
+import { useUser } from "../../contexts/UserContext";
 
 type PropsType = {
-  user: Types.User | null;
+  userProps: Types.User | null;
 };
-export default function CreateFeed({ user }: PropsType) {
+export default function CreateFeed({ userProps }: PropsType) {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
-
+  const { userContext } = useUser();
   const handleSetting = () => {
     setIsSettingOpen(true);
   };
 
-  const badgeType = user?.userType == "RED" ? "danger" : "primary";
-  const badgeName = user?.userType == "RED" ? "RED" : "BLUE";
+  const badgeType = userProps?.userType == "RED" ? "danger" : "primary";
+  const badgeName = userProps?.userType == "RED" ? "RED" : "BLUE";
 
-  if (!user) return <div className="loading mt-4"></div>;
-  const typeClass = styles[user?.userType] || "";
+  if (!userProps) return <div className="loading mt-4"></div>;
+  const typeClass = styles[userProps?.userType] || "";
   return (
     <>
       {isSettingOpen && <ProfileSetting setIsSettingOpen={setIsSettingOpen} />}
@@ -32,14 +33,16 @@ export default function CreateFeed({ user }: PropsType) {
               <Badge pill bg={`${badgeType}`} className={`${styles.smallBadge} `} as={"span"}>
                 {badgeName}
               </Badge>
-              <p className={`${styles.ProfileuserName} ${typeClass} mx-2`}>{user.userName}</p>
+              <p className={`${styles.ProfileuserName} ${typeClass} mx-2`}>{userProps.userName}</p>
             </Col>
             <Col className={`${styles.profileSettingContainer} me-4`}>
-              <FontAwesomeIcon
-                icon={faGear}
-                className={`${styles.profileSetting}`}
-                onClick={handleSetting}
-              />
+              {userContext?.userId == userProps.userId && (
+                <FontAwesomeIcon
+                  icon={faGear}
+                  className={`${styles.profileSetting}`}
+                  onClick={handleSetting}
+                />
+              )}
             </Col>
           </Row>
           <Row className="mb-3 ms-3">

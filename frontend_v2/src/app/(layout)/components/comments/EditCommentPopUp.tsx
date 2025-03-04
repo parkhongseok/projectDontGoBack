@@ -73,15 +73,13 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
     const url = `http://localhost:8090/api/v1/comments/${commentContext.commentId}`;
     const body = updateRequest;
     const success = (result: any) => {
-      // console.log("EditPopUp : ", commentContext);
-      // console.log("result.data : ", result.data);
+
       if (result.data.commentId == commentContext.commentId)
         setContentContext(result.data.content, result.data.updatedAt);
       else console.error("EditPopUp : 즉시 갱신 실패");
+      // 경로 검사 ㄱㅊ?
       setIsCommentEditOpen(false);
       setCrudMyComment({ C: false, R: false, U: true, D: false });
-      // if (pathname === "/") {
-      // }
     };
     const fail = () => {
       alert("게시물을 수정할 수 없습니다.");

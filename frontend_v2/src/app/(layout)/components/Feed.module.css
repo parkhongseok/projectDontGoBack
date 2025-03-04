@@ -300,9 +300,17 @@
 }
 
 .settingName {
-  width: 150px;
-  line-height: 0;
+  /* width: 150px; */
+  line-height: 16px;
 }
 .settingSwitch {
   margin-bottom: 4px;
+}
+
+.settingEmailContainer {
+  height: 1.5rem;
+  color: var(--gray2);
+  border: solid 1px var(--gray2);
+  background-color: var(--white);
+  border-radius: 0.3rem;
 }

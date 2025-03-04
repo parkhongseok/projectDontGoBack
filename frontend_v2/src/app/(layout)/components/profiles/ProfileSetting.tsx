@@ -5,7 +5,7 @@ import "../../globals.css";
 import { useUser } from "../../contexts/UserContext";
 import { httpRequest } from "../../utils/httpRequest";
 import styles from "../Feed.module.css";
-import { Form, Stack } from "react-bootstrap";
+import { Col, Container, Form, OverlayTrigger, Row, Stack, Tooltip } from "react-bootstrap";
 
 type propsType = {
   setIsSettingOpen: Dispatch<SetStateAction<boolean>>;
@@ -62,46 +62,83 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
                 </button>
               </>
               <h6 className={`ms-auto ${styles.createBoxTop}`}>프로필 설정</h6>
-              <h6 className={`ms-auto more ${styles.createBoxTop} pb-2`}>. . .</h6>
+              <h6 className={`ms-auto more ${styles.createBoxTop} ps-3 pb-2`}>. . .</h6>
             </Stack>
             <hr className="feed-underline fontGray4 mt-4" />
-            <div className="mt-2 mx-auto">
-              <Form className="d-flex align-items-center">
-                <p className={`${styles.settingName}`}>프로필 비공개</p>
-                <Form.Check
-                  reverse
-                  type="switch"
-                  id="custom-switch"
-                  checked={!profileSettingState}
-                  onChange={handleToggle1}
-                  className={`${styles.settingSwitch} `}
-                />
-              </Form>
-            </div>
+            <Container className="d-flex align-items-center">
+              <Row className="ms-4 me-4 mt-2 w-100 align-items-center">
+                <Col className="">
+                  <p className={`${styles.settingName} ms-5`}>연결된 계정</p>
+                </Col>
+                <Col className="d-flex align-items-center justify-content-end ">
+                  <div className={`${styles.settingEmailContainer} d-flex align-items-center p-2`}>
+                    <p className={`${styles.settingName} mx-auto`}>{userContext?.email}</p>
+                  </div>
+                </Col>
+              </Row>
+            </Container>
+            <hr className="feed-underline fontGray4 mt-4" />
+            <Container className="d-flex align-items-center">
+              <Row className="ms-4 me-4 w-100 align-items-center">
+                <Col className="">
+                  <p className={`${styles.settingName} ms-5`}>프로필 비공개</p>
+                </Col>
+                <Col className="d-flex align-items-center justify-content-end ">
+                  <div className={` d-flex align-items-center p-2`}>
+                    <Form.Check
+                      reverse
+                      type="switch"
+                      id="custom-switch"
+                      checked={!profileSettingState}
+                      onChange={handleToggle1}
+                      className={`${styles.settingSwitch}`}
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Container>
+
             <hr className="feed-underline fontGray4 mt-3" />
-            <div className="mt-2 mx-auto">
-              <Form className="d-flex align-items-center">
-                <p className={`${styles.settingName}`}>계정 비활성화</p>
-                <Form.Check
-                  reverse
-                  type="switch"
-                  id="custom-switch"
-                  checked={!accountStatus}
-                  onChange={handleToggle2}
-                  className={`${styles.settingSwitch} `}
-                />
-              </Form>
-            </div>
+            <Container className="d-flex align-items-center">
+              <Row className="ms-4 me-4 w-100 align-items-center">
+                <Col className="">
+                  <p className={`${styles.settingName} ms-5`}>계정 비활성화</p>
+                </Col>
+                <Col className="d-flex align-items-center justify-content-end ">
+                  <div className={` d-flex align-items-center p-2`}>
+                    <Form.Check
+                      reverse
+                      type="switch"
+                      id="custom-switch"
+                      checked={!accountStatus}
+                      onChange={handleToggle2}
+                      className={`${styles.settingSwitch} `}
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Container>
+
             <hr className="feed-underline fontGray4 mt-3" />
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
               <>
-                <button
-                  className={`ms-auto mb-1 ${styles.write} custom-button`}
-                  onClick={handleSubmit}
+                <OverlayTrigger
+                  key={"bottom"}
+                  placement={"bottom"}
+                  overlay={
+                    <Tooltip id={`tooltip-${"bottom"}`}>
+                      <strong>{"아직"}</strong> 지원하지 않는 기능입니다.
+                    </Tooltip>
+                  }
                 >
-                  저장
-                </button>
+                  <button
+                    className={`ms-auto mb-1 ${styles.write} custom-button`}
+                    onClick={handleSubmit}
+                  >
+                    저장
+                  </button>
+                </OverlayTrigger>
               </>
             </Stack>
           </Stack>

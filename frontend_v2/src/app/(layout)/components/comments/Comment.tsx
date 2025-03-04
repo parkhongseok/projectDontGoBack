@@ -14,15 +14,18 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons/faHeart";
 import { faComment } from "@fortawesome/free-solid-svg-icons/faComment";
 import { httpRequest } from "../../utils/httpRequest";
 import { useFeed } from "../../contexts/FeedContext";
+import { usePathname } from "next/navigation";
 
 type CommentProps = {
   comment: Types.Comment;
 };
 
 export default function Comment({ comment }: CommentProps) {
+  const pathname = usePathname();
+
   const { userContext } = useUser();
   const { setCommentContext, setCrudMyComment } = useFeed();
-  
+
   const [isCommentEditOpen, setIsCommentEditOpen] = useState(false);
   const [isCommentDeleteOpen, setIsCommentDeleteOpen] = useState(false);
 
@@ -77,7 +80,7 @@ export default function Comment({ comment }: CommentProps) {
       setCommentContext(likedComment); // 댓글의 메인화면(디테일 게시글 화면에) 즉시반영 (무결성x)
     }
     fetchCommentLike();
-    setCrudMyComment({ C: false, R: false, U: true, D: false });
+    if (/\/post\/\d+$/.test(pathname)) setCrudMyComment({ C: false, R: false, U: true, D: false });
   };
   const feedTypeClass = styles[comment.commentType] || "";
   return (

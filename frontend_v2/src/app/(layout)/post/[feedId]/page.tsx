@@ -124,12 +124,12 @@ export default function FeedDetile() {
     if (crudMyComment.C) {
       setCrudMyComment({ ...crudMyComment, C: false });
       if (commentContext) {
+        console.log(`[f${commentContext.feedId}-c${commentContext.commentId}] 답글 생성 요청 감지`);
         createMyComment(commentContext);
         if (comments.length == 0) setLastCommentId(commentContext.commentId); // 이부분이 없으면 첫번째 댓글 조회 시, 동일 내용 추가
       }
       if (feedContext)
         setFeedContext({ ...feedContext, commentCount: feedContext.commentCount + 1 });
-      console.log(`[f${commentContext?.feedId}-c${commentContext?.commentId}] 답글 생성 요청 감지`);
     }
     // 수정 작업
     if (crudMyComment.U) {

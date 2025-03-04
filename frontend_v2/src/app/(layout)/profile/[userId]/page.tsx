@@ -13,19 +13,21 @@ import Footer from "../../components/Footer";
 import { httpRequest } from "../../utils/httpRequest";
 import { useParams } from "next/navigation";
 import Loading from "../../components/Loading";
-import ProfileSetting from "../../components/profiles/ProfileSetting";
+import { useUser } from "../../contexts/UserContext";
+import { useFeed } from "../../contexts/FeedContext";
 
 export default function ProfileMain() {
   const { userId } = useParams<{ userId: string }>();
   const [feedsState, setFeedsState] = useState<Types.Feed[]>([]);
   const [userState, setUserState] = useState<Types.User>();
 
-  const [redFeedsState, setRedFeedsState] = useState(feedsState);
-  const [blueFeedsState, setBlueFeedsState] = useState(feedsState);
+  const [redFeedsState, setRedFeedsState] = useState<Types.Feed[]>([]);
+  const [blueFeedsState, setBlueFeedsState] = useState<Types.Feed[]>([]);
   const [feedsLoading, setFeedsLoading] = useState(false);
   const [lastFeedId, setLastFeedId] = useState(0);
   const lastFeedIdRef = useRef(lastFeedId);
-
+  const { userContext } = useUser();
+  const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
 
   //클로저
   useEffect(() => {
@@ -76,9 +78,54 @@ export default function ProfileMain() {
   }, [userState]);
 
   useEffect(() => {
-    setRedFeedsState((prevFeeds) => prevFeeds.filter((feed) => feed.feedType !== "BLUE"));
-    setBlueFeedsState((prevFeeds) => prevFeeds.filter((feed) => feed.feedType !== "RED"));
+    setRedFeedsState(feedsState.filter((feed: Types.Feed) => feed.feedType === "RED"));
+    setBlueFeedsState(feedsState.filter((feed: Types.Feed) => feed.feedType === "BLUE"));
   }, [feedsState]);
+
+  // 프로필에 실시간 생성 및 수정 반영
+  // 나의 피스 생성 반영 함수
+  const createMyFeed = (createdFeed: Types.Feed) => {
+    setFeedsState((prevFeeds) => [createdFeed, ...prevFeeds]);
+  };
+  // 나의 피드 수정 반영 함수
+  const updateMyFeed = (updatedFeed: Types.Feed) => {
+    setFeedsState((prevFeeds) =>
+      prevFeeds.map((feed) => (feed.feedId === updatedFeed.feedId ? updatedFeed : feed))
+    );
+  };
+  // 나의 피드 삭제 반영 함수
+  const deleteMyFeed = (deletedFeed: Types.Feed) => {
+    setFeedsState((prevFeeds) => prevFeeds.filter((feed) => feed.feedId !== deletedFeed.feedId));
+  };
+
+  // 자신 피드의 수정 삭제를 감지하여, 이를 반영
+  useEffect(() => {
+    // 생성
+    if (crudMyFeed.C) {
+      setCrudMyFeed({ ...crudMyFeed, C: false });
+      if (feedContext) {
+        console.log(`[fID : ${feedContext.feedId}] 게시물 생성 요청 감지`);
+        createMyFeed(feedContext);
+        if (feedsState.length == 0) setLastFeedId(feedContext?.feedId); // 이부분이 없으면 첫번째 댓글 조회 시, 동일 내용 추가
+      }
+    }
+    // 수정
+    if (crudMyFeed.U) {
+      setCrudMyFeed({ ...crudMyFeed, U: false });
+      if (feedContext) {
+        console.log(`[fID : ${feedContext.feedId}] 게시물 수정 요청 감지`);
+        updateMyFeed(feedContext);
+      }
+    }
+    // 삭제
+    if (crudMyFeed.D) {
+      setCrudMyFeed({ ...crudMyFeed, D: false });
+      if (feedContext) {
+        console.log(`[fID : ${feedContext?.feedId}] 게시물 삭제 요청 감지`);
+        deleteMyFeed(feedContext);
+      }
+    }
+  }, [crudMyFeed]);
 
   // 스크롤을 감지하여 마지막에 다다르면 피드를 불러옴
   useEffect(() => {
@@ -111,7 +158,7 @@ export default function ProfileMain() {
       <div className="pt-4 feeds-container">
         {/* 사이드바가 차지하지 않는 나머지 공간 */}
 
-        <Profile user={userState} />
+        <Profile userProps={userState} />
         <Chart />
         <Tabs
           defaultActiveKey="Main"
@@ -121,12 +168,15 @@ export default function ProfileMain() {
           justify
         >
           <Tab eventKey="Main" title="Main" className={`${styles.tabs} `}>
+            <hr className="init mb-4 feedUnderLine" />
             <Stack gap={4} direction="vertical">
               {/* 글쓰기 영역 user기능 */}
-              <div className="mt-1">
-                <CreateFeed />
-                <hr className="init mt-4 createFeedUnderLine" />
-              </div>
+              {userContext?.userId == userState.userId && (
+                <div className="">
+                  <CreateFeed />
+                  <hr className="init mt-4 createFeedUnderLine" />
+                </div>
+              )}
               {feedsState.map((item: Types.Feed, idx: number) => (
                 <div key={idx}>
                   <Feed feed={item} />
@@ -162,7 +212,4 @@ export default function ProfileMain() {
       </div>
     </>
   );
-}
-function userState(Feeds: import("../../utils/types").Feed[]): [any, any] {
-  throw new Error("Function not implemented.");
 }

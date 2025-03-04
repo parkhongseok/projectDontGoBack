@@ -10,15 +10,18 @@ import { useFeed } from "./contexts/FeedContext";
 import { httpRequest } from "./utils/httpRequest";
 import Loading from "./components/Loading";
 import { useUser } from "./contexts/UserContext";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  // 액세스 토큰을 URL에서 쿼리 파라미터로부터 추출하고 로컬 스토리지에 저장
+  const router = useRouter();
+  // url 바꿔치기
   useEffect(() => {
-    window.history.replaceState(null, "", "/"); // 빈틈이 사실 존재함 하지만 둘러보기를 위해서, 우선 해당 방식/ url변경
+    router.replace("/");
+    // window.history.replaceState(null, "", "/"); // 빈틈이 사실 존재함 하지만 둘러보기를 위해서, 우선 해당 방식/ url변경
     document.title = "DONT GO BACK"; // 크롬의 경우, 탭 이름까지 변경
   }, []);
 
-  const [feeds, setFeeds] = useState<Types.Feed[]>([]);
+  const [feedsState, setFeedsState] = useState<Types.Feed[]>([]);
   const [lastFeedId, setLastFeedId] = useState(0);
   const [feedsLoading, setFeedsLoading] = useState(false);
   const lastFeedIdRef = useRef(lastFeedId);
@@ -40,7 +43,7 @@ export default function Home() {
       setFeedsLoading(false);
       let newFeeds = result.data.feeds;
       if (newFeeds.length === 0) return;
-      setFeeds((prevFeeds: Types.Feed[]) => [...prevFeeds, ...newFeeds]);
+      setFeedsState((prevFeeds: Types.Feed[]) => [...prevFeeds, ...newFeeds]);
       setLastFeedId(newFeeds[newFeeds.length - 1].feedId);
     };
     const fail = () => {
@@ -63,17 +66,17 @@ export default function Home() {
 
   // 나의 피스 생성 반영 함수
   const createMyFeed = (createdFeed: Types.Feed) => {
-    setFeeds((prevFeeds) => [createdFeed, ...prevFeeds]);
+    setFeedsState((prevFeeds) => [createdFeed, ...prevFeeds]);
   };
   // 나의 피드 수정 반영 함수
   const updateMyFeed = (updatedFeed: Types.Feed) => {
-    setFeeds((prevFeeds) =>
+    setFeedsState((prevFeeds) =>
       prevFeeds.map((feed) => (feed.feedId === updatedFeed.feedId ? updatedFeed : feed))
     );
   };
   // 나의 피드 삭제 반영 함수
   const deleteMyFeed = (deletedFeed: Types.Feed) => {
-    setFeeds((prevFeeds) => prevFeeds.filter((feed) => feed.feedId !== deletedFeed.feedId));
+    setFeedsState((prevFeeds) => prevFeeds.filter((feed) => feed.feedId !== deletedFeed.feedId));
   };
 
   // 자신 피드의 수정 삭제를 감지하여, 이를 반영
@@ -119,7 +122,7 @@ export default function Home() {
       clearTimeout(timeoutId);
     };
   }, [feedsLoading, lastFeedId]);
-  
+
   if (!userContext) return <Loading />;
   return (
     <>
@@ -134,7 +137,7 @@ export default function Home() {
             <CreateFeed />
             <hr className="init mt-4 createFeedUnderLine" />
           </div>
-          {feeds.map((item, idx) => (
+          {feedsState.map((item, idx) => (
             <div key={idx}>
               <Feed feed={item} />
               <hr className="init mt-3 feedUnderLine" />

@@ -70,9 +70,9 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
       handlerClose();
       // console.log(pathname)
       // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
-      if (pathname === "/") {
-        setCrudMyFeed({ C: true, R: false, U: false, D: false });
+      if (pathname === "/" || /\/profile\/\d+$/.test(pathname)) {
         setFeedContext(result.data);
+        setCrudMyFeed({ C: true, R: false, U: false, D: false });
       }
     };
     const fail = () => {

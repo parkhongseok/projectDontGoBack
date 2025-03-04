@@ -28,8 +28,9 @@ export default function DeleteCommentPopUp({ commentId, setIsCommentDeleteOpen }
     const body = null;
     const success = (result: { data: any }) => {
       handleClosePopUp();
-      setCrudMyComment({ C: false, R: false, U: false, D: true });
+      // 경로 검사 안필요할까 
       setCommentContext({ ...Dummys.Comment, commentId: result.data.commentId });
+      setCrudMyComment({ C: false, R: false, U: false, D: true });
     };
     const fail = () => {
       alert("답글을 삭제할 수 없습니다.");

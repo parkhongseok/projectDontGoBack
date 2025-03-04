@@ -75,13 +75,13 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
     const url = `http://localhost:8090/api/v1/feeds/${feedContext.feedId}`;
     const body = updateFeedRequest;
     const success = (result: any) => {
-      if (result.data.feedId == feedContext.feedId)
-        setContentContext(result.data.content, result.data.updatedAt);
-      else console.error("EditPopUp : 즉시 갱신 실패");
-      setIsFeedEditOpen(false);
-      if (pathname === "/") {
+      if (result.data.feedId != feedContext.feedId)
+        return console.error("EditPopUp : 즉시 갱신 실패");
+      setContentContext(result.data.content, result.data.updatedAt);
+      if (pathname === "/" || /\/profile\/\d+$/.test(pathname)) {
         setCrudMyFeed({ C: false, R: false, U: true, D: false });
       }
+      setIsFeedEditOpen(false);
     };
     const fail = () => {
       alert("게시물을 수정할 수 없습니다.");

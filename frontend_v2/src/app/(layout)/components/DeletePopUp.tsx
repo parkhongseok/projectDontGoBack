@@ -8,6 +8,7 @@ import { useFeed } from "../contexts/FeedContext";
 import { httpRequest } from "../utils/httpRequest";
 // import * as Types from "../utils/types";
 import Dummys from "../utils/dummyData";
+import { useEffect, useRef } from "react";
 
 type propsType = {
   feedId: number;
@@ -15,9 +16,11 @@ type propsType = {
 };
 
 export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) {
-  const pathname = usePathname() || "";
   const { setCrudMyFeed, setFeedContext } = useFeed();
-  const router = useRouter();
+  const pathname = usePathname();
+  // 현재 페이지 확인
+  const isNowPostDetailPage = /\/post\/\d+$/.test(pathname);
+
   const handleClosePopUp = () => {
     setIsFeedDeleteOpen(false);
   };
@@ -26,13 +29,15 @@ export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) 
     const method = "DELETE";
     const url = `http://localhost:8090/api/v1/feeds/${feedId}`;
     const body = null;
-    const success = (result: {data : any}) => {
+    const success = (result: { data: any }) => {
       handleClosePopUp();
-      setCrudMyFeed({ C: false, R: false, U: false, D: true });
-      setFeedContext({ ...Dummys.Feed, feedId: result.data.feedId });
-      if (pathname !== "/") {
-        router.push("/");
+      if (pathname === "/" || /\/profile\/\d+$/.test(pathname)) {
+        setFeedContext({ ...Dummys.DeletedFeed, feedId: result.data.feedId });
+        setCrudMyFeed({ C: false, R: false, U: false, D: true });
       }
+      // 삭제 후 페이지 이동
+      if (!isNowPostDetailPage) return;
+      window.history.back();
     };
     const fail = () => {
       alert("게시물을 삭제할 수 없습니다.");

@@ -57,6 +57,7 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
     const success = (result: any) => {
       setUserInput("");
       closeBox();
+      // 경로 검사 필요하지 않나?
       setCommentContext(result.data);
       setCrudMyComment({ C: true, R: false, U: false, D: false });
     };

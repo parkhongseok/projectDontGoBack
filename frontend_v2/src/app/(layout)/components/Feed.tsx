@@ -5,7 +5,7 @@ import { Dropdown, Stack } from "react-bootstrap";
 import * as Types from "../utils/types";
 import Link from "next/link";
 import { useFeed } from "../contexts/FeedContext";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import EditPopUp from "./EditPopUp";
 import DeletePopUp from "./DeletePopUp";
@@ -21,6 +21,7 @@ type PropsType = {
 };
 
 export default function Feed({ feed }: PropsType) {
+  const pathname = usePathname();
   const { feedId } = useParams<{ feedId: string }>();
   const { feedContext, setFeedContext, setCrudMyFeed } = useFeed();
   const { userContext } = useUser();
@@ -78,8 +79,9 @@ export default function Feed({ feed }: PropsType) {
       setFeedState(likedFeed); // 즉시 화면에 보여지는 용
       setFeedContext(likedFeed); // MainFeed에 정보 갱신용
     }
-    setCrudMyFeed({ C: false, R: false, U: true, D: false });
     fetchFeedLike();
+    if (pathname === "/" || /\/profile\/\d+$/.test(pathname))
+      setCrudMyFeed({ C: false, R: false, U: true, D: false });
   };
   // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
   const feedTypeClass = styles[feed.feedType] || "";
