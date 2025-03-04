@@ -28,5 +28,14 @@ public class BaseEntity {
 
     @LastModifiedDate
     protected LocalDateTime updatedAt;
-    // Feed 엔티티에서 이 값을 강제로 바꾸는 경우 존재
+
+
+    // Feed update -> save 시, save의 반환 객체는, DB다녀오기 전이라서, UpdateAt정보 갱신 전이라서 수동으로 갱신
+    // DB값과 차이 존재함 (~0.001초)
+    // 무결성이 중요한 경우라면 사용 ㄴㄴ (영속성 컨텍스트 반영 전 문제애 대한 임시 방편)
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    } // 수동으로 updatedAt 갱신
+
 }

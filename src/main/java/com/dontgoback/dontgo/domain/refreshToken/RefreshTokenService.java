@@ -12,4 +12,10 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(()-> new IllegalArgumentException(("RefreshToken can not found")));
     }
+
+    public void deleteByToken(String refreshToken){
+        RefreshToken refreshTokenEntity = findByRefreshToken(refreshToken);
+        refreshTokenRepository.delete(refreshTokenEntity);
+    }
 }
+

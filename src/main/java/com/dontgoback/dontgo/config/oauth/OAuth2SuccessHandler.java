@@ -19,12 +19,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.time.Duration;
 
+import static com.dontgoback.dontgo.global.util.GlobalValues.ACCESS_TOKEN_NAME;
+import static com.dontgoback.dontgo.global.util.GlobalValues.REFRESH_TOKEN_NAME;
+
 
 // 필터 맥락에서, 사용자에게 로그인 페이지를 전달하고, 사용자는 로그인을 수행, 그리고 로그인 성공 시 실행되는 핸들러
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
+    public static final String REFRESH_TOKEN_COOKIE_NAME = REFRESH_TOKEN_NAME;
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
     public static final String REDIRECT_PATH = "http://localhost:3000";
@@ -48,7 +51,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
         saveRefreshToken(user.getId(), refreshToken);
         addRefreshTokenToCookie(request, response, refreshToken);
-
 
         /* 액세스 토큰을 클라이언트한테 전달하기
                 HOW ? 리다이렉트 경로에 액세스 토큰 집어넣기
@@ -81,8 +83,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                          String refreshToken) {
         int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME); // 기존 리프레시 토큰 제거 하고
-        boolean httpOnly = false;
-        boolean httpsOnly = false; //cookie.setSecure(true);
+        boolean httpOnly = true;
+        boolean httpsOnly = true;
         CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge, httpOnly, httpsOnly); // 새로운 거 추가
     }
 
@@ -98,7 +100,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // 토큰에서 경로를 꺼내서, 거기에 쿠키 집어넣기 (쿼리 파라미터로)
     private String getTargetUrl(String token) {
         return UriComponentsBuilder.fromUriString(REDIRECT_PATH)
-                .queryParam("access_token", token)
+                .queryParam(ACCESS_TOKEN_NAME, token)
                 .build()
                 .toUriString();
     }

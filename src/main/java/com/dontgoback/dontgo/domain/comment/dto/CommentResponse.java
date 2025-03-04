@@ -11,6 +11,7 @@ public interface CommentResponse {
     String getCommentType();
     int getLikeCount();
     int getSubCommentCount();
+    boolean getIsLiked();
     LocalDateTime getCreatedAt();
     LocalDateTime getUpdatedAt();
     LocalDateTime getDeletedAt();

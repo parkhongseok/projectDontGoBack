@@ -8,9 +8,11 @@ import com.dontgoback.dontgo.config.oauth.OAuth2UserCustomService;
 import com.dontgoback.dontgo.domain.refreshToken.RefreshTokenRepository;
 import com.dontgoback.dontgo.domain.user.UserService;
 import jakarta.servlet.Filter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -56,7 +58,7 @@ public class WebOAuthSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic 비활성화
                 .formLogin(AbstractHttpConfigurer::disable) // Form 로그인 비활성화
-                .logout(logout -> logout.logoutSuccessUrl("http://localhost:3000/login")) // 로그아웃 성공 후 리디렉트
+                .logout(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안 함
                 );
@@ -75,7 +77,8 @@ public class WebOAuthSecurityConfig {
                 .loginPage("http://localhost:3000/login")
                 // 인증 요청 상태 저장 : 인증 요청을 시작한 뒤, 리다이렉션을 통해 돌아올 때 그 상태를 복원
                 .authorizationEndpoint(auth ->
-                        auth.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                        auth.authorizationRequestRepository(
+                                oAuth2AuthorizationRequestBasedOnCookieRepository())
                 )
                 // 성공적으로 완료된 경우 실행될 핸들러
                 .successHandler(oAuth2SuccessHandler()) // 인증 성공 시 실행할 핸들러 호출 (커스텀 핸들러 호출)
@@ -91,6 +94,7 @@ public class WebOAuthSecurityConfig {
         // 나머지 API URL은 인증이 필요
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/token").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/logout").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
         );
@@ -102,7 +106,7 @@ public class WebOAuthSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE"));
+        config.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE","OPTIONS"));// OPTIONS: 브라우저의 사전 요청(Preflight 요청) 허용
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 

@@ -8,11 +8,10 @@ import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.dontgoback.dontgo.global.util.GlobalValues.MAX_TEXT_LENGTH;
 
 @Entity
 @Getter
@@ -38,16 +37,9 @@ public class Feed extends BaseEntity {
     @Column(nullable = false)
     private RedBlueType feedType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = MAX_TEXT_LENGTH)
     private String content;
 
     private LocalDateTime deletedAt;
 
-    // Feed update 후 반환 객체에서 사용 중, 완전히 DB값과 일치하지 않음.
-    // (영속성 컨텍스트 반영 전 문제애 대한 임시 방편)
-    // 무결성이 중요한 경우라면 사용 ㄴㄴ
-    @PreUpdate
-    public void preUpdate() {
-        super.updatedAt = LocalDateTime.now(); // 수동으로 updatedAt 갱신
-    }
 }

@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+
 @RequiredArgsConstructor
 @Service
 public class TokenProvider {
@@ -37,7 +38,7 @@ public class TokenProvider {
                 .setExpiration(expiry)                // 패이로드 exp : expiry 멤버 변수
                 .setSubject(user.getEmail())          // 패이로드 sub : 유저 이메일
                 .claim("id", user.getId())      // 클레임 id : 유저 ID
-                 // 서명 : 비밀값 + 해시값을 HS256 방식으로 암호화
+                // 서명 : 비밀값 + 해시값을 HS256 방식으로 암호화
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
     }

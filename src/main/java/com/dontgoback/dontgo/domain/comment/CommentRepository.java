@@ -21,14 +21,19 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                     c.author AS author,
                     c.commentType AS commentType,
                     (SELECT COUNT(l) FROM CommentLike l WHERE l.comment = c) AS likeCount,
-                    (SELECT COUNT(sc) FROM Comment sc WHERE sc.parentComment = c) AS subCommentCount,
+                    (SELECT COUNT(sc) FROM Comment sc WHERE sc.parentComment = c AND sc.deletedAt IS NULL) AS subCommentCount,
+                    (EXISTS (SELECT 1 FROM CommentLike l WHERE l.comment = c AND l.user.id = :currentUserId)) AS isLiked,
                     c.createdAt AS createdAt,
                     c.updatedAt AS updatedAt,
                     c.deletedAt AS deletedAt
                 FROM Comment c
                 JOIN c.user u
-                WHERE c.feed.id = :feedId
+                WHERE c.feed.id = :feedId AND (:lastCommentId = 0 OR c.id < :lastCommentId) AND c.deletedAt IS NULL
                 ORDER BY c.createdAt DESC
+                LIMIT :size
             """)
-    List<CommentResponse> findCommentsResponse(@Param("feedId") Long feedId);
+    List<CommentResponse> findCommentsResponse(@Param("lastCommentId") Long lastCommentId,
+                                               @Param("size") int size,
+                                               @Param("feedId") Long feedId,
+                                               @Param("currentUserId") Long currentUserId);
 }

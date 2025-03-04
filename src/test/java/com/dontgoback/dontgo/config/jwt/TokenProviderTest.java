@@ -74,7 +74,7 @@ class TokenProviderTest {
         AssertionsForClassTypes.assertThat(result).isFalse();
     }
 
-    // 만료 시간에 대한 TEST
+    // 유효한 토큰
     @DisplayName("validToken(): 유효한 토큰인 경우에 유효성 검증에 성공한다.")
     @Test
     void validToken_validToken() {
@@ -85,6 +85,7 @@ class TokenProviderTest {
 
         // when
         boolean result = tokenProvider.validToken(token);
+
 
         // then
         AssertionsForClassTypes.assertThat(result).isTrue();

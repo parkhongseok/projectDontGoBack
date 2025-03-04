@@ -10,8 +10,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDateTime;
 
 @Getter
-@SuperBuilder
 @AllArgsConstructor
-public class DeleteFeedResponse extends FeedTypeDto {
-
+public class DeleteFeedResponse{
+    private Long feedId;
 }

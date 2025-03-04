@@ -41,7 +41,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
                 .orElse(User.builder()
                         .email(email)
                         .nickname(name)
-                        .userAsset("ME : 930,000원")
+                        .userAsset("30억원")
                         .userType(RedBlueType.BLUE)
                         .build());
         return userRepository.save(user);

@@ -8,6 +8,7 @@ public interface FeedResponse {
     String getAuthor();
     String getFeedType();
     int getLikeCount();
+    boolean getIsLiked();
     int getCommentCount();
     LocalDateTime getCreatedAt();
     LocalDateTime getUpdatedAt();

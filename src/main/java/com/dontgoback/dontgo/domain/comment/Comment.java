@@ -14,6 +14,8 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.dontgoback.dontgo.global.util.GlobalValues.MAX_TEXT_LENGTH;
+
 @Entity
 @Getter
 @Setter
@@ -39,7 +41,7 @@ public class Comment extends BaseEntity {
     // 당연 지사 피드 타입과 동일하겠지만, 추후 다른 타입에도 댓글을 남길 수 있도록 변경을 고려
     private RedBlueType commentType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = MAX_TEXT_LENGTH)
     private String content;
 
     @Column(nullable = true)

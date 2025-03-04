@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @MappedSuperclass
 @NoArgsConstructor
-public class FeedTypeDto
-{
+public class FeedTypeDto{
     private Long feedId;
     private Long userId;
     private String content;
@@ -22,6 +21,7 @@ public class FeedTypeDto
     private RedBlueType feedType;
     private int likeCount;
     private int commentCount;
+    private int isLiked;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;

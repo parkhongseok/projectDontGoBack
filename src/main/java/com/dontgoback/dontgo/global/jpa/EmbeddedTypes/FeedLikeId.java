@@ -7,16 +7,16 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Getter
+    @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     @Embeddable
     public class FeedLikeId implements Serializable {
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "feed_id")
+    @Column(name = "feed_id", nullable = false)
     private Long feedId;
 
     // equals와 hashCode 오버라이드

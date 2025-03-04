@@ -1,15 +1,9 @@
 package com.dontgoback.dontgo.domain.user;
 
-import com.dontgoback.dontgo.domain.user.dto.LoginUserResponse;
+import com.dontgoback.dontgo.domain.user.dto.UserResponse;
 import com.dontgoback.dontgo.global.resData.ResData;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -19,19 +13,25 @@ import java.security.Principal;
 public class ApiV1UserController {
     private final UserService userService;
 
-    @GetMapping("/me")
-    public ResData<LoginUserResponse> getUserInfo(Principal principal) {
-        LoginUserResponse myData = userService.findMe(principal.getName());
+    @GetMapping("/{userId}")
+    public ResData<UserResponse> getUserInfo(@PathVariable("userId") Long userId) {
+        User user = userService.findById(userId);
+        UserResponse data = userService.findUser(user);
         return ResData.of("S-200",
-               "내 정보 조회 성공 [uID : %d]".formatted(myData.getUserId()),
-                myData
+                "유저 정보 조회 성공 [uID : %d]".formatted(data.getUserId()),
+                data
         );
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-        return "redirect:/login";
+    @GetMapping("/me")
+    public ResData<UserResponse> getMyInfo(Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        UserResponse data = userService.findUser(user);
+        return ResData.of("S-200",
+                "내 정보 조회 성공 [uID : %d]".formatted(data.getUserId()),
+                data
+        );
     }
+
 
 }

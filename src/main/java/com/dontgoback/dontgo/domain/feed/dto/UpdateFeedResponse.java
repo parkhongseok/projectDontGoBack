@@ -15,6 +15,5 @@ import java.time.LocalDateTime;
 public class UpdateFeedResponse {
     private Long feedId;
     private String content;
-    private RedBlueType feedType;
     private LocalDateTime updatedAt;
 }

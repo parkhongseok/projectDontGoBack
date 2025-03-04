@@ -108,10 +108,10 @@ public class FeedControllerTest {
 
 
         FeedsResponse feedsResponse = new FeedsResponse(
-                feedRepository.findFeedsResponse(1L, 10)
+                feedRepository.findFeedsResponse(1L, 10, 2L)
         );
 
-        assertThat(feedsResponse.size()).isEqualTo(1);
+        assertThat(feedsResponse.getFeeds().size()).isEqualTo(1);
         assertThat(feedsResponse.getFeeds().get(0).getContent()).isEqualTo(content);
     }
 
