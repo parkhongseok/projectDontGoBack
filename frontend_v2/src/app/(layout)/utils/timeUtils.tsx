@@ -26,7 +26,7 @@ export const timeAgo = (createdAt: string, updatedAt: string) => {
     return isUpdated ? "방금 전 수정됨" : "방금 전";
   }
 
-  let result = past.fromNow();
+  const result = past.fromNow();
 
   return isUpdated ? `${result} 수정됨` : result;
 };

@@ -39,9 +39,9 @@ export default function Home() {
     setFeedsLoading(true); // 로딩 시작
     const url = `http://localhost:8090/api/v1/feeds?lastFeedId=${lastFeedIdRef.current}&size=${10}`;
     const body = null;
-    const success = async (result: any) => {
+    const success = async (result: Types.ResData<{ feeds: Types.Feed[] }>) => {
       setFeedsLoading(false);
-      let newFeeds = result.data.feeds;
+      const newFeeds = result.data.feeds;
       if (newFeeds.length === 0) return;
       setFeedsState((prevFeeds: Types.Feed[]) => [...prevFeeds, ...newFeeds]);
       setLastFeedId(newFeeds[newFeeds.length - 1].feedId);

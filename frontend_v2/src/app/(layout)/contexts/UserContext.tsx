@@ -19,7 +19,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const fetchUserContext = async () => {
     const url = "http://localhost:8090/api/v1/users/me";
     const body = null;
-    const success = (result: any) => {
+    const success = (result: Types.ResData<Types.User>) => {
       setUserContext(result.data);
     };
     const fail = () => {

@@ -18,10 +18,7 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
   const [userInput, setUserInput] = useState("");
   const { setCrudMyComment, setCommentContext } = useFeed();
   const { userContext } = useUser();
-  if (!userContext) {
-    return <div className="loading" />;
-  }
-  const feedTypeClass = styles[userContext.userType] || "";
+
   const closeBox = () => {
     setShowWriteBox(false);
   };
@@ -54,7 +51,7 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
     const method = "POST";
     const url = "http://localhost:8090/api/v1/comments";
     const body = CreateCommentRequest;
-    const success = (result: any) => {
+    const success = (result: Types.ResData<Types.Comment>) => {
       setUserInput("");
       closeBox();
       // 경로 검사 필요하지 않나?
@@ -81,6 +78,11 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
     target.style.height = "auto"; // 먼저 높이를 auto로 리셋
     target.style.height = `${target.scrollHeight}px`; // 텍스트의 높이에 맞게 설정
   };
+
+  if (!userContext) {
+    return <div className="loading" />;
+  }
+  const feedTypeClass = styles[userContext.userType] || "";
   const PLACEHOLER = feed?.userId == userContext?.userId ? `나에게` : `${feed.author} 님에게`;
   return (
     <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>

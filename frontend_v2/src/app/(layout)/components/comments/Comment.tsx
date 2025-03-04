@@ -46,7 +46,7 @@ export default function Comment({ comment }: CommentProps) {
     const method = "GET";
     const url = `http://localhost:8090/api/v1/commentLikes/${comment.commentId}`;
     const body = null;
-    const success = (result: any) => {
+    const success = (result: Types.ResData<Types.Comment>) => {
       if (commentState) {
         setCommentContext({
           ...commentState,
@@ -68,10 +68,10 @@ export default function Comment({ comment }: CommentProps) {
   const handleCommentDeleteClick = () => {
     setIsCommentDeleteOpen(true);
   };
-  const handleCommentClick = () => {};
+  // const handleCommentClick = () => {};
   const handleCommentLike = () => {
     if (commentState) {
-      let likedComment = {
+      const likedComment = {
         ...commentState,
         isLiked: !commentState.isLiked,
         likeCount: commentState.isLiked ? commentState.likeCount - 1 : commentState.likeCount + 1,

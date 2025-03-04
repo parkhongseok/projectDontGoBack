@@ -3,7 +3,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import "../../globals.css";
 import { useUser } from "../../contexts/UserContext";
-import { httpRequest } from "../../utils/httpRequest";
 import styles from "../Feed.module.css";
 import { Col, Container, Form, OverlayTrigger, Row, Stack, Tooltip } from "react-bootstrap";
 
@@ -15,6 +14,7 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
   const [profileSettingState, setProfileSettingState] = useState(true);
   const [accountStatus, setAccountStatus] = useState(true);
   const { userContext } = useUser();
+
   const handleToggle1 = () => {
     setProfileSettingState((prev) => !prev);
   };
@@ -28,14 +28,14 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
 
   const handleSubmit = async () => {
     // 요청 객체
-    const profileSettingRequest = {};
-    const method = "POST";
-    const url = "http://localhost:8090/api/v1/feeds";
-    const body = profileSettingRequest;
-    const success = (result: {}) => {};
-    const fail = () => {
-      alert("서버 오류가 발생했습니다.");
-    };
+    // const profileSettingRequest = {};
+    // const method = "POST";
+    // const url = "http://localhost:8090/api/v1/feeds";
+    // const body = profileSettingRequest;
+    // const success = (result: {}) => {};
+    // const fail = () => {
+      // alert("서버 오류가 발생했습니다.");
+    // };
 
     // httpRequest(method, url, body, success, fail);
   };

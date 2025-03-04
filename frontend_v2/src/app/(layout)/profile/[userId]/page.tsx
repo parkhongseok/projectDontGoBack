@@ -5,7 +5,7 @@ import "../../globals.css";
 import CreateFeed from "../../components/CreateFeed";
 import Feed from "../../components/Feed";
 import * as Types from "../../utils/types";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Profile from "../../components/profiles/Profile";
 import styles from "../../components/Feed.module.css";
 import Chart from "../../components/profiles/Chart";
@@ -34,26 +34,26 @@ export default function ProfileMain() {
     lastFeedIdRef.current = lastFeedId;
   }, [lastFeedId]);
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     const url = `http://localhost:8090/api/v1/users/${userId}`;
     const body = null;
-    const success = (result: any) => {
+    const success = (result: Types.ResData<Types.User>) => {
       setUserState(result.data);
     };
     const fail = () => {};
     httpRequest("GET", url, body, success, fail);
-  };
+  }, [userId]);
 
-  const fetchFeeds = async () => {
+  const fetchFeeds = useCallback(async () => {
     if (feedsLoading) return <Loading />;
     setFeedsLoading(true); // 로딩 시작
     const url = `http://localhost:8090/api/v1/feeds/profile?userId=${userId}&lastFeedId=${
       lastFeedIdRef.current
     }&size=${10}`;
     const body = null;
-    const success = async (result: any) => {
+    const success = async (result: Types.ResData<{ feeds: Types.Feed[] }>) => {
       setFeedsLoading(false);
-      let newFeeds = result.data.feeds;
+      const newFeeds = result.data.feeds;
       if (newFeeds.length === 0) return;
       setFeedsState((prevFeeds: Types.Feed[]) => [...prevFeeds, ...newFeeds]);
       setLastFeedId(newFeeds[newFeeds.length - 1].feedId);
@@ -64,7 +64,7 @@ export default function ProfileMain() {
       // alert("feed load fail");
     };
     httpRequest("GET", url, body, success, fail);
-  };
+  }, [feedsLoading, userId]);
 
   // 메인 피드에 필요한 데이터만 fetch
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function ProfileMain() {
       }
     };
     initData();
-  }, [userState]);
+  }, [userState, fetchUser, fetchFeeds]);
 
   useEffect(() => {
     setRedFeedsState(feedsState.filter((feed: Types.Feed) => feed.feedType === "RED"));
@@ -125,7 +125,7 @@ export default function ProfileMain() {
         deleteMyFeed(feedContext);
       }
     }
-  }, [crudMyFeed]);
+  }, [crudMyFeed, feedContext, feedsState.length, setCrudMyFeed]);
 
   // 스크롤을 감지하여 마지막에 다다르면 피드를 불러옴
   useEffect(() => {
@@ -147,7 +147,7 @@ export default function ProfileMain() {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(timeoutId);
     };
-  }, [feedsLoading, lastFeedId]);
+  }, [feedsLoading, fetchFeeds, lastFeedId]);
 
   if (!userState) return <Loading />;
   return (

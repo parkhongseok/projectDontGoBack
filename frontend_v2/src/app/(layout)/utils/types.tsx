@@ -1,5 +1,3 @@
-import exp from "constants";
-
 export type Feed = {
   feedId: number;
   userId: number;
@@ -35,4 +33,8 @@ export type Comment = {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
+};
+
+export type ResData<T> = {
+  data: T;
 };

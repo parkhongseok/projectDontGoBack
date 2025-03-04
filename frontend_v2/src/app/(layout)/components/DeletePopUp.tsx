@@ -3,12 +3,11 @@
 import { Stack } from "react-bootstrap";
 import "../globals.css";
 import styles from "./Feed.module.css";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useFeed } from "../contexts/FeedContext";
 import { httpRequest } from "../utils/httpRequest";
-// import * as Types from "../utils/types";
+import * as Types from "../utils/types";
 import Dummys from "../utils/dummyData";
-import { useEffect, useRef } from "react";
 
 type propsType = {
   feedId: number;
@@ -29,7 +28,7 @@ export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) 
     const method = "DELETE";
     const url = `http://localhost:8090/api/v1/feeds/${feedId}`;
     const body = null;
-    const success = (result: { data: any }) => {
+    const success = (result: Types.ResData<{ feedId: number }>) => {
       handleClosePopUp();
       if (pathname === "/" || /\/profile\/\d+$/.test(pathname)) {
         setFeedContext({ ...Dummys.DeletedFeed, feedId: result.data.feedId });

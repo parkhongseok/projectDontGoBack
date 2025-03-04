@@ -60,6 +60,3 @@ export default function CreateFeed({ userProps }: PropsType) {
     </>
   );
 }
-function setFeedsLoading(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}

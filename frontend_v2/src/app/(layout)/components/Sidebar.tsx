@@ -29,6 +29,7 @@ export default function SideBar() {
   }, [userContext]);
 
   if (!userContext) return <SideBarLoading />;
+
   const handleSetting = () => {};
   const handleCreateFeed = () => {
     setIsFeedCreaterOpen(true);

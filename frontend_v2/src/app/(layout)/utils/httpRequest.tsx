@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { ACCESS_TOKEN_NAME, REFRESH_TOKEN_NAME } from "./values";
 
 // 쿠키에서 값 가져오기 함수
@@ -10,9 +12,9 @@ export function getCookie(name: string) {
 
 // 상태 코드 관련 유틸리티
 const isSuccessStatus = (status: number) => [200, 201].includes(status);
-const isBadRequest = (status: number) => status === 400; // 잘못된 요청
+// const isBadRequest = (status: number) => status === 400; // 잘못된 요청
 const isUnauthorized = (status: number) => status === 401; // 인증 실패
-const isForbidden = (status: number) => status === 403; // 권한 부족
+// const isForbidden = (status: number) => status === 403; // 권한 부족
 const isNotFound = (status: number) => status === 404; // 리소스 없음
 
 // 토큰 관리 유틸리티

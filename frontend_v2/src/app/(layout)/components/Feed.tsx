@@ -43,7 +43,7 @@ export default function Feed({ feed }: PropsType) {
     const method = "GET";
     const url = `http://localhost:8090/api/v1/feedLikes/${feed.feedId}`;
     const body = null;
-    const success = (result: any) => {
+    const success = (result: Types.ResData<{ likeCount: number; isLiked: boolean }>) => {
       if (feedState) {
         setFeedContext({
           ...feedState,
@@ -66,12 +66,12 @@ export default function Feed({ feed }: PropsType) {
     setFeedContext(feed.feedId == feedContext?.feedId ? feedContext : feed);
   };
   const handleFeedClick = () => {
-    feed.feedId == feedContext?.feedId;
-    setFeedContext(feed.feedId == feedContext?.feedId ? feedContext : feed);
+    if (feed.feedId == feedContext?.feedId)
+      setFeedContext(feed.feedId == feedContext?.feedId ? feedContext : feed);
   };
   const handleFeedLike = () => {
     if (feedState) {
-      let likedFeed = {
+      const likedFeed = {
         ...feedState,
         isLiked: !feedState.isLiked,
         likeCount: feedState.isLiked ? feedState.likeCount - 1 : feedState.likeCount + 1,
@@ -184,7 +184,4 @@ export default function Feed({ feed }: PropsType) {
       </Stack>
     </Stack>
   );
-}
-function setCrudMyFeed(arg0: { C: boolean; R: boolean; U: boolean; D: boolean }) {
-  throw new Error("Function not implemented.");
 }

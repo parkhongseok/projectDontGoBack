@@ -1,16 +1,17 @@
 "use client";
 
 import "../../globals.css";
-import { useEffect, useRef, useState } from "react";
-import { Stack } from "react-bootstrap";
-import Feed from "../../components/Feed";
-import CreateComment from "../../components/comments/CreateComment";
-import Comment from "../../components/comments/Comment";
 import * as Types from "../../utils/types";
-import { useParams, useRouter } from "next/navigation";
+import Feed from "../../components/Feed";
+import Comment from "../../components/comments/Comment";
+import CreateComment from "../../components/comments/CreateComment";
+import { Stack } from "react-bootstrap";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
 import { useFeed } from "../../contexts/FeedContext";
 import { httpRequest } from "../../utils/httpRequest";
 import { useUser } from "../../contexts/UserContext";
+import Loading from "../../components/Loading";
 
 export default function FeedDetile() {
   const {
@@ -21,7 +22,8 @@ export default function FeedDetile() {
     crudMyComment,
     setCrudMyComment,
   } = useFeed();
-  const { userContext, fetchUserContext } = useUser();
+
+  const { userContext } = useUser();
   const { feedId } = useParams<{ feedId: string }>();
   // const router = useRouter();
   const [comments, setComments] = useState<Types.Comment[]>([]);
@@ -34,11 +36,11 @@ export default function FeedDetile() {
     lastCommentIdRef.current = lastCommentId;
   }, [lastCommentId]);
 
-  const fetchFeed = async () => {
+  const fetchFeed = useCallback(async () => {
     const method = "GET";
     const url = `http://localhost:8090/api/v1/feeds/${feedId}`;
     const body = null;
-    const success = (result: any) => {
+    const success = (result: Types.ResData<Types.Feed>) => {
       if (result.data) {
         setFeedContext(result.data);
       } else {
@@ -49,9 +51,9 @@ export default function FeedDetile() {
       console.error(`${feedId}번 게시물 조회 실패`);
     };
     httpRequest(method, url, body, success, fail);
-  };
+  }, [feedId, setFeedContext]);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     if (commentsLoading) return;
     setCommentsLoading(true); // 로딩 시작
 
@@ -60,9 +62,9 @@ export default function FeedDetile() {
       lastCommentIdRef.current
     }&size=${5}`;
     const body = null;
-    const success = async (result: any) => {
+    const success = async (result: Types.ResData<{ comments: Types.Comment[] }>) => {
       setCommentsLoading(false); // 로딩 끝
-      let newComments = result.data.comments;
+      const newComments = result.data.comments;
       if (newComments.length == 0) return;
       setComments((prevComments: Types.Comment[]) => [...prevComments, ...newComments]);
       setLastCommentId(newComments[newComments.length - 1].commentId);
@@ -72,12 +74,12 @@ export default function FeedDetile() {
       console.error(`${feedId}번 게시물의 댓글 조회 실패`);
     };
     httpRequest(method, url, body, success, fail);
-  };
+  }, [commentsLoading, feedId]);
 
   // 상세 피드에 필요한 데이터만 fetch
   useEffect(() => {
     const fetchInitialData = async () => {
-      if (!userContext?.userId) await fetchUserContext();
+      // if (!userContext?.userId) await fetchUserContext();
       if (!feedContext?.feedId) await fetchFeed();
       if (lastCommentId == 0) await fetchComments();
     };
@@ -88,13 +90,6 @@ export default function FeedDetile() {
   // 나의 답글 생성 반영 함수
   const createMyComment = (createdComment: Types.Comment) => {
     setComments((prevComments) => [createdComment, ...prevComments]);
-    // if (commentContext) {
-    //   // 댓글 개수 프론트에서도 즉시 반영
-    //   setCommentContext({
-    //     ...commentContext,
-    //     subCommentCount: commentContext?.subCommentCount + 1,
-    //   });
-    // }
   };
   // 나의 답글 수정 반영 함수
   const updateMyComment = (updatedComment: Types.Comment) => {
@@ -104,6 +99,7 @@ export default function FeedDetile() {
       )
     );
   };
+
   // 나의 답글 삭제 반영 함수
   const deleteMyComment = (deletedComment: Types.Comment) => {
     setComments((prevComments) =>
@@ -167,8 +163,8 @@ export default function FeedDetile() {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(timeoutId);
     };
-  }, [commentsLoading, lastCommentId]);
-
+  }, [commentsLoading, fetchComments, lastCommentId]);
+  if (!userContext) return <Loading />;
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}

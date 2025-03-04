@@ -284,8 +284,6 @@
 }
 
 .chartImgContainer {
-  margin: auto;
-  height: 320px;
   overflow: hidden;
   display: flex;
   justify-content: center;

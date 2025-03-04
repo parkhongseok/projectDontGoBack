@@ -2,6 +2,7 @@
 
 import "../globals.css";
 import styles from "./Feed.module.css";
+import * as Types from "../utils/types";
 import { Stack } from "react-bootstrap";
 import { useFeed } from "../contexts/FeedContext";
 import { useEffect, useRef, useState } from "react";
@@ -18,14 +19,21 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
   const pathname = usePathname() || "";
   const { feedContext, setFeedContext, setCrudMyFeed } = useFeed();
   const [userInput, setUserInput] = useState(feedContext?.content || "");
-  if (!feedContext) return <div className="loading" />;
+
+  const autoResize = (input: HTMLTextAreaElement | React.FormEvent<HTMLTextAreaElement>) => {
+    const target =
+      input instanceof HTMLTextAreaElement ? input : (input.target as HTMLTextAreaElement);
+    target.style.height = "auto";
+    target.style.height = `${target.scrollHeight}px`;
+  };
 
   useEffect(() => {
     if (textareaRef.current) {
-      autoResize({ target: textareaRef.current } as any); // 초기 높이 설정
+      autoResize(textareaRef.current);
     }
   }, []);
 
+  if (!feedContext) return <div className="loading" />;
   const setContentContext = (newContent: string, newUpdatedAt: string) => {
     const newFeed = {
       ...feedContext,
@@ -37,12 +45,6 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
 
   const handleClosePopUp = () => {
     setIsFeedEditOpen(false);
-  };
-
-  const autoResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    const target = e.target as HTMLTextAreaElement;
-    target.style.height = "auto";
-    target.style.height = `${target.scrollHeight}px`;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -74,7 +76,9 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
     const method = "PATCH";
     const url = `http://localhost:8090/api/v1/feeds/${feedContext.feedId}`;
     const body = updateFeedRequest;
-    const success = (result: any) => {
+    const success = (
+      result: Types.ResData<{ feedId: number; content: string; updatedAt: string }>
+    ) => {
       if (result.data.feedId != feedContext.feedId)
         return console.error("EditPopUp : 즉시 갱신 실패");
       setContentContext(result.data.content, result.data.updatedAt);

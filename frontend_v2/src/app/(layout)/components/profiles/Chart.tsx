@@ -2,6 +2,7 @@
 
 import styles from "../Feed.module.css";
 import { Carousel } from "react-bootstrap";
+import Image from "next/image";
 
 export default function Chart() {
   return (
@@ -14,7 +15,15 @@ export default function Chart() {
       >
         <Carousel.Item>
           <div className={`${styles.chartImgContainer}`}>
-            <img className="d-block w-100 " src="/chart_week.png" alt="First slide" />
+            {/* <img className="d-block w-100 " src="/chart_week.png" alt="First slide" /> */}
+            <Image
+              className="d-block"
+              src="/chart_week.png"
+              alt="First slide"
+              width={380} // 이미지 원본 크기에 맞게 설정
+              height={100} // 비율 유지하며 설정
+              priority // LCP 최적화를 위해 추가
+            />
           </div>
           <Carousel.Caption>
             {/* <h3 className="fontGray3">Week </h3>
@@ -23,7 +32,15 @@ export default function Chart() {
         </Carousel.Item>
         <Carousel.Item>
           <div className={`${styles.chartImgContainer}`}>
-            <img className="d-block w-100 " src="/chart_year.png" alt="First slide" />
+            <Image
+              className="d-block"
+              src="/chart_year.png"
+              alt="First slide"
+              width={380} // 이미지 원본 크기에 맞게 설정
+              height={100} // 비율 유지하며 설정
+              priority // LCP 최적화를 위해 추가
+            />
+            {/* <img className="d-block w-100 " src="/chart_year.png" alt="First slide" /> */}
           </div>
           <Carousel.Caption>
             {/* <h3 className="fontGray3">Year </h3>

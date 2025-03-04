@@ -3,7 +3,6 @@
 import "../../globals.css";
 import { Stack } from "react-bootstrap";
 import styles from "../Feed.module.css";
-import { usePathname } from "next/navigation";
 import { useFeed } from "../../contexts/FeedContext";
 import { httpRequest } from "../../utils/httpRequest";
 import * as Types from "../../utils/types";
@@ -26,9 +25,9 @@ export default function DeleteCommentPopUp({ commentId, setIsCommentDeleteOpen }
     const method = "DELETE";
     const url = `http://localhost:8090/api/v1/comments/${commentId}`;
     const body = null;
-    const success = (result: { data: any }) => {
+    const success = (result: Types.ResData<Types.Comment>) => {
       handleClosePopUp();
-      // 경로 검사 안필요할까 
+      // 경로 검사 안필요할까
       setCommentContext({ ...Dummys.Comment, commentId: result.data.commentId });
       setCrudMyComment({ C: false, R: false, U: false, D: true });
     };
