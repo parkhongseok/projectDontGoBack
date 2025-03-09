@@ -41,3 +41,19 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY_DERECTORY:frontend-$TAG .
           docker push $ECR_REGISTRY_DERECTORY:frontend-$TAG
+
+      - name: Configure SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_key.pem
+          chmod 600 ~/.ssh/ec2_key.pem
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            -i ~/.ssh/ec2_key.pem \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_IP }} \
+            "docker login -u AWS -p $(aws ecr get-login-password --region $AWS_REGION) $ECR_REGISTRY && \
+              docker pull $ECR_REGISTRY/$ECR_REPO:backend-$TAG && \
+              docker pull $ECR_REGISTRY/$ECR_REPO:frontend-$TAG && \
+              docker compose -f /home/ubuntu/docker-compose.yml up -d"
