@@ -8,9 +8,9 @@ on:
 
 env:
   AWS_REGION: ap-southeast-2
-  ECR_REGISTRY: 651706767183.dkr.ecr.$AWS_REGION.amazonaws.com
-  BACKEND_IMAGE: $ECR_REGISTRY/my-backend
-  FRONTEND_IMAGE: $ECR_REGISTRY/my-frontend
+  ECR_REGISTRY: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com
+  BACKEND_IMAGE: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/my-backend
+  FRONTEND_IMAGE: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/my-frontend
   TAG: ${{ github.sha }}
 
 jobs:
