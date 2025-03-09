@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # 수동으로 액션 실행
 
 env:
-  AWS_REGION: ap-southeast-2
+  AWS_REGION: ap-northeast-2
   ECR_REGISTRY: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com
   ECR_REGISTRY_DERECTORY: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com/dontgoback
   TAG: ${{ github.sha }}
@@ -29,12 +29,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-
-      # - name: Print environment variables
-      #   run: |
-      #     echo "ECR_REGISTRY: $ECR_REGISTRY"
-      #     echo "BACKEND_IMAGE: $BACKEND_IMAGE"
-      #     echo "TAG: $TAG"
 
       - name: Build and Push Backend
         working-directory: ./dontgo
