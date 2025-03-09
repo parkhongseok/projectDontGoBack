@@ -9,8 +9,7 @@ on:
 env:
   AWS_REGION: ap-southeast-2
   ECR_REGISTRY: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com
-  BACKEND_IMAGE: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/dontgoback:backend
-  FRONTEND_IMAGE: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/dontgoback:frontend
+  ECR_REGISTRY_DERECTORY: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/dontgoback
   TAG: ${{ github.sha }}
 
 jobs:
@@ -40,11 +39,11 @@ jobs:
       - name: Build and Push Backend
         working-directory: ./dontgo
         run: |
-          docker build -t $BACKEND_IMAGE:$TAG .
-          docker push $BACKEND_IMAGE:$TAG
+          docker build -t $ECR_REGISTRY_DERECTORY:backend-$TAG .
+          docker push $ECR_REGISTRY_DERECTORY:backend-$TAG
 
       - name: Build and Push Frontend
         working-directory: ./frontend_v2
         run: |
-          docker build -t $FRONTEND_IMAGE:$TAG .
-          docker push $FRONTEND_IMAGE:$TAG
+          docker build -t $ECR_REGISTRY_DERECTORY:frontend-$TAG .
+          docker push $ECR_REGISTRY_DERECTORY:frontend-$TAG
