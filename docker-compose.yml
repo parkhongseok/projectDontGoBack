@@ -26,7 +26,7 @@ services:
           "mariadb-admin",
           "ping",
           "-uroot",
-          "-p${DB_ROOT_PASSWORD}",
+          "-p$${DB_ROOT_PASSWORD}",
           "--protocol=tcp",
         ]
       interval: 10s # 10초마다 healthcheck
