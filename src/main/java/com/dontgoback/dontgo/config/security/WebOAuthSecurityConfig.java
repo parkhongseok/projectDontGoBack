@@ -43,7 +43,7 @@ public class WebOAuthSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure(){     // Spring Security 기능 비활성화
         return (web) -> web.ignoring()
-                .requestMatchers(toH2Console())
+//                .requestMatchers(toH2Console())
                 .requestMatchers("/img/**", "/css/**", "/js/**");
     }
 

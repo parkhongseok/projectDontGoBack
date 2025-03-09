@@ -33,7 +33,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Transient // 데이터베이스에 저장되지 않음
     @Column(name = "password")
-    private String password = "";
+    private final String password = "";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_type", nullable = true)

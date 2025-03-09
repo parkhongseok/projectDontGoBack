@@ -33,12 +33,16 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	// DB
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+//	runtimeOnly 'com.h2database:h2'
+	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
+	runtimeOnly 'com.mysql:mysql-connector-j' // Maria DB와 호환
+
+
 	// Test
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 	// oauth2 for Open Id Connect
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	// jwt
