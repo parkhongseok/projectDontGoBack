@@ -9,8 +9,8 @@ on:
 env:
   AWS_REGION: ap-southeast-2
   ECR_REGISTRY: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com
-  BACKEND_IMAGE: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/my-backend
-  FRONTEND_IMAGE: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/my-frontend
+  BACKEND_IMAGE: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/dontgoback:backend
+  FRONTEND_IMAGE: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/dontgoback:frontend
   TAG: ${{ github.sha }}
 
 jobs:
@@ -31,11 +31,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Print environment variables
-        run: |
-          echo "ECR_REGISTRY: $ECR_REGISTRY"
-          echo "BACKEND_IMAGE: $BACKEND_IMAGE"
-          echo "TAG: $TAG"
+      # - name: Print environment variables
+      #   run: |
+      #     echo "ECR_REGISTRY: $ECR_REGISTRY"
+      #     echo "BACKEND_IMAGE: $BACKEND_IMAGE"
+      #     echo "TAG: $TAG"
 
       - name: Build and Push Backend
         working-directory: ./dontgo
