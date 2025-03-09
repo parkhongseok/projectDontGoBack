@@ -31,6 +31,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Print environment variables
+        run: |
+          echo "ECR_REGISTRY: $ECR_REGISTRY"
+          echo "BACKEND_IMAGE: $BACKEND_IMAGE"
+          echo "TAG: $TAG"
+
       - name: Build and Push Backend
         working-directory: ./dontgo
         run: |
