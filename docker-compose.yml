@@ -38,7 +38,7 @@ services:
   backend:
     networks:
       - app_network
-    image: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/my-backend:latest
+    image: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com/dontgoback:backend-${TAG}
     build:
       context: ./dontgo # 백엔드 코드가 있는 디렉토리 (Dockerfile이 포함된 위치)
     container_name: backend_container
@@ -57,7 +57,7 @@ services:
   frontend:
     networks:
       - app_network
-    image: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/my-frontend:latest
+    image: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com/dontgoback:frontend-${TAG}
     build:
       context: ./frontend_v2 # 프론트엔드 코드가 있는 디렉토리 (Dockerfile이 포함된 위치)
     container_name: frontend_container
