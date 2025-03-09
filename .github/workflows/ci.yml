@@ -8,8 +8,8 @@ on:
 
 env:
   AWS_REGION: ap-southeast-2
-  ECR_REGISTRY: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com
-  ECR_REGISTRY_DERECTORY: 651706767183.dkr.ecr.ap-southeast-2.amazonaws.com/dontgoback
+  ECR_REGISTRY: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com
+  ECR_REGISTRY_DERECTORY: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com/dontgoback
   TAG: ${{ github.sha }}
 
 jobs:
