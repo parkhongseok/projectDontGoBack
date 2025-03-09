@@ -1,0 +1,6 @@
+{
+  "printWidth": 100,
+  "singleAttributePerLine": false,
+  "prettier.htmlWhitespaceSensitivity": "ignore",
+  "prettier.wrapAttributes": "preserve"
+}

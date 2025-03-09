@@ -1,0 +1,64 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-min-width);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 20px;
+  /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); */
+  background-color: var(--white);
+  border-right: 2px solid var(--gray4);
+  z-index: 1000;
+}
+
+.logo {
+  text-align: center;
+}
+
+.logoImage {
+  color: #000;
+  width: var(--sidebar-logo-width);
+  min-width: var(--sidebar-item-min-width);
+  height: auto;
+  fill: var(--gray1);
+}
+
+.navContainer {
+  flex-grow: 1; /* 네비게이션 메뉴를 세로로 중앙 배치 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.navImage {
+  width: var(--sidebar-item-width);
+  min-width: var(--sidebar-item-min-width);
+  height: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /* fill: var(--gray1); */
+}
+
+.settingsContainer {
+  margin-top: auto;
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.settingImage {
+  width: var(--sidebar-item-width);
+  min-width: var(--sidebar-item-min-width);
+}
+
+.logout {
+  color: var(--text-color-red);
+  font-weight: 700;
+}
