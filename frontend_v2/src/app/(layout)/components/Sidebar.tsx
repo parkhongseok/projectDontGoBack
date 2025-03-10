@@ -41,7 +41,7 @@ export default function SideBar() {
     localStorage.removeItem("feedContext");
 
     // 백엔드에 로그아웃 요청 (서버에서 리프래시 토큰 검증 후, 무효한 토큰을 브라우저에 발급)
-    await fetch("http://localhost:8090/api/logout", {
+    await fetch("/backend/api/logout", {
       method: "POST",
       credentials: "include", // 쿠키 자동 전송
       headers: {

@@ -49,7 +49,7 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
     };
     console.log(CreateCommentRequest);
     const method = "POST";
-    const url = "http://localhost:8090/api/v1/comments";
+    const url = "/backend/api/v1/comments";
     const body = CreateCommentRequest;
     const success = (result: Types.ResData<Types.Comment>) => {
       setUserInput("");

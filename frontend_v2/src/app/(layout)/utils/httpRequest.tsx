@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ACCESS_TOKEN_NAME, REFRESH_TOKEN_NAME } from "./values";
+import { ACCESS_TOKEN_NAME, BACKEND_API_URL, REFRESH_TOKEN_NAME } from "./values";
 
 // 쿠키에서 값 가져오기 함수
 export function getCookie(name: string) {
@@ -49,7 +49,7 @@ const handleErrorResponse = async (response: Response, fail: () => void) => {
 const refreshAccessToken = async (refreshToken: string) => {
   console.log("🔄 액세스 토큰 갱신 시도");
 
-  const response = await fetch(`{BACKEND_API_URL}/token`, {
+  const response = await fetch(`${BACKEND_API_URL}/api/token`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refreshToken }),

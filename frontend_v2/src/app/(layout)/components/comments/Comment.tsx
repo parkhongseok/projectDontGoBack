@@ -44,7 +44,7 @@ export default function Comment({ comment }: CommentProps) {
 
   const fetchCommentLike = () => {
     const method = "GET";
-    const url = `http://localhost:8090/api/v1/commentLikes/${comment.commentId}`;
+    const url = `/backend/api/v1/commentLikes/${comment.commentId}`;
     const body = null;
     const success = (result: Types.ResData<Types.Comment>) => {
       if (commentState) {
