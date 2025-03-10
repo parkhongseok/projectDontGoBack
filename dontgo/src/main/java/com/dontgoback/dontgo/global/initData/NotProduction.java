@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Configuration
-@Profile("test")// dev, test 환경에서만 사용
+@Profile("dev")// dev, test 환경에서만 사용
 public class NotProduction {
 
     @Bean
