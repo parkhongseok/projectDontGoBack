@@ -17,7 +17,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   const fetchUserContext = async () => {
-    const url = `${BACKEND_API_URL}/api/v1/users/me`;
+    const url = `${BACKEND_API_URL}/v1/users/me`;
     const body = null;
     const success = (result: Types.ResData<Types.User>) => {
       setUserContext(result.data);

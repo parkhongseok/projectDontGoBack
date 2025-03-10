@@ -10,7 +10,7 @@ import styles from "../Feed.module.css";
 import { useFeed } from "../../contexts/FeedContext";
 import { useUser } from "../../contexts/UserContext";
 import { httpRequest } from "../../utils/httpRequest";
-import { MAX_TEXT_LENGTH } from "../../utils/values";
+import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/values";
 
 type propsType = { setShowWriteBox: Dispatch<SetStateAction<boolean>>; feed: Types.Feed };
 
@@ -49,7 +49,7 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
     };
     console.log(CreateCommentRequest);
     const method = "POST";
-    const url = "/backend/api/v1/comments";
+    const url = `${BACKEND_API_URL}/v1/comments`;
     const body = CreateCommentRequest;
     const success = (result: Types.ResData<Types.Comment>) => {
       setUserInput("");

@@ -8,6 +8,7 @@ import { useFeed } from "../contexts/FeedContext";
 import { httpRequest } from "../utils/httpRequest";
 import * as Types from "../utils/types";
 import Dummys from "../utils/dummyData";
+import { BACKEND_API_URL } from "../utils/values";
 
 type propsType = {
   feedId: number;
@@ -26,7 +27,7 @@ export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) 
 
   const handleSubmit = async () => {
     const method = "DELETE";
-    const url = `http://localhost:8090/api/v1/feeds/${feedId}`;
+    const url = `${BACKEND_API_URL}/v1/feeds/${feedId}`;
     const body = null;
     const success = (result: Types.ResData<{ feedId: number }>) => {
       handleClosePopUp();

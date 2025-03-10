@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { httpRequest } from "../utils/httpRequest";
+import { BACKEND_API_URL } from "../utils/values";
 
 type PropsType = {
   feed: Types.Feed | null; // Props의 타입 정의
@@ -41,7 +42,7 @@ export default function Feed({ feed }: PropsType) {
 
   const fetchFeedLike = () => {
     const method = "GET";
-    const url = `/api/v1/feedLikes/${feed.feedId}`;
+    const url = `${BACKEND_API_URL}/v1/feedLikes/${feed.feedId}`;
 
     const body = null;
     const success = (result: Types.ResData<{ likeCount: number; isLiked: boolean }>) => {

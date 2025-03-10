@@ -49,7 +49,7 @@ const handleErrorResponse = async (response: Response, fail: () => void) => {
 const refreshAccessToken = async (refreshToken: string) => {
   console.log("🔄 액세스 토큰 갱신 시도");
 
-  const response = await fetch(`${BACKEND_API_URL}/api/token`, {
+  const response = await fetch(`${BACKEND_API_URL}/token`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refreshToken }),

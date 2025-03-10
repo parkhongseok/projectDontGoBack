@@ -38,7 +38,7 @@ export default function Home() {
   const fetchFeeds = async () => {
     if (feedsLoading) return <Loading />;
     setFeedsLoading(true); // 로딩 시작
-    const url = `${BACKEND_API_URL}/api/v1/feeds?lastFeedId=${lastFeedIdRef.current}&size=${10}`;
+    const url = `${BACKEND_API_URL}/v1/feeds?lastFeedId=${lastFeedIdRef.current}&size=${10}`;
     const body = null;
     const success = async (result: Types.ResData<{ feeds: Types.Feed[] }>) => {
       setFeedsLoading(false);

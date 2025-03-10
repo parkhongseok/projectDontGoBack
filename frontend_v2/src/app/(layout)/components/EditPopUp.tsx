@@ -8,7 +8,7 @@ import { useFeed } from "../contexts/FeedContext";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
-import { MAX_TEXT_LENGTH } from "../utils/values";
+import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../utils/values";
 
 type propsType = {
   setIsFeedEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -74,7 +74,7 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
     };
 
     const method = "PATCH";
-    const url = `http://localhost:8090/api/v1/feeds/${feedContext.feedId}`;
+    const url = `${BACKEND_API_URL}/v1/feeds/${feedContext.feedId}`;
     const body = updateFeedRequest;
     const success = (
       result: Types.ResData<{ feedId: number; content: string; updatedAt: string }>

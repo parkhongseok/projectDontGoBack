@@ -10,6 +10,6 @@ export const ACCESS_TOKEN_FOR_VISITER =
 
 // 배포 EC2
 export const FRONTEND_URL = "https://dontgoback.kro.kr";
-export const BACKEND_API_URL = "https://dontgoback.kro.kr/backend";
+export const BACKEND_API_URL = "https://dontgoback.kro.kr/api";
 
 // // 배포 라즈베리파이

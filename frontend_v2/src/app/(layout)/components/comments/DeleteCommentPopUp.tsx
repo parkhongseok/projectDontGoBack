@@ -7,6 +7,7 @@ import { useFeed } from "../../contexts/FeedContext";
 import { httpRequest } from "../../utils/httpRequest";
 import * as Types from "../../utils/types";
 import Dummys from "../../utils/dummyData";
+import { BACKEND_API_URL } from "../../utils/values";
 
 type propsType = {
   commentId: number;
@@ -23,7 +24,7 @@ export default function DeleteCommentPopUp({ commentId, setIsCommentDeleteOpen }
 
   const handleSubmit = async () => {
     const method = "DELETE";
-    const url = `http://localhost:8090/api/v1/comments/${commentId}`;
+    const url = `${BACKEND_API_URL}/v1/comments/${commentId}`;
     const body = null;
     const success = (result: Types.ResData<Types.Comment>) => {
       handleClosePopUp();

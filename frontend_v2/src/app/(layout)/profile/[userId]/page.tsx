@@ -15,6 +15,7 @@ import { useParams } from "next/navigation";
 import Loading from "../../components/Loading";
 import { useUser } from "../../contexts/UserContext";
 import { useFeed } from "../../contexts/FeedContext";
+import { BACKEND_API_URL } from "../../utils/values";
 
 export default function ProfileMain() {
   const { userId } = useParams<{ userId: string }>();
@@ -47,7 +48,7 @@ export default function ProfileMain() {
   const fetchFeeds = useCallback(async () => {
     if (feedsLoading) return <Loading />;
     setFeedsLoading(true); // 로딩 시작
-    const url = `/api/v1/feeds/profile?userId=${userId}&lastFeedId=${
+    const url = `${BACKEND_API_URL}/v1/feeds/profile?userId=${userId}&lastFeedId=${
       lastFeedIdRef.current
     }&size=${10}`;
     const body = null;

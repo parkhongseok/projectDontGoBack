@@ -7,7 +7,7 @@ import { Stack } from "react-bootstrap";
 import { useFeed } from "../../contexts/FeedContext";
 import { useEffect, useRef, useState } from "react";
 import { httpRequest } from "../../utils/httpRequest";
-import { MAX_TEXT_LENGTH } from "../../utils/values";
+import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/values";
 
 type propsType = {
   setIsCommentEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -72,7 +72,7 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
     };
 
     const method = "PATCH";
-    const url = `http://localhost:8090/api/v1/comments/${commentContext.commentId}`;
+    const url = `${BACKEND_API_URL}/v1/comments/${commentContext.commentId}`;
     const body = updateRequest;
     const success = (result: Types.ResData<Types.Comment>) => {
       if (result.data.commentId == commentContext.commentId)

@@ -76,9 +76,14 @@ public class WebOAuthSecurityConfig {
                 // 사용자 인증이 필요하거나, 인증 실패 시, 연결되는 로그인 페이지
                 .loginPage("https://dontgoback.kro.kr/login")
                 // 인증 요청 상태 저장 : 인증 요청을 시작한 뒤, 리다이렉션을 통해 돌아올 때 그 상태를 복원
-                .authorizationEndpoint(auth ->
-                        auth.authorizationRequestRepository(
+                .authorizationEndpoint(auth -> auth
+                        .baseUri("/api/oauth2/authorization") // 기본 경로 변경
+                        .authorizationRequestRepository(
                                 oAuth2AuthorizationRequestBasedOnCookieRepository())
+                )
+                // 리다이렉션 URL 변경 (기본: /login/oauth2/code/google)
+                .redirectionEndpoint(redir -> redir
+                        .baseUri("/api/login/oauth2/code/*") // 리다이렉트 경로 변경
                 )
                 // 성공적으로 완료된 경우 실행될 핸들러
                 .successHandler(oAuth2SuccessHandler()) // 인증 성공 시 실행할 핸들러 호출 (커스텀 핸들러 호출)

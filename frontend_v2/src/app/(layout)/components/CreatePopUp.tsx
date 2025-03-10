@@ -8,7 +8,7 @@ import { useFeed } from "../contexts/FeedContext";
 import { useUser } from "../contexts/UserContext";
 import { usePathname } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
-import { MAX_TEXT_LENGTH } from "../utils/values";
+import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../utils/values";
 import * as Types from "../utils/types";
 
 type propsType = {
@@ -63,7 +63,7 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
       content: userInput,
     };
     const method = "POST";
-    const url = "http://localhost:8090/api/v1/feeds";
+    const url = `${BACKEND_API_URL}/v1/feeds`;
     const body = createFeedRequest;
     const success = (result: { data: Types.Feed }) => {
       setUserInput("");

@@ -12,6 +12,7 @@ import { useFeed } from "../../contexts/FeedContext";
 import { httpRequest } from "../../utils/httpRequest";
 import { useUser } from "../../contexts/UserContext";
 import Loading from "../../components/Loading";
+import { BACKEND_API_URL } from "../../utils/values";
 
 export default function FeedDetile() {
   const {
@@ -38,7 +39,7 @@ export default function FeedDetile() {
 
   const fetchFeed = useCallback(async () => {
     const method = "GET";
-    const url = `http://localhost:8090/api/v1/feeds/${feedId}`;
+    const url = `${BACKEND_API_URL}/v1/feeds/${feedId}`;
     const body = null;
     const success = (result: Types.ResData<Types.Feed>) => {
       if (result.data) {
@@ -58,7 +59,7 @@ export default function FeedDetile() {
     setCommentsLoading(true); // 로딩 시작
 
     const method = "GET";
-    const url = `http://localhost:8090/api/v1/comments/${feedId}?lastCommentId=${
+    const url = `${BACKEND_API_URL}/v1/comments/${feedId}?lastCommentId=${
       lastCommentIdRef.current
     }&size=${5}`;
     const body = null;

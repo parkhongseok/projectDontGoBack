@@ -15,6 +15,7 @@ import { faComment } from "@fortawesome/free-solid-svg-icons/faComment";
 import { httpRequest } from "../../utils/httpRequest";
 import { useFeed } from "../../contexts/FeedContext";
 import { usePathname } from "next/navigation";
+import { BACKEND_API_URL } from "../../utils/values";
 
 type CommentProps = {
   comment: Types.Comment;
@@ -44,7 +45,7 @@ export default function Comment({ comment }: CommentProps) {
 
   const fetchCommentLike = () => {
     const method = "GET";
-    const url = `/backend/api/v1/commentLikes/${comment.commentId}`;
+    const url = `${BACKEND_API_URL}/v1/commentLikes/${comment.commentId}`;
     const body = null;
     const success = (result: Types.ResData<Types.Comment>) => {
       if (commentState) {
