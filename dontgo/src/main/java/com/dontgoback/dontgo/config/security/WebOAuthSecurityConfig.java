@@ -83,7 +83,7 @@ public class WebOAuthSecurityConfig {
                 )
                 // 리다이렉션 URL 변경 (기본: /login/oauth2/code/google)
                 .redirectionEndpoint(redir -> redir
-                        .baseUri("/api/login/oauth2/code/*") // 리다이렉트 경로 변경
+                        .baseUri("/api/login/oauth2/code/*") // 리다이렉트 경로 변경 개발환경에서도 작동하도록
                 )
                 // 성공적으로 완료된 경우 실행될 핸들러
                 .successHandler(oAuth2SuccessHandler()) // 인증 성공 시 실행할 핸들러 호출 (커스텀 핸들러 호출)
