@@ -30,6 +30,7 @@ spring:
             scope:
               - email
               - profile
+            redirect-uri: dontgoback.kro.kr/api/login/oauth2/code/google
 jwt:
   secretKey: ${JWT_SECRET_KEY}
 
