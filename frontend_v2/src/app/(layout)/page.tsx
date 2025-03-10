@@ -11,6 +11,7 @@ import { httpRequest } from "./utils/httpRequest";
 import Loading from "./components/Loading";
 import { useUser } from "./contexts/UserContext";
 import { useRouter } from "next/navigation";
+import { BACKEND_API_URL } from "./utils/values";
 
 export default function Home() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function Home() {
   const fetchFeeds = async () => {
     if (feedsLoading) return <Loading />;
     setFeedsLoading(true); // 로딩 시작
-    const url = `http://localhost:8090/api/v1/feeds?lastFeedId=${lastFeedIdRef.current}&size=${10}`;
+    const url = `${BACKEND_API_URL}/v1/feeds?lastFeedId=${lastFeedIdRef.current}&size=${10}`;
     const body = null;
     const success = async (result: Types.ResData<{ feeds: Types.Feed[] }>) => {
       setFeedsLoading(false);

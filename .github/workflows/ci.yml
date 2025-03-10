@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # 수동으로 액션 실행
+  workflow_dispatch: # 수동으로 액션 실행g
 
 env:
   AWS_REGION: ap-northeast-2

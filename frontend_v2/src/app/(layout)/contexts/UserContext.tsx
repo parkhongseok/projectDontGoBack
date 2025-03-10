@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
 import * as Types from "../utils/types";
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import { ACCESS_TOKEN_NAME } from "../utils/values";
+import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "../utils/values";
 
 interface UserContextType {
   userContext: Types.User | null;
@@ -17,7 +17,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   const fetchUserContext = async () => {
-    const url = "http://localhost:8090/api/v1/users/me";
+    const url = `${BACKEND_API_URL}/v1/users/me`;
     const body = null;
     const success = (result: Types.ResData<Types.User>) => {
       setUserContext(result.data);

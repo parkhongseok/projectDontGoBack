@@ -74,7 +74,7 @@ public class WebOAuthSecurityConfig {
         // OAuth 로그인 설정
         http.oauth2Login(oauth2 -> oauth2
                 // 사용자 인증이 필요하거나, 인증 실패 시, 연결되는 로그인 페이지
-                .loginPage("http://localhost:3000/login")
+                .loginPage("https://dontgoback.kro.kr/login")
                 // 인증 요청 상태 저장 : 인증 요청을 시작한 뒤, 리다이렉션을 통해 돌아올 때 그 상태를 복원
                 .authorizationEndpoint(auth ->
                         auth.authorizationRequestRepository(
