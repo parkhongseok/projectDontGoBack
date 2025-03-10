@@ -63,4 +63,7 @@ jobs:
               docker pull $ECR_REGISTRY/$ECR_REPO:frontend-$TAG && \
               docker-compose -f /home/ubuntu/docker-compose.yml down
               docker-compose -f /home/ubuntu/docker-compose.yml up -d
-              docker image prune -a -f --filter 'until=24h'"
+              docker image prune -a"
+
+# docker image prune -a -f --filter 'until=24h'"
+

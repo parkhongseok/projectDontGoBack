@@ -35,7 +35,7 @@ export default function ProfileMain() {
   }, [lastFeedId]);
 
   const fetchUser = useCallback(async () => {
-    const url = `http://localhost:8090/api/v1/users/${userId}`;
+    const url = `/api/v1/users/${userId}`;
     const body = null;
     const success = (result: Types.ResData<Types.User>) => {
       setUserState(result.data);
@@ -47,7 +47,7 @@ export default function ProfileMain() {
   const fetchFeeds = useCallback(async () => {
     if (feedsLoading) return <Loading />;
     setFeedsLoading(true); // 로딩 시작
-    const url = `http://localhost:8090/api/v1/feeds/profile?userId=${userId}&lastFeedId=${
+    const url = `/api/v1/feeds/profile?userId=${userId}&lastFeedId=${
       lastFeedIdRef.current
     }&size=${10}`;
     const body = null;
