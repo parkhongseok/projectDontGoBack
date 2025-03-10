@@ -1,13 +1,16 @@
 "use client";
 
-import { ACCESS_TOKEN_NAME } from "@/app/(layout)/utils/values";
+import {
+  ACCESS_TOKEN_FOR_VISITER,
+  ACCESS_TOKEN_NAME,
+  BACKEND_API_URL,
+  FRONTEND_URL,
+} from "@/app/(layout)/utils/values";
 import "../auth.css";
 import Link from "next/link";
 import { Image, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
 
 export default function Login() {
-  const access_token =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGVtYWlsLmNvbSIsImlhdCI6MTc0MDY2OTQ3MSwiZXhwIjoxNzQxODc5MDcxfQ.J8O74yZaap-ptorzzoAYVIRqQAd8mZXgUPg9iDH6GR8";
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
@@ -26,10 +29,7 @@ export default function Login() {
           <h4 className="login-btn fontGray4 text">서비스 시작하기</h4>
         </div>
         <div className="line mt-4 mb-3"></div>
-        <Link
-          className="imageLink mx-auto"
-          href="http://localhost:8090/oauth2/authorization/google"
-        >
+        <Link className="imageLink mx-auto" href={`${BACKEND_API_URL}/oauth2/authorization/google`}>
           <Image className="image" src="/googleLogin.svg" alt="LogInBtn" />
         </Link>
         <OverlayTrigger
@@ -43,7 +43,7 @@ export default function Login() {
         >
           <Link
             className="imageLink2 mx-auto"
-            href={`http://localhost:3000/?${ACCESS_TOKEN_NAME}=${access_token}`}
+            href={`${FRONTEND_URL}/?${ACCESS_TOKEN_NAME}=${ACCESS_TOKEN_FOR_VISITER}`}
           >
             <p className="imageText">둘러보기</p>
           </Link>
