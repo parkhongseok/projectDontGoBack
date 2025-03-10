@@ -61,4 +61,6 @@ jobs:
               docker login -u AWS -p $(aws ecr get-login-password --region $AWS_REGION) $ECR_REGISTRY && \
               docker pull $ECR_REGISTRY/$ECR_REPO:backend-$TAG && \
               docker pull $ECR_REGISTRY/$ECR_REPO:frontend-$TAG && \
-              docker-compose -f /home/ubuntu/docker-compose.yml up -d"
+              docker-compose -f /home/ubuntu/docker-compose.yml down
+              docker-compose -f /home/ubuntu/docker-compose.yml up -d
+              docker image prune -a -f --filter 'until=24h'"
