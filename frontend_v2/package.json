@@ -2,7 +2,7 @@
   "name": "frontend_v2",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8090",
+  "proxy": "https://dontgoback.kro.kr/api",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

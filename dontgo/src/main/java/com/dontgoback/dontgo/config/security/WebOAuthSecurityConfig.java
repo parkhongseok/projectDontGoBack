@@ -105,7 +105,7 @@ public class WebOAuthSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedOrigins(List.of("https://dontgoback.kro.kr/"));
         config.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE","OPTIONS"));// OPTIONS: 브라우저의 사전 요청(Preflight 요청) 허용
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

@@ -41,7 +41,7 @@ export default function Feed({ feed }: PropsType) {
 
   const fetchFeedLike = () => {
     const method = "GET";
-    const url = `http://localhost:8090/api/v1/feedLikes/${feed.feedId}`;
+    const url = `/api/v1/feedLikes/${feed.feedId}`;
     const body = null;
     const success = (result: Types.ResData<{ likeCount: number; isLiked: boolean }>) => {
       if (feedState) {
