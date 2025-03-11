@@ -19,8 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.time.Duration;
 
-import static com.dontgoback.dontgo.global.util.GlobalValues.ACCESS_TOKEN_NAME;
-import static com.dontgoback.dontgo.global.util.GlobalValues.REFRESH_TOKEN_NAME;
+import static com.dontgoback.dontgo.global.util.GlobalValues.*;
 
 
 // 필터 맥락에서, 사용자에게 로그인 페이지를 전달하고, 사용자는 로그인을 수행, 그리고 로그인 성공 시 실행되는 핸들러
@@ -30,8 +29,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public static final String REFRESH_TOKEN_COOKIE_NAME = REFRESH_TOKEN_NAME;
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
-//    public static final String REDIRECT_PATH = "http://localhost:3000";
-    public static final String REDIRECT_PATH = "https://dontgoback.kro.kr";
+    public static final String REDIRECT_PATH = FRONTEND_URL;
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;

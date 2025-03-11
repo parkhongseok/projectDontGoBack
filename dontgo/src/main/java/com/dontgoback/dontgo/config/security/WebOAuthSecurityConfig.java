@@ -30,6 +30,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static com.dontgoback.dontgo.global.util.GlobalValues.FRONTEND_URL;
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 @RequiredArgsConstructor
@@ -74,7 +75,7 @@ public class WebOAuthSecurityConfig {
         // OAuth 로그인 설정
         http.oauth2Login(oauth2 -> oauth2
                 // 사용자 인증이 필요하거나, 인증 실패 시, 연결되는 로그인 페이지
-                .loginPage("https://dontgoback.kro.kr/login")
+                .loginPage(FRONTEND_URL + "/login")
                 // 인증 요청 상태 저장 : 인증 요청을 시작한 뒤, 리다이렉션을 통해 돌아올 때 그 상태를 복원
                 .authorizationEndpoint(auth -> auth
                         .baseUri("/api/oauth2/authorization") // 기본 경로 변경
@@ -110,7 +111,7 @@ public class WebOAuthSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://dontgoback.kro.kr/"));
+        config.setAllowedOrigins(List.of(FRONTEND_URL));
         config.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE","OPTIONS"));// OPTIONS: 브라우저의 사전 요청(Preflight 요청) 허용
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
