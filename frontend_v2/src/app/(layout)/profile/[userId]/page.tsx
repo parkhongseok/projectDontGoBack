@@ -36,7 +36,7 @@ export default function ProfileMain() {
   }, [lastFeedId]);
 
   const fetchUser = useCallback(async () => {
-    const url = `/api/v1/users/${userId}`;
+    const url = `${BACKEND_API_URL}/v1/users/${userId}`;
     const body = null;
     const success = (result: Types.ResData<Types.User>) => {
       setUserState(result.data);
