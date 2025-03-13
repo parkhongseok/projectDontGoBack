@@ -92,7 +92,7 @@ export default function SideBar() {
                 onClick={handleCreateFeed}
               />
             </Nav.Link>
-            <Nav.Link href="/test">
+            <Nav.Link href="#CopybaraLove">
               <Image src="/sidebar/like.svg" alt="Likes" className={styles.navImage} />
             </Nav.Link>
           </Nav>

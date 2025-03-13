@@ -1,6 +1,7 @@
 package com.dontgoback.dontgo.config.oauth;
 
 import com.dontgoback.dontgo.domain.user.User;
+import com.dontgoback.dontgo.domain.user.UserAsset;
 import com.dontgoback.dontgo.domain.user.UserRepository;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +37,14 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
         String name = (String) attributes.get("name");
+        UserAsset userAsset = new UserAsset(); // amount 값은 따로 history에 저장, 임시 이름
         User user = userRepository.findByEmail(email)
                 .map(entity -> entity.update(name))
                 .orElse(User.builder()
                         .email(email)
                         .nickname(name)
-                        .userAsset("30억원")
-                        .userType(RedBlueType.BLUE)
+                        .userAsset(userAsset.getUserAssetName())
+                        .userType(userAsset.getUserAssetType())
                         .build());
         return userRepository.save(user);
     }

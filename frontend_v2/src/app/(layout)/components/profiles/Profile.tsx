@@ -1,5 +1,5 @@
 "use client";
-import { Badge, Col, Container, Row } from "react-bootstrap";
+import { Badge, Col, Container, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import styles from "../Feed.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
@@ -29,12 +29,24 @@ export default function CreateFeed({ userProps }: PropsType) {
       <div className="profileTop mb-3 ">
         <Container className="mt-3">
           <Row className="mb-3 ms-3">
-            <Col className="d-flex align-items-center">
-              <Badge pill bg={`${badgeType}`} className={`${styles.smallBadge} `} as={"span"}>
-                {badgeName}
-              </Badge>
-              <p className={`${styles.ProfileuserName} ${typeClass} mx-2`}>{userProps.userName}</p>
-            </Col>
+            <OverlayTrigger
+              key={"key"}
+              placement={"left"}
+              overlay={
+                <Tooltip id={`button-tooltip`}>
+                  <strong>{"임의"}</strong>로 지정된 값입니다!
+                </Tooltip>
+              }
+            >
+              <Col className="d-flex align-items-center">
+                <Badge pill bg={`${badgeType}`} className={`${styles.smallBadge} `} as={"span"}>
+                  {badgeName}
+                </Badge>
+                <p className={`${styles.ProfileuserName} ${typeClass} mx-2`}>
+                  {userProps.userName}
+                </p>
+              </Col>
+            </OverlayTrigger>
             <Col className={`${styles.profileSettingContainer} me-4`}>
               {userContext?.userId == userProps.userId && (
                 <FontAwesomeIcon

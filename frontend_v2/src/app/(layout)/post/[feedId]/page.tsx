@@ -26,7 +26,7 @@ export default function FeedDetile() {
 
   const { userContext } = useUser();
   const { feedId } = useParams<{ feedId: string }>();
-  // const router = useRouter();
+
   const [comments, setComments] = useState<Types.Comment[]>([]);
   // 댓글 패이징
   const [lastCommentId, setLastCommentId] = useState(0);
@@ -80,7 +80,6 @@ export default function FeedDetile() {
   // 상세 피드에 필요한 데이터만 fetch
   useEffect(() => {
     const fetchInitialData = async () => {
-      // if (!userContext?.userId) await fetchUserContext();
       if (!feedContext?.feedId) await fetchFeed();
       if (lastCommentId == 0) await fetchComments();
     };
@@ -122,8 +121,8 @@ export default function FeedDetile() {
       setCrudMyComment({ ...crudMyComment, C: false });
       if (commentContext) {
         console.log(`[f${commentContext.feedId}-c${commentContext.commentId}] 답글 생성 요청 감지`);
-        createMyComment(commentContext);
         if (comments.length == 0) setLastCommentId(commentContext.commentId); // 이부분이 없으면 첫번째 댓글 조회 시, 동일 내용 추가
+        createMyComment(commentContext);
       }
       if (feedContext)
         setFeedContext({ ...feedContext, commentCount: feedContext.commentCount + 1 });
@@ -169,7 +168,7 @@ export default function FeedDetile() {
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <h5 className="text-center mb-4 pt-4 topTitleText">POST</h5>
+      <h5 className="text-center mb-4 pt-4 topTitleText">Post</h5>
 
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
