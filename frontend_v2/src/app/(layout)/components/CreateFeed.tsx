@@ -6,6 +6,7 @@ import { Stack } from "react-bootstrap";
 import { useState } from "react";
 import CreatePopUp from "./CreatePopUp";
 import { useUser } from "../contexts/UserContext";
+import Link from "next/link";
 
 export default function CreateFeed() {
   const { userContext } = useUser();
@@ -28,7 +29,9 @@ export default function CreateFeed() {
         className={`${styles.CreateFeedContainer}  cursorPointer px-2 py-2 `}
       >
         <div>
-          <p className={`${styles.userName} ${feedTypeClass} ms-3`}>{userContext.userName}</p>
+          <Link href={`/profile/${userContext?.userId}`}>
+            <p className={`${styles.userName} ${feedTypeClass} ms-3`}>{userContext.userName}</p>
+          </Link>
         </div>
         <div className="vr" />
         <div>

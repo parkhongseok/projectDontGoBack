@@ -120,9 +120,9 @@ export default function Comment({ comment }: CommentProps) {
                 </>
               ) : (
                 <>
-                  <Dropdown.Item href="#/action-2">저장하기</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">관심없음</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">혼인신고하기</Dropdown.Item>
+                  <Dropdown.ItemText className="fontGray1">저장하기</Dropdown.ItemText>
+                  <Dropdown.ItemText className="fontGray1">관심없음</Dropdown.ItemText>
+                  <Dropdown.ItemText className="fontGray1">혼인신고하기</Dropdown.ItemText>
                 </>
               )}
             </Dropdown.Menu>
