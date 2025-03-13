@@ -1,9 +1,8 @@
-xpackage com.dontgoback.dontgo.config.oauth;
+package com.dontgoback.dontgo.config.oauth;
 
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.UserAsset;
 import com.dontgoback.dontgo.domain.user.UserRepository;
-import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
