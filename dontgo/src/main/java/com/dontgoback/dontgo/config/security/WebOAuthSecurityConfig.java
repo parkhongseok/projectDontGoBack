@@ -8,7 +8,6 @@ import com.dontgoback.dontgo.config.oauth.OAuth2UserCustomService;
 import com.dontgoback.dontgo.domain.refreshToken.RefreshTokenRepository;
 import com.dontgoback.dontgo.domain.user.UserService;
 import jakarta.servlet.Filter;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.List;
 
 import static com.dontgoback.dontgo.global.util.GlobalValues.FRONTEND_URL;
@@ -39,14 +39,14 @@ public class WebOAuthSecurityConfig {
     private final UserService userService;
 
     @Bean
-    public WebSecurityCustomizer configure(){     // Spring Security 기능 비활성화
+    public WebSecurityCustomizer configure() {     // Spring Security 기능 비활성화
         return (web) -> web.ignoring()
 //                .requestMatchers(toH2Console())
                 .requestMatchers("/img/**", "/css/**", "/js/**");
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 토큰 방식 인증을 사용하기 때문에, 기존의 폼로그인과, 세션 방식 비활성화
         http
                 .cors(cors -> cors.configurationSource(
@@ -61,8 +61,8 @@ public class WebOAuthSecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안 함
                 );
 
-            // 헤더를 확인할 커스텀 필터를 추가 (헤더에서 유저 토큰 뜯어서 유효하다면, 이제 시큐리티 상에서 인증된 유저로 취급)
-            http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        // 헤더를 확인할 커스텀 필터를 추가 (헤더에서 유저 토큰 뜯어서 유효하다면, 이제 시큐리티 상에서 인증된 유저로 취급)
+        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // 인증이 필요한 API 요청에서 401 반환
         http.exceptionHandling(ex -> ex
@@ -109,7 +109,7 @@ public class WebOAuthSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(FRONTEND_URL));
-        config.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE","OPTIONS"));// OPTIONS: 브라우저의 사전 요청(Preflight 요청) 허용
+        config.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE", "OPTIONS"));// OPTIONS: 브라우저의 사전 요청(Preflight 요청) 허용
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
@@ -124,7 +124,7 @@ public class WebOAuthSecurityConfig {
         return new OAuth2SuccessHandler(
                 tokenProvider, refreshTokenRepository, oAuth2AuthorizationRequestBasedOnCookieRepository(),
                 userService);
-        }
+    }
 
     @Bean
     public Filter tokenAuthenticationFilter() {
@@ -138,7 +138,7 @@ public class WebOAuthSecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
