@@ -60,7 +60,7 @@ jobs:
               fi && \
               docker login -u AWS -p $(aws ecr get-login-password --region $AWS_REGION) $ECR_REGISTRY && \
               docker-compose -f /home/ubuntu/docker-compose.yml down && \
-              docker image prune -a && \
+              docker image prune -a -f && \
               docker pull $ECR_REGISTRY/$ECR_REPO:backend-$TAG && \
               docker pull $ECR_REGISTRY/$ECR_REPO:frontend-$TAG && \
               docker-compose -f /home/ubuntu/docker-compose.yml up -d"

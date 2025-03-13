@@ -9,3 +9,6 @@ dontgo/build.gradle merge=ours
 dontgo/src/main/java/com/dontgoback/dontgo/resources/application.yml merge=ours
 dontgo/src/main/java/com/dontgoback/dontgo/global/util/GlobalValues.java merge=ours
 dontgo/src/main/java/com/dontgoback/dontgo/config/security/WebOAuthSecurityConfig.java merge=ours
+
+# gitHub Actions
+.gitHub/workflows/CICD.yml merge=ours
