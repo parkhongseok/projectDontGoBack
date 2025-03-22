@@ -1,0 +1,15 @@
+# merge 시 제외할 파일 설정
+# frontend
+frontend_v2/package.json merge=ours
+frontend_v2/package-lock.json merge=ours
+frontend_v2/src/(layout)/utils/values.tsx merge=ours
+
+# backend
+dontgo/build.gradle merge=ours
+dontgo/src/main/java/com/dontgoback/dontgo/resources/application.yml merge=ours
+dontgo/src/main/java/com/dontgoback/dontgo/global/util/GlobalValues.java merge=ours
+dontgo/src/main/java/com/dontgoback/dontgo/config/security/WebOAuthSecurityConfig.java merge=ours
+
+# gitHub Actions
+.gitHub/workflows/CICD.yml merge=ours
+.gitattributes
