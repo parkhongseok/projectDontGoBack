@@ -26,7 +26,7 @@ public class UserAsset {
     }
 
     private RedBlueType setUserAssetType(){
-        return amount < 0 ? RedBlueType.BLUE : RedBlueType.RED;
+        return amount >= 0 ? RedBlueType.BLUE : RedBlueType.RED;
     }
 
     public String setFormatAssetName() {
