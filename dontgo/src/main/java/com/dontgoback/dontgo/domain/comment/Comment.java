@@ -33,7 +33,7 @@ public class Comment extends BaseEntity {
     private Feed feed;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAREUNT_COMMENT_ID")
+    @JoinColumn(name = "PARENT_COMMENT_ID")
     private Comment parentComment;
 
     // 당연 지사 유저 이름이지만, 유저 이름은 매일 바뀌니까 다로 저장할 필요가 있음

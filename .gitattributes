@@ -12,3 +12,4 @@ dontgo/src/main/java/com/dontgoback/dontgo/config/security/WebOAuthSecurityConfi
 
 # gitHub Actions
 .gitHub/workflows/CICD.yml merge=ours
+.gitattributes
