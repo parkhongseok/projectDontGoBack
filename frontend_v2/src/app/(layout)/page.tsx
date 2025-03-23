@@ -11,7 +11,7 @@ import { httpRequest } from "./utils/httpRequest";
 import Loading from "./components/Loading";
 import { useUser } from "./contexts/UserContext";
 import { useRouter } from "next/navigation";
-import { BACKEND_API_URL } from "./utils/values";
+import { BACKEND_API_URL } from "./utils/globalValues";
 
 export default function Home() {
   const router = useRouter();

@@ -5,7 +5,7 @@ import {
   ACCESS_TOKEN_NAME,
   BACKEND_API_URL,
   FRONTEND_URL,
-} from "@/app/(layout)/utils/values";
+} from "@/app/(layout)/utils/globalValues";
 import "../auth.css";
 import Link from "next/link";
 import { Image, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";

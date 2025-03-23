@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "./values";
+import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "./globalValues";
 
 // 쿠키에서 값 가져오기 함수
 export function getCookie(name: string) {

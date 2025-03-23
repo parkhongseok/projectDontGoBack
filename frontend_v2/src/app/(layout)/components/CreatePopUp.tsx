@@ -8,7 +8,7 @@ import { useFeed } from "../contexts/FeedContext";
 import { useUser } from "../contexts/UserContext";
 import { usePathname } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
-import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../utils/values";
+import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../utils/globalValues";
 import * as Types from "../utils/types";
 
 type propsType = {

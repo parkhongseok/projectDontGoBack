@@ -15,7 +15,7 @@ import { faComment } from "@fortawesome/free-solid-svg-icons/faComment";
 import { httpRequest } from "../../utils/httpRequest";
 import { useFeed } from "../../contexts/FeedContext";
 import { usePathname } from "next/navigation";
-import { BACKEND_API_URL } from "../../utils/values";
+import { BACKEND_API_URL } from "../../utils/globalValues";
 
 type CommentProps = {
   comment: Types.Comment;

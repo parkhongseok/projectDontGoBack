@@ -12,7 +12,7 @@ import { useFeed } from "../../contexts/FeedContext";
 import { httpRequest } from "../../utils/httpRequest";
 import { useUser } from "../../contexts/UserContext";
 import Loading from "../../components/Loading";
-import { BACKEND_API_URL } from "../../utils/values";
+import { BACKEND_API_URL } from "../../utils/globalValues";
 
 export default function FeedDetile() {
   const {

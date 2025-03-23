@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
 import * as Types from "../utils/types";
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "../utils/values";
+import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "../utils/globalValues";
 
 interface UserContextType {
   userContext: Types.User | null;

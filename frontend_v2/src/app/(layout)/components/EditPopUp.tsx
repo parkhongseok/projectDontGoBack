@@ -8,7 +8,7 @@ import { useFeed } from "../contexts/FeedContext";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
-import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../utils/values";
+import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../utils/globalValues";
 
 type propsType = {
   setIsFeedEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
