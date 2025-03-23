@@ -10,6 +10,7 @@ import com.dontgoback.dontgo.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -29,13 +30,17 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public static final String REFRESH_TOKEN_COOKIE_NAME = REFRESH_TOKEN_NAME;
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
-    public static final String REDIRECT_PATH = FRONTEND_URL;
+
+    @Value("${app.FRONTEND_URL}")
+    public String REDIRECT_PATH;
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
     private  final UserService userService;
 
+    @Value("${cookie.secure}")
+    private boolean secureCookie;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -83,6 +88,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME); // 기존 리프레시 토큰 제거 하고
         boolean httpOnly = true;
+
+
         boolean httpsOnly = false;
         CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge, httpOnly, httpsOnly); // 새로운 거 추가
     }

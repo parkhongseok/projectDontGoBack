@@ -28,15 +28,9 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type: TRACE
 
-# datasource:
-#  driver-class-name: com.mysql.cj.jdbc.Driver
-#  url: jdbc:mysql://localhost:3306/your_db_name
-#  username: your_db_username
-#  password: your_db_password
-#custom:
-#  fileDirPath: /usr/file
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/dontgo
-#    username: ${DB_USERNAME}
-#    password: ${DB_PASSWORD}
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+cookie:
+  secure: false # https Only 설정 [OAuth2SuccessHandler]
+
+app:
+  FRONTEND_URL: http://localhost:3000
+  BACKEND_API_URL: http://localhost:8090/api

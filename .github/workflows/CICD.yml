@@ -39,6 +39,8 @@ jobs:
       - name: Build and Push Frontend
         working-directory: ./frontend_v2
         run: |
+          echo "NEXT_PUBLIC_BACKEND_API_URL=https://dontgoback.kro.kr/api" >> .env.production
+          echo "NEXT_PUBLIC_FRONTEND_URL=https://dontgoback.kro.kr" >> .env.production
           docker build -t $ECR_REGISTRY/$ECR_REPO:frontend-$TAG .
           docker push $ECR_REGISTRY/$ECR_REPO:frontend-$TAG
 
