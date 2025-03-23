@@ -48,7 +48,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         /* TokenProvider를 사용하여 리프레시 토큰을 만들고, saveRefreshToken() 메서드를 호출하여 해당 토큰을 DB에 유저 id와 함께 저장
         이후 클라이언트에서 액세스토큰이 만료되면, 재발급을 요청하도록 addRefreshTokenToCookie()를 호출해서 쿠키에 리프레시 토큰을 저장 */
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
-        saveRefreshToken(user.getId(), refreshToken);
+        saveRefreshToken(user, refreshToken);
         addRefreshTokenToCookie(request, response, refreshToken);
 
         /* 액세스 토큰을 클라이언트한테 전달하기
@@ -68,10 +68,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     // 생성된 리프레시 토큰을 전달받아서 DB에 저장
-    private void saveRefreshToken(Long userId, String newRefreshToken){
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
+    private void saveRefreshToken(User user, String newRefreshToken){
+        RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId())
                 .map(entity -> entity.update(newRefreshToken))
-                .orElse(new RefreshToken(userId, newRefreshToken));
+                .orElse(new RefreshToken(user, newRefreshToken));
 
         refreshTokenRepository.save(refreshToken);
     }
@@ -83,7 +83,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME); // 기존 리프레시 토큰 제거 하고
         boolean httpOnly = true;
-        boolean httpsOnly = true;
+        boolean httpsOnly = false;
         CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge, httpOnly, httpsOnly); // 새로운 거 추가
     }
 

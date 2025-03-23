@@ -26,9 +26,6 @@ public class Feed extends BaseEntity {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToMany(mappedBy = "feed")
-    private List<Comment> comment;
-
     // 유저 이름(userAsset)이 매일 갱신되니까, 게시글은 이를 갖고 있어야함
     @Column(nullable = false)
     private String author;

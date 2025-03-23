@@ -22,8 +22,8 @@ public class TokenService {
             throw new IllegalArgumentException("Unexpect refreshToken token");
         }
 
-        Long userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();
-        User user = userService.findById(userId);
+        RefreshToken refreshTokenObj = refreshTokenService.findByRefreshToken(refreshToken);
+        User user = refreshTokenObj.getUser();
 
         // 두시간짜리 액세스 토큰 발급
         return tokenProvider.generateToken(user, Duration.ofHours(2));

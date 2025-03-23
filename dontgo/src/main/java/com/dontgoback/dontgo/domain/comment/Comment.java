@@ -1,9 +1,7 @@
 package com.dontgoback.dontgo.domain.comment;
 
-//import com.dontgoback.dontgo.domain.commentLike.CommentLike;
+
 import com.dontgoback.dontgo.domain.feed.Feed;
-//import com.dontgoback.dontgo.domain.notification.Notification;
-//import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.global.jpa.BaseEntity;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
@@ -12,7 +10,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 import static com.dontgoback.dontgo.global.util.GlobalValues.MAX_TEXT_LENGTH;
 

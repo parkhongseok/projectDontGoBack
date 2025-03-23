@@ -11,10 +11,10 @@ public class GlobalValues {
     public static final String REFRESH_TOKEN_NAME = "refresh_token";
 
     // dev 환경
-    // public static final String FRONTEND_URL = "http://localhost:3000";
-    // public static final String BACKEND_API_URL = "http://localhost:8090/api";
+     public static final String FRONTEND_URL = "http://localhost:3000";
+     public static final String BACKEND_API_URL = "http://localhost:8090/api";
 
     // prod 환경
-   public static final String FRONTEND_URL = "https://dontgoback.kro.kr";
-   public static final String BACKEND_API_URL = "https://dontgoback.kro.kr/api";
+//   public static final String FRONTEND_URL = "https://dontgoback.kro.kr";
+//   public static final String BACKEND_API_URL = "https://dontgoback.kro.kr/api";
    }
