@@ -31,12 +31,20 @@ spring:
               - email
               - profile
             redirect-uri: https://dontgoback.kro.kr/api/login/oauth2/code/google
-jwt:
-  secretKey: ${JWT_SECRET_KEY}
-
 logging:
   level:
     org.springframework.jdbc: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type: TRACE
+
+jwt:
+  secretKey: ${JWT_SECRET_KEY}
+
+cookie:
+  secure: true # https Only 설정 [OAuth2SuccessHandler]
+
+app:
+  FRONTEND_URL: https://dontgoback.kro.kr
+  BACKEND_API_URL: https://dontgoback.kro.kr/api
+
 

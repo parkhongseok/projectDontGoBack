@@ -32,7 +32,7 @@ import java.util.List;
 @Profile("test")
 @RequiredArgsConstructor
 @Configuration
-public class WebOAuthSecurityConfig {
+public class WebOAuthSecurityConfigTest {
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;

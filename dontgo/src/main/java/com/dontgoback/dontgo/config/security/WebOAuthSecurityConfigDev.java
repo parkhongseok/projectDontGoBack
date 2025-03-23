@@ -9,8 +9,10 @@ import com.dontgoback.dontgo.domain.refreshToken.RefreshTokenRepository;
 import com.dontgoback.dontgo.domain.user.UserService;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,17 +29,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static com.dontgoback.dontgo.global.util.GlobalValues.FRONTEND_URL;
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
-
+@Profile("dev")
 @RequiredArgsConstructor
 @Configuration
-public class WebOAuthSecurityConfig {
+public class WebOAuthSecurityConfigDev {
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserService userService;
+
+    @Value("${app.FRONTEND_URL}")
+    private String FRONTEND_URL;
 
     @Bean
     public WebSecurityCustomizer configure() {     // Spring Security 기능 비활성화
