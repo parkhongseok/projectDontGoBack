@@ -10,7 +10,7 @@ import styles from "../Feed.module.css";
 import { useFeed } from "../../contexts/FeedContext";
 import { useUser } from "../../contexts/UserContext";
 import { httpRequest } from "../../utils/httpRequest";
-import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/values";
+import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/globalValues";
 
 type propsType = { setShowWriteBox: Dispatch<SetStateAction<boolean>>; feed: Types.Feed };
 

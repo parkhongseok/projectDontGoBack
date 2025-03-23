@@ -8,7 +8,7 @@ import { useFeed } from "../contexts/FeedContext";
 import { httpRequest } from "../utils/httpRequest";
 import * as Types from "../utils/types";
 import Dummys from "../utils/dummyData";
-import { BACKEND_API_URL } from "../utils/values";
+import { BACKEND_API_URL } from "../utils/globalValues";
 
 type propsType = {
   feedId: number;

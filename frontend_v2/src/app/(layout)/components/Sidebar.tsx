@@ -6,7 +6,7 @@ import styles from "./SideBar.module.css";
 import { Nav, Image, Dropdown } from "react-bootstrap";
 import CreatePopUp from "./CreatePopUp";
 import { useUser } from "../contexts/UserContext";
-import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "../utils/values";
+import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "../utils/globalValues";
 import SideBarLoading from "./SidebarLoading";
 
 export default function SideBar() {

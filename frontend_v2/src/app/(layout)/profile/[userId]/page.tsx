@@ -15,7 +15,7 @@ import { useParams } from "next/navigation";
 import Loading from "../../components/Loading";
 import { useUser } from "../../contexts/UserContext";
 import { useFeed } from "../../contexts/FeedContext";
-import { BACKEND_API_URL } from "../../utils/values";
+import { BACKEND_API_URL } from "../../utils/globalValues";
 
 export default function ProfileMain() {
   const { userId } = useParams<{ userId: string }>();

@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { httpRequest } from "../utils/httpRequest";
-import { BACKEND_API_URL } from "../utils/values";
+import { BACKEND_API_URL } from "../utils/globalValues";
 
 type PropsType = {
   feed: Types.Feed | null; // Props의 타입 정의
