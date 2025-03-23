@@ -1,5 +1,6 @@
 package com.dontgoback.dontgo.domain.refreshToken;
 
+import com.dontgoback.dontgo.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,14 +24,15 @@ public class RefreshToken {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true)
-    private Long userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
     @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 
-    public RefreshToken(Long userId, String refreshToken){
-        this.userId = userId;
+    public RefreshToken(User user, String refreshToken){
+        this.user = user;
         this.refreshToken = refreshToken;
     }
 
@@ -38,5 +40,4 @@ public class RefreshToken {
         this.refreshToken = newRefreshToken;
         return this;
     }
-
 }

@@ -28,6 +28,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 import static com.dontgoback.dontgo.global.util.GlobalValues.FRONTEND_URL;
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class WebOAuthSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() {     // Spring Security 기능 비활성화
         return (web) -> web.ignoring()
-
+                .requestMatchers(toH2Console())
                 .requestMatchers("/img/**", "/css/**", "/js/**");
     }
 

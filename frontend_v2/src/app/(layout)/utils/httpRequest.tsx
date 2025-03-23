@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ACCESS_TOKEN_NAME, BACKEND_API_URL, REFRESH_TOKEN_NAME } from "./values";
+import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "./values";
 
 // 쿠키에서 값 가져오기 함수
 export function getCookie(name: string) {
@@ -19,7 +19,7 @@ const isNotFound = (status: number) => status === 404; // 리소스 없음
 
 // 토큰 관리 유틸리티
 const getAccessToken = () => localStorage.getItem(ACCESS_TOKEN_NAME);
-const getRefreshToken = () => getCookie(REFRESH_TOKEN_NAME);
+// const getRefreshToken = () => getCookie(REFRESH_TOKEN_NAME);
 const setAccessToken = (token: string) => localStorage.setItem(ACCESS_TOKEN_NAME, token);
 const redirectToLogin = () => window.location.replace("/login");
 
@@ -46,13 +46,13 @@ const handleErrorResponse = async (response: Response, fail: () => void) => {
 };
 
 // 토큰 갱신 관련 로직
-const refreshAccessToken = async (refreshToken: string) => {
+const refreshAccessToken = async () => {
   console.log("🔄 액세스 토큰 갱신 시도");
 
   const response = await fetch(`${BACKEND_API_URL}/token`, {
-    method: "POST",
+    method: "GET",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refreshToken }),
   });
 
   if (!response.ok) {
@@ -81,16 +81,16 @@ const handleUnauthorizedError = async (
   success: (result: any) => void,
   fail: () => void
 ) => {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) {
-    console.error("❌ Refresh Token 없음");
-    redirectToLogin();
-    fail();
-    return;
-  }
+  // const refreshToken = getRefreshToken();
+  // if (!refreshToken) {
+  //   console.error("❌ Refresh Token 없음");
+  //   redirectToLogin();
+  //   fail();
+  //   return;
+  // }
 
   try {
-    const { accessToken } = await refreshAccessToken(refreshToken);
+    const { accessToken } = await refreshAccessToken();
     setAccessToken(accessToken);
     console.log("🔑 새 액세스 토큰 발급 완료");
     retryOriginalRequest(method, url, body, success, fail);
@@ -112,7 +112,6 @@ export async function httpRequest(
   try {
     const response = await fetch(url, {
       method,
-      credentials: "include",
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
         "Content-Type": "application/json",
