@@ -41,6 +41,11 @@ export default function SideBar() {
     localStorage.removeItem("feedContext");
 
     // 백엔드에 로그아웃 요청 (서버에서 리프래시 토큰 검증 후, 무효한 토큰을 브라우저에 발급)
+    // get방식이 아닌 이유는 
+    // 1. 쿠키는 사용자가 명시적으로 보내는 요청이라서, 쿠키가 포함된다. (리프래시 토큰 재발급의 경우, 자동 요청이라 get방식으로 지정해야, 다른 프로세스 간에 쿠키 전달 가능했음)
+    // 2. get방식은 조회의 의도, POST는 행위(서버에서 무언가 일어남)의 목적
+    // 이에 맞춰 브라우저 내에서도 GET방식의 경우 미리 요청을 보내는 등 의도치않은 동작을 수반할 수 있고, CSRF 방어 대상이 아님
+    // 따라서 POST 가 굳
     await fetch(`${BACKEND_API_URL}/logout`, {
       method: "POST",
       credentials: "include", // 쿠키 자동 전송

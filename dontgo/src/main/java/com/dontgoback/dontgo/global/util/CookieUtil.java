@@ -27,8 +27,8 @@ public class CookieUtil {
                 .flatMap(cs -> Arrays.stream(cs)
                         .filter(cookie -> name.equals(cookie.getName()))
                         .findFirst());
-
     }
+
     // 쿠키의 이름을 입력받아서, 쿠키를 삭제
     /*실제로 쿠키를 삭제하는 방법은 없으므로,
     파라미터로 넘어온 키의 쿠키를 비어있는 값으로 바꾸고,
