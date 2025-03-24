@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
 import * as Types from "../utils/types";
 import React, { createContext, useState, useContext, ReactNode } from "react";
-import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "../utils/globalValues";
+import { BACKEND_API_URL } from "../utils/globalValues";
 
 interface UserContextType {
   userContext: Types.User | null;
@@ -24,7 +24,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     };
     const fail = () => {
       console.warn("[fetchUserContext] 유저 로딩 실패 함수 호출");
-      localStorage.setItem(`${ACCESS_TOKEN_NAME}`, "");
+      // localStorage.setItem(`${ACCESS_TOKEN_NAME}`, "");
       // console.error("토큰 초기화 및 재로그인");
       router.replace("/login"); // 뒤로가기 방지 이동
     };
