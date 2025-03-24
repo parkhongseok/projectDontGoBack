@@ -16,7 +16,7 @@ public class ApiV1UserController {
     @GetMapping("/{userId}")
     public ResData<UserResponse> getUserInfo(@PathVariable("userId") Long userId) {
         User user = userService.findById(userId);
-        UserResponse data = userService.findUser(user);
+        UserResponse data = userService.getUserResponse(user);
         return ResData.of("S-200",
                 "유저 정보 조회 성공 [uID : %d]".formatted(data.getUserId()),
                 data
@@ -26,7 +26,7 @@ public class ApiV1UserController {
     @GetMapping("/me")
     public ResData<UserResponse> getMyInfo(Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        UserResponse data = userService.findUser(user);
+        UserResponse data = userService.getUserResponse(user);
         return ResData.of("S-200",
                 "내 정보 조회 성공 [uID : %d]".formatted(data.getUserId()),
                 data
