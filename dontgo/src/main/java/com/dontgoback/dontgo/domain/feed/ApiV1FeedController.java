@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -27,9 +28,10 @@ public class ApiV1FeedController {
     public ResData<FeedsResponse> getFeeds(
             @RequestParam(name = "lastFeedId", required = false, defaultValue = "0") Long lastFeedId,   // 기본값 0
             @RequestParam(name = "size", required = false, defaultValue = "10") int size,  // 기본값 10
-            Principal principal
+            // @AuthenticationPrincipal은 SecurityContextHolder.getContext().getAuthentication().getPrincipal()을 자동으로 꺼내서 넣어주는 역할
+            @AuthenticationPrincipal User me
     ) {
-        User me = userService.findByEmail(principal.getName()); // 없으면 에러 반환
+//        User me = userService.findByEmail(principal.getName()); // 없으면 에러 반환
         FeedsResponse data = feedService.getFeedsResponse(lastFeedId, size, me.getId());
         if (lastFeedId == 0)
             return ResData.of("S-200", "메인 피드 조회 성공", data);
@@ -47,9 +49,9 @@ public class ApiV1FeedController {
             @RequestParam(name = "userId", required = true) Long userId,
             @RequestParam(name = "lastFeedId", required = false, defaultValue = "0") Long lastFeedId,   // 기본값 0
             @RequestParam(name = "size", required = false, defaultValue = "10") int size,  // 기본값 10
-            Principal principal
+            @AuthenticationPrincipal User me
     ) {
-        User me = userService.findByEmail(principal.getName()); // 내정보 -> 좋아요 누른적 있는지 조회
+//        User me = userService.findByEmail(principal.getName()); // 내정보 -> 좋아요 누른적 있는지 조회
         User targetUser = userService.findById(userId); // 타겟 유저
 
         FeedsResponse data = feedService.getProfileFeedsResponse(targetUser.getId(), lastFeedId, size, me.getId());
@@ -65,10 +67,10 @@ public class ApiV1FeedController {
 
     // 단건 조회
     @GetMapping("/{id}")
-    public ResData<FeedResponse> getFeed(@PathVariable("id") Long id, Principal principal) {
-        User user = userService.findByEmail(principal.getName());
+    public ResData<FeedResponse> getFeed(@PathVariable("id") Long id, @AuthenticationPrincipal User me) {
+//        User user = userService.findByEmail(principal.getName());
 
-        FeedResponse data = feedService.getFeedResponse(id, user.getId());
+        FeedResponse data = feedService.getFeedResponse(id, me.getId());
         return ResData.of(
                 "S-200",
                 "[fID : %d] 피드 조회 성공".formatted(id),
@@ -79,9 +81,15 @@ public class ApiV1FeedController {
 
     // 생성
     @PostMapping("")
-    public ResponseEntity<ResData<CreateFeedResponse>> createFeed(@Valid @RequestBody CreateFeedRequest feedRequest, Principal principal) {
-        User user = userService.findByEmail(principal.getName()); // 여기서 실패 시 에러 반환
-        CreateFeedResponse data = feedService.createFeed(user, feedRequest);
+    public ResponseEntity<ResData<CreateFeedResponse>> createFeed(
+            @Valid @RequestBody CreateFeedRequest feedRequest,
+            // 아래 부분에선 필요한 type 정보 등이 토큰으로부터 인증객체에 주입되는데, 매일 변동되니까,
+            // 자정 전후의 경계조건에서 오류 생갈 여지 큼
+            // 따라서 id나 email기준으로 실시간 조회하는 수밖에 없음
+            Principal principal
+            ) {
+        User me = userService.findByEmail(principal.getName()); // 여기서 실패 시 에러 반환
+        CreateFeedResponse data = feedService.createFeed(me, feedRequest);
         ResData<CreateFeedResponse> resdata = ResData.of(
                 "S-200",
                 "[fID %d] 게시물이 생성되었습니다.".formatted(data.getFeedId()),

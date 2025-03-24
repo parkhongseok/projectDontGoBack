@@ -95,6 +95,4 @@ public class User extends BaseEntity implements UserDetails {
         // 사용 가능 확인 로직
         return true; // true -> 사용 가능
     }
-
-
 }
