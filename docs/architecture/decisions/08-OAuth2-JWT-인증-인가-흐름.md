@@ -56,7 +56,6 @@ Spring Security 기반 JWT/OAuth2 회원 인증/인가 방식 결정
     - 하지만, 이는 일시적인 보안 우회(눈속임)이며, 장기적인 해결책이 필요
   - 임시 방문자용 Access Token 전달을 위해 이 방식 임시적으로 유지
 
-
 - 현재 OAuth2를 사용하고 있지만, OIDC 도입 검토 중
   - 사용하지 않을 이유가 없음
   - 단순 로그인만 필요하므로 OIDC(OpenID Connect) 도입이 유리
