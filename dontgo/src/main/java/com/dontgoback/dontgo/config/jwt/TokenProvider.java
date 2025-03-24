@@ -61,12 +61,21 @@ public class TokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+
+        User user = User.builder()
+                .id(claims.get("id", Long.class))
+                .email(claims.getSubject())
+                .build();
+
+
         // UsernamePasswordAuthenticationToken은 두 객체( principal, credentials ) 와 다른 List를 파라미터로 받음.
         // getPrincipal()메서드는 입력받은 유저 정보를 반환,
         // getCredentials() 메서드는 토큰 반환,
-        return new UsernamePasswordAuthenticationToken( //인증 유저, 등을 필드로 갖는 객체
-                new org.springframework.security.core.userdetails.User(
-                        claims.getSubject(), "", authorities),
+        return new UsernamePasswordAuthenticationToken(
+                //인증 유저, 등을 필드로 갖는 객체 (시큐리티 기본 재공 user 객체 대신 userdetials를 구현한 나의 user 엔티티를 직접 사용
+//                new org.springframework.security.core.userdetails.User(
+//                        claims.getSubject(), "", authorities),
+                user,
                 token,
                 authorities
         );

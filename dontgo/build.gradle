@@ -46,7 +46,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
+	testRuntimeOnly 'com.h2database:h2' // test 시에만 실행
+	testCompileOnly 'org.projectlombok:lombok:1.18.30'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 	// oauth2 for Open Id Connect
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	// jwt

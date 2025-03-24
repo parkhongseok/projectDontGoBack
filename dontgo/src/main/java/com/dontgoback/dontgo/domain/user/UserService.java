@@ -17,7 +17,7 @@ import static com.dontgoback.dontgo.global.util.EmailMasking.maskEmail;
 public class UserService {
     final UserRepository userRepository;
 
-    public UserResponse findUser(User user) {
+    public UserResponse getUserResponse(User user) {
         return UserResponse.builder()
                 .userId(user.getId())
                 .email(maskEmail(user.getEmail())) // 이메일 마스킹 처리 1234******@g*****.com 형식
