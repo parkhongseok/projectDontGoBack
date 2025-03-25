@@ -3,7 +3,7 @@
 ### 목차
 
 1. 프로젝트 개요
-2. 개발 환경 및 배포 URL
+2. 개발 환경 및 API 구조
 3. 아키텍처 결정 레코드
 
 </br>
@@ -15,7 +15,7 @@
 - 기간 : 2025.01.13 ~ (진행 중)
 - 인원 : 개인 프로젝트
 - 배포 : [https://dontgoback.kro.kr/](https://dontgoback.kro.kr/)
-- 1차 목표
+- 1차 목표 (1차 목표 달성 ✅)
     <pre>
     1.  Spring Security, OAuth2, JWT 기반 회원 인증  
     2.  JPA와 Hibernate 기반 ORM 기술 실습          
@@ -23,7 +23,7 @@
     4.  AWS 서비스를 통한 배포 환경 구성                
     5.  Docker, GitHub Action 사용한 <strong>빌드 및 배포 자동화</strong> 
   </pre>
-  (1차 목표 달성 ✅)
+
   </br>
   </br>
 
@@ -142,7 +142,7 @@
 
 ## 결정
 
-- GitHub Actions + Docker + Amazon ECR + EC2 기반의 자동화된 빌드 및 배포 파이프라인을 구축한다.
+- GitHub Actions + Docker + Amazon ECR(Elastic Container Registry) + EC2 기반의 자동화된 빌드 및 배포 파이프라인을 구축한다.
 - 흐름
   <pre>
   main 브랜치에 push 발생 시,
@@ -175,14 +175,17 @@
 
   - 현재 구조는 EC2 + Docker Compose가 간편하고 직관적이므로, 현 상태 유지를 결정
 
-- ### EC2, ECR 내에 쌓이는 Docker 이미지 정리에 대한 전략 필요
+- ### EC2, ECR 내에 쌓이는 Docker 이미지 정리에 대한 전략 필요 (개선 완료)
 
-  - docker image prune, 일정 시간 기준 자동 정리 등 고려 -> 일부 개선 완료
-    (현재 gitAction으로 이미지 pull 이전에 미사용 이미지 정리하도록 개선 완료, ECR의 저장공간 정리 방식 수립 필요)
+  - docker image prune, 일정 시간 기준 자동 정리 등 고려 -> 현재 개선 완료
+    - EC2 정리 : gitAction으로 이미지 pull 이전에 미사용 이미지 정리하도록 개선
+    - ECR 정리 : 레퍼지토리의 생명주기 정책 설정으로 6개까지만 이미지 저장
 
-- ### 장애 발생 시 복구 전략 및 간단한 모니터링 체계 필요
-  - 현재 ssh로 접속하여, docker log를 직접 확인하는 방식 사용 -> 편의성 개선이 필요
-  - 예: Health check, 로그 수집, 재시작 정책 등
+- ### 장애 발생 시 복구 전략 및 간단한 모니터링 체계 필요 (일부 개선 완료)
+
+  - 기존 ssh로 접속하여, docker log를 직접 확인하는 방식만 사용 \
+    -> CloudWatch 설정으로 상태 모니터링 개선
+
   </details>
 
 !["CI/CD Architecture"](./docs/architecture/decisions/09-빌드-및-배포-자동화-프로세스.png)
