@@ -7,7 +7,7 @@ import {
   FRONTEND_URL,
 } from "@/app/(layout)/utils/globalValues";
 import "../auth.css";
-import Link from "next/link";
+
 import { Image, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
 
 export default function Login() {
@@ -44,12 +44,9 @@ export default function Login() {
             </Tooltip>
           }
         >
-          <Link
-            className="imageLink mx-auto"
-            href={`${BACKEND_API_URL}/oauth2/authorization/google`}
-          >
+          <a className="imageLink mx-auto" href={`${BACKEND_API_URL}/oauth2/authorization/google`}>
             <Image className="image" src="/googleLogin.svg" alt="LogInBtn" />
-          </Link>
+          </a>
         </OverlayTrigger>
 
         <OverlayTrigger
@@ -61,15 +58,9 @@ export default function Login() {
             </Tooltip>
           }
         >
-          <Link
-            className="imageLink2 mx-auto"
-            href="#"
-            // href={`${FRONTEND_URL}/?${ACCESS_TOKEN_NAME}=${ACCESS_TOKEN_FOR_VISITER}`}
-          >
-            <p className="imageText" onClick={handlerVisit}>
-              둘러보기
-            </p>
-          </Link>
+          <a className="imageLink2 mx-auto" role="button" onClick={handlerVisit}>
+            <p className="imageText">둘러보기</p>
+          </a>
         </OverlayTrigger>
       </Stack>
     </>
