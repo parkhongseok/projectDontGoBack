@@ -50,6 +50,16 @@ public class NotProduction {
             }
         }
 
+        //
+//        ///  임시적
+        User visitor = userService.createDummyUser(
+                "9001억 (방문자)",
+                "testUser@gmail.com",
+                RedBlueType.BLUE);
+        users.add(visitor);
+
+
+
         // Dummy 피드 생성
         int feedMax = 40;
         List<Integer> feedRange = IntStream.range(0, feedMax)
@@ -75,12 +85,6 @@ public class NotProduction {
         }
 
 
-        ///  임시적
-        User visit = userService.createDummyUser(
-                "1000억 (방문자)",
-                "test@gmail.com",
-                RedBlueType.BLUE);
-        users.add(visit);
 
         return (args) -> {
             // Dummy Comment 생성
