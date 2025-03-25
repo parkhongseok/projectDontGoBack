@@ -29,6 +29,7 @@ export default function ProfileMain() {
   const lastFeedIdRef = useRef(lastFeedId);
   const { userContext } = useUser();
   const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
+  const [hasMoreFeeds, setHasMoreFeeds] = useState(true);
 
   //클로저
   useEffect(() => {
@@ -46,37 +47,42 @@ export default function ProfileMain() {
   }, [userId]);
 
   const fetchFeeds = useCallback(async () => {
-    if (feedsLoading) return <Loading />;
+    if (feedsLoading || !hasMoreFeeds) return;
+
     setFeedsLoading(true); // 로딩 시작
+    const method = "GET";
     const url = `${BACKEND_API_URL}/v1/feeds/profile?userId=${userId}&lastFeedId=${
       lastFeedIdRef.current
     }&size=${10}`;
     const body = null;
     const success = async (result: Types.ResData<{ feeds: Types.Feed[] }>) => {
-      setFeedsLoading(false);
       const newFeeds = result.data.feeds;
-      if (newFeeds.length === 0) return;
+      if (newFeeds.length === 0) {
+        setHasMoreFeeds(false);
+        return;
+      }
       setFeedsState((prevFeeds: Types.Feed[]) => [...prevFeeds, ...newFeeds]);
       setLastFeedId(newFeeds[newFeeds.length - 1].feedId);
+      setFeedsLoading(false);
     };
     const fail = () => {
       setFeedsLoading(false);
       console.error("피드 불러오기 실패");
       // alert("feed load fail");
     };
-    httpRequest("GET", url, body, success, fail);
-  }, [feedsLoading, userId]);
+    httpRequest(method, url, body, success, fail);
+  }, [feedsLoading, hasMoreFeeds, userId]);
 
   // 메인 피드에 필요한 데이터만 fetch
   useEffect(() => {
     const initData = async () => {
       if (!userState?.userId) await fetchUser();
-      if (lastFeedIdRef.current == 0) {
+      if (lastFeedIdRef.current == 0 && hasMoreFeeds) {
         await fetchFeeds();
       }
     };
     initData();
-  }, [userState, fetchUser, fetchFeeds]);
+  }, [userState, fetchUser, fetchFeeds, hasMoreFeeds]);
 
   useEffect(() => {
     setRedFeedsState(feedsState.filter((feed: Types.Feed) => feed.feedType === "RED"));
@@ -84,7 +90,7 @@ export default function ProfileMain() {
   }, [feedsState]);
 
   // 프로필에 실시간 생성 및 수정 반영
-  // 나의 피스 생성 반영 함수
+  // 나의 피드 생성 반영 함수
   const createMyFeed = (createdFeed: Types.Feed) => {
     setFeedsState((prevFeeds) => [createdFeed, ...prevFeeds]);
   };

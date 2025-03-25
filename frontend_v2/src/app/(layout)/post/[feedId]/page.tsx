@@ -32,6 +32,8 @@ export default function FeedDetile() {
   const [lastCommentId, setLastCommentId] = useState(0);
   const [commentsLoading, setCommentsLoading] = useState(false);
   const lastCommentIdRef = useRef(lastCommentId);
+  const [hasMoreComments, setHasMoreComments] = useState(true);
+
   useEffect(() => {
     //클로저
     lastCommentIdRef.current = lastCommentId;
@@ -55,7 +57,8 @@ export default function FeedDetile() {
   }, [feedId, setFeedContext]);
 
   const fetchComments = useCallback(async () => {
-    if (commentsLoading) return;
+    if (commentsLoading || !hasMoreComments) return;
+
     setCommentsLoading(true); // 로딩 시작
 
     const method = "GET";
@@ -64,24 +67,27 @@ export default function FeedDetile() {
     }&size=${5}`;
     const body = null;
     const success = async (result: Types.ResData<{ comments: Types.Comment[] }>) => {
-      setCommentsLoading(false); // 로딩 끝
       const newComments = result.data.comments;
-      if (newComments.length == 0) return;
+      if (newComments.length == 0) {
+        setHasMoreComments(false);
+        return;
+      }
       setComments((prevComments: Types.Comment[]) => [...prevComments, ...newComments]);
       setLastCommentId(newComments[newComments.length - 1].commentId);
+      setCommentsLoading(false); // 로딩 끝
     };
     const fail = () => {
       setCommentsLoading(false); // 로딩 끝
       console.error(`${feedId}번 게시물의 댓글 조회 실패`);
     };
     httpRequest(method, url, body, success, fail);
-  }, [commentsLoading, feedId]);
+  }, [commentsLoading, hasMoreComments, feedId]);
 
   // 상세 피드에 필요한 데이터만 fetch
   useEffect(() => {
     const fetchInitialData = async () => {
       if (!feedContext?.feedId) await fetchFeed();
-      if (lastCommentId == 0) await fetchComments();
+      if (lastCommentId == 0 && hasMoreComments) await fetchComments();
     };
     fetchInitialData();
   }, []);

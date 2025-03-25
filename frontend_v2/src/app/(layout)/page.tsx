@@ -23,10 +23,12 @@ export default function Home() {
   }, []);
 
   const [feedsState, setFeedsState] = useState<Types.Feed[]>([]);
+
   const [lastFeedId, setLastFeedId] = useState(0);
   const [feedsLoading, setFeedsLoading] = useState(false);
   const lastFeedIdRef = useRef(lastFeedId);
   const { userContext } = useUser();
+  const [hasMoreFeeds, setHasMoreFeeds] = useState(true);
 
   useEffect(() => {
     //클로저
@@ -37,13 +39,18 @@ export default function Home() {
 
   const fetchFeeds = async () => {
     if (feedsLoading) return <Loading />;
+    if (!hasMoreFeeds) return;
+
     setFeedsLoading(true); // 로딩 시작
     const url = `${BACKEND_API_URL}/v1/feeds?lastFeedId=${lastFeedIdRef.current}&size=${10}`;
     const body = null;
     const success = async (result: Types.ResData<{ feeds: Types.Feed[] }>) => {
       setFeedsLoading(false);
       const newFeeds = result.data.feeds;
-      if (newFeeds.length === 0) return;
+      if (newFeeds.length === 0) {
+        setHasMoreFeeds(false);
+        return;
+      }
       setFeedsState((prevFeeds: Types.Feed[]) => [...prevFeeds, ...newFeeds]);
       setLastFeedId(newFeeds[newFeeds.length - 1].feedId);
     };
@@ -58,7 +65,7 @@ export default function Home() {
   // 메인 피드에 필요한 데이터만 fetch
   useEffect(() => {
     const initData = async () => {
-      if (lastFeedIdRef.current == 0) {
+      if (lastFeedIdRef.current == 0 && hasMoreFeeds) {
         await fetchFeeds();
       }
     };

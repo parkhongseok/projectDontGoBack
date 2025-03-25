@@ -39,16 +39,16 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "user_type", nullable = true)
     private RedBlueType userType;
 
-    // OAuth2 를 위해
-    // 사용자 이름 필드 추가 -> 생성자에 닉네임 추가
-    @Column(name = "nickname", unique = true)
-    private String nickname;
-
+//    // OAuth2 를 위해
+//    // 사용자 이름 필드 추가 -> 생성자에 닉네임 추가
+//    @Column(name = "nickname", unique = true)
+//    private String nickname;
+//
     // 사용자 이름 변경
-    public User update(String nickname){
-        this.nickname = nickname;
-        return this;
-    }
+//    public User update(String nickname){
+//        this.email = email;
+//        return this;
+//    }
 
     // 권한 반환
     @Override

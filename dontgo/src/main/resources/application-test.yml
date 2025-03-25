@@ -29,7 +29,6 @@ spring:
             client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
             scope:
               - email
-              - profile
             redirect-uri: https://dontgoback.kro.kr/api/login/oauth2/code/google
 logging:
   level:

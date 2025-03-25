@@ -1,41 +1,22 @@
 import * as Types from "./types";
 
-const myText: string =
-  "난 아직도 강아지 말 못 알아 듣는데 강아지는 내 말 다 알아 듣는다 강아지가 더 똑똑하다 강아지가 더 똑똑하다 강아지가 더 똑똑하다 강아지가 더 똑똑하다 아부러웡";
+const myText =
+  "######################################### \n \n " +
+  "Dont Go Back에 오신 것을 환영합니다. \n \n " +
+  "이곳은 가진 돈이 유일한 이름인, 익명의 공간입니다. \n \n" +
+  "#########################################  ";
 
 export const Dummys = {
   Feeds: [
     {
-      feedId: 1,
-      userId: 1,
-      author: "FrontDummy",
+      feedId: 0,
+      userId: 0,
+      author: "관리자",
       feedType: "BLUE",
-      createdAt: "1시간전",
+      createdAt: "지난 겨울",
       content: myText,
-      isLiked: false,
-      likeCount: 0,
-      commentCount: 0,
-    },
-    {
-      feedId: 2,
-      userId: 1,
-      author: "FrontDummy2",
-      feedType: "BLUE",
-      createdAt: "1시간전",
-      content: myText,
-      isLiked: false,
-      likeCount: 0,
-      commentCount: 0,
-    },
-    {
-      feedId: 3,
-      userId: 1,
-      author: "FrontDummy",
-      feedType: "RED",
-      createdAt: "1시간전",
-      content: "contents Test",
       isLiked: true,
-      likeCount: 30,
+      likeCount: 114,
       commentCount: 0,
     },
   ] as Types.Feed[],

@@ -32,10 +32,19 @@ public class NotProduction {
                 .toList();
         List<User> users = new ArrayList<>();
         for (int i : userRange){
-            users.add(userService.createDummyUser(
+            if(i % 2 == 0){
+                users.add(userService.createDummyUser(
                     "%d00만원".formatted(i+1),
                     "user%d@email.com".formatted(i),
-                    (i % 2 == 0) ? RedBlueType.RED : RedBlueType.BLUE));
+                    RedBlueType.BLUE)
+                    );
+            }else{
+                users.add(userService.createDummyUser(
+                        "-%d00만원".formatted(i+1),
+                        "user%d@email.com".formatted(i),
+                        RedBlueType.RED)
+                );
+            }
         }
 
         // Dummy 피드 생성
@@ -47,7 +56,7 @@ public class NotProduction {
 
         for (int i : feedRange){
             User user = users.get(i % userMax);
-            feeds.add(feedService.createDummyFeed(user, "%d번 피드가 자동으로 생성되고 말았어 크윽..".formatted(i+1)));
+            feeds.add(feedService.createDummyFeed(user, "%d번 피드입니다.".formatted(i+1)));
         }
 
         // Dummy feedLike 생성
@@ -71,7 +80,7 @@ public class NotProduction {
                         if (j == commentMax) break;
                         Feed feed = feeds.get(i);
                         User user = users.get((i+j) % userMax);
-                        commentService.createDummyComment(feed, user,  "%d번 피드에 %d번 유저의 댓글이 자동으로 생성되고 말았어 크윽..".formatted(feed.getId(), user.getId()));
+                        commentService.createDummyComment(feed, user,  "%d번 피드에 생성된 %d번 유저의 답글입니다.".formatted(feed.getId(), user.getId()));
                     }
                 }
             }
