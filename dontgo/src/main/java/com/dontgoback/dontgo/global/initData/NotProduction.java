@@ -1,6 +1,6 @@
 package com.dontgoback.dontgo.global.initData;
 
-import com.dontgoback.dontgo.config.jwt.TokenProvider;
+
 import com.dontgoback.dontgo.domain.comment.CommentService;
 import com.dontgoback.dontgo.domain.feed.Feed;
 import com.dontgoback.dontgo.domain.feed.FeedService;
@@ -15,10 +15,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import java.time.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 import java.util.stream.IntStream;
 
 
@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 public class NotProduction {
 
     @Bean
-    CommandLineRunner initPostData(TokenProvider tokenProvider, FeedService feedService, UserService userService, CommentService commentService, FeedLikeService feedLikeService) {
+    CommandLineRunner initPostData(FeedService feedService, UserService userService, CommentService commentService, FeedLikeService feedLikeService) {
         // Dummy user 생성
         int userMax = 20;
         List<Integer> userRange = IntStream.range(0, userMax)
@@ -50,15 +50,11 @@ public class NotProduction {
             }
         }
 
-        //
-//        ///  임시적
-        User visitor = userService.createDummyUser(
-                "9001억 (방문자)",
+        User visitor =  userService.createDummyUser(
+                "9000억 (방문자)",
                 "testUser@gmail.com",
                 RedBlueType.BLUE);
         users.add(visitor);
-
-
 
         // Dummy 피드 생성
         int feedMax = 40;
@@ -91,7 +87,7 @@ public class NotProduction {
             int commentMax = 10;
             for (int i : feedRange) {
                 for (int j : userRange) {
-                     if (i%2==0){
+                    if (i%2==0){
                         if (j == commentMax) break;
                         Feed feed = feeds.get(i);
                         User user = users.get((i+j) % userMax);
