@@ -6,21 +6,14 @@ import styles from "./SideBar.module.css";
 import { Nav, Image, Dropdown } from "react-bootstrap";
 import CreatePopUp from "./CreatePopUp";
 import { useUser } from "../contexts/UserContext";
-import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "../utils/globalValues";
+import { BACKEND_API_URL } from "../utils/globalValues";
 import SideBarLoading from "./SidebarLoading";
 
 export default function SideBar() {
   const [isFeedCreaterOpen, setIsFeedCreaterOpen] = useState(false);
   const { userContext, fetchUserContext } = useUser();
 
-  // 액세스 토큰을 URL에서 쿼리 파라미터로부터 추출하고 로컬 스토리지에 저장
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get(ACCESS_TOKEN_NAME);
-    if (token) {
-      localStorage.setItem(ACCESS_TOKEN_NAME, token);
-    }
-  }, []);
+
 
   useEffect(() => {
     if (!userContext) {
@@ -38,7 +31,6 @@ export default function SideBar() {
   const handleLogout = async () => {
     // 액세스 토큰 삭제
     localStorage.removeItem("access_token");
-    localStorage.removeItem("feedContext");
 
     // 백엔드에 로그아웃 요청 (서버에서 리프래시 토큰 검증 후, 무효한 토큰을 브라우저에 발급)
     // get방식이 아닌 이유는

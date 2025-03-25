@@ -11,6 +11,11 @@ import Link from "next/link";
 import { Image, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
 
 export default function Login() {
+  const handlerVisit = () => {
+    localStorage.setItem(ACCESS_TOKEN_NAME, ACCESS_TOKEN_FOR_VISITER || "");
+    window.location.href = FRONTEND_URL;
+  };
+
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
@@ -58,9 +63,12 @@ export default function Login() {
         >
           <Link
             className="imageLink2 mx-auto"
-            href={`${FRONTEND_URL}/?${ACCESS_TOKEN_NAME}=${ACCESS_TOKEN_FOR_VISITER}`}
+            href="#"
+            // href={`${FRONTEND_URL}/?${ACCESS_TOKEN_NAME}=${ACCESS_TOKEN_FOR_VISITER}`}
           >
-            <p className="imageText">둘러보기</p>
+            <p className="imageText" onClick={handlerVisit}>
+              둘러보기
+            </p>
           </Link>
         </OverlayTrigger>
       </Stack>

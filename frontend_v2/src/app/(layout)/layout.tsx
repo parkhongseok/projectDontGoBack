@@ -9,6 +9,8 @@ import { UserProvider } from "./contexts/UserContext";
 // fontAwesome
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css"; // CSS 직접 불러오기
+import { useEffect } from "react";
+import { ACCESS_TOKEN_NAME } from "./utils/globalValues";
 config.autoAddCss = false;
 
 // import type { Metadata } from "next";
@@ -33,6 +35,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 액세스 토큰을 URL에서 쿼리 파라미터로부터 추출하고 로컬 스토리지에 저장
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get(ACCESS_TOKEN_NAME);
+    if (token) {
+      localStorage.setItem(ACCESS_TOKEN_NAME, token);
+    }
+  }, []);
+
   return (
     <html lang="en">
       <body>

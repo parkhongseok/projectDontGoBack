@@ -1,5 +1,6 @@
 package com.dontgoback.dontgo.global.initData;
 
+import com.dontgoback.dontgo.config.jwt.TokenProvider;
 import com.dontgoback.dontgo.domain.comment.CommentService;
 import com.dontgoback.dontgo.domain.feed.Feed;
 import com.dontgoback.dontgo.domain.feed.FeedService;
@@ -14,17 +15,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+
 @Configuration
-@Profile("dev")// dev, test 환경에서만 사용
+@Profile("test")// dev, test 환경에서만 사용
 public class NotProduction {
 
     @Bean
-    CommandLineRunner initPostData(FeedService feedService, UserService userService, CommentService commentService, FeedLikeService feedLikeService) {
+    CommandLineRunner initPostData(TokenProvider tokenProvider, FeedService feedService, UserService userService, CommentService commentService, FeedLikeService feedLikeService) {
         // Dummy user 생성
         int userMax = 20;
         List<Integer> userRange = IntStream.range(0, userMax)
@@ -70,6 +73,14 @@ public class NotProduction {
                 }
             }
         }
+
+
+        ///  임시적
+        User visit = userService.createDummyUser(
+                "1000억 (방문자)",
+                "test@gmail.com",
+                RedBlueType.BLUE);
+        users.add(visit);
 
         return (args) -> {
             // Dummy Comment 생성
