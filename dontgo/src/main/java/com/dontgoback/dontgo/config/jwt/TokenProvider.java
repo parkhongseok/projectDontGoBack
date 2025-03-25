@@ -51,6 +51,7 @@ public class TokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (Exception e) { // 복호화 시 에러 나면 유효하지 않은 토큰
+            System.out.println("⚠️ JWT 토큰 유효성 실패: " + e.getMessage());
             return false;
         }
     }
