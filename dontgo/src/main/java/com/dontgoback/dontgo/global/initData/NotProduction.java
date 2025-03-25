@@ -23,11 +23,11 @@ import java.util.stream.IntStream;
 
 
 @Configuration
-@Profile("dev")// dev, test 환경에서만 사용
+@Profile("test")// dev, test 환경에서만 사용
 public class NotProduction {
 
     @Bean
-    CommandLineRunner initPostData(TokenProvider tokenProvider, FeedService feedService, UserService userService, CommentService commentService, FeedLikeService feedLikeService) {
+    CommandLineRunner initPostData(FeedService feedService, UserService userService, CommentService commentService, FeedLikeService feedLikeService) {
         // Dummy user 생성
         int userMax = 20;
         List<Integer> userRange = IntStream.range(0, userMax)
@@ -49,6 +49,18 @@ public class NotProduction {
                 );
             }
         }
+
+
+        User visitor =  userService.createDummyUser(
+                "9000억 (방문자)",
+                "testUser@gmail.com",
+                RedBlueType.BLUE);
+        users.add(visitor);
+
+//        String visitor_token = tokenProvider.generateToken(visitor, Duration.ofDays(100));
+//        System.out.println("##################################################");
+//        System.out.println(visitor_token);
+
 
         // Dummy 피드 생성
         int feedMax = 40;
