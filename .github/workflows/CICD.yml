@@ -14,6 +14,8 @@ env:
 
 jobs:
   build-push:
+    # ex: git commit -m "fix: typo on login page [deploy]" 등 [deploy] 포함 시에만 자동 배포
+    if: contains(github.event.head_commit.message, '[deploy]')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
