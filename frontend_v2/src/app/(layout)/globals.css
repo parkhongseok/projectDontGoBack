@@ -104,6 +104,7 @@ button {
 .fontGray4 {
   color: var(--gray4) !important;
 }
+
 .fontBlue {
   color: var(--text-color-blue);
 }
@@ -115,6 +116,22 @@ button {
 }
 .fontRedLight {
   color: var(--text-color-red-light);
+}
+
+.bgGray0 {
+  background-color: var(--gray0);
+}
+.bgGray1 {
+  background-color: var(--gray1);
+}
+.bgGray2 {
+  background-color: var(--gray2);
+}
+.bgGray3 {
+  background-color: var(--gray3);
+}
+.bgGray4 {
+  background-color: var(--gray4);
 }
 
 .marginAuto {
@@ -187,10 +204,12 @@ body {
   border-radius: 15px;
 }
 
-.cusorDefault {
-  cursor: text;
+.cusorPointer {
+  cursor: pointer;
 }
-
+.cusorDefault {
+  cursor: pointer;
+}
 .feedUnderLine {
   color: var(--gray2);
 }
@@ -206,10 +225,6 @@ body {
 
 .custom-button {
   height: 30px;
-}
-
-.pointer {
-  cursor: pointer;
 }
 
 .main-top-drop-down {

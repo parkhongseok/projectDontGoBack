@@ -13,8 +13,6 @@ export default function SideBar() {
   const [isFeedCreaterOpen, setIsFeedCreaterOpen] = useState(false);
   const { userContext, fetchUserContext } = useUser();
 
-
-
   useEffect(() => {
     if (!userContext) {
       fetchUserContext();
@@ -107,9 +105,9 @@ export default function SideBar() {
               <Image src="/sidebar/setting.svg" alt="setting" className={styles.settingImage} />
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.ItemText onClick={handleSetting} className="fontGray1">
+              <Dropdown.Item href="/settings" onClick={handleSetting} className="fontGray4">
                 설정
-              </Dropdown.ItemText>
+              </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.ItemText className="fontGray1">개인정보처리방침</Dropdown.ItemText>
               <Dropdown.ItemText className="fontGray1">서비스 약관</Dropdown.ItemText>

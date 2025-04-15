@@ -41,6 +41,9 @@ dependencies {
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
 	runtimeOnly 'com.mysql:mysql-connector-j' // Maria DB와 호환
 
+	// mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 	// Test
 	testImplementation 'org.springframework.security:spring-security-test'
