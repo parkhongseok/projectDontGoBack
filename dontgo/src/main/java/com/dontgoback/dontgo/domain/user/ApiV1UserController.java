@@ -3,8 +3,11 @@ package com.dontgoback.dontgo.domain.user;
 import com.dontgoback.dontgo.domain.user.dto.UserResponse;
 import com.dontgoback.dontgo.global.resData.ResData;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.security.Principal;
 
 @RestController
@@ -32,6 +35,15 @@ public class ApiV1UserController {
                 data
         );
     }
+
+    @PostMapping("/account-close-request")
+    public ResponseEntity<?> sendAccountCloseRequestEmail(@AuthenticationPrincipal User me){
+        User user = userService.findByEmail(me.getEmail()); // 영속 상태의 JPA Entity인지 검증
+        userService.sendAccountCloseEmail(user);
+        return ResponseEntity.ok("이메일을 확인해주세요");
+    }
+
+
 
 
 }
