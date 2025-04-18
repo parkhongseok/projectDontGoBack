@@ -9,22 +9,33 @@ import { Stack } from "react-bootstrap";
 import { BACKEND_API_URL } from "../../utils/globalValues";
 // import * as Types from "../../utils/types";
 import { httpRequest } from "../../utils/httpRequest";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export default function CloseAccount() {
+export default function DeactivateAccount() {
   const { userContext } = useUser();
+  const router = useRouter();
+  const [isEmailSend, setIsEmailSend] = useState(false);
 
-  const handlerCloseAccount = () => {
+  const handlerBefore = () => {
+    router.back();
+  };
+  const handlerAccountCloseEamil = () => {
     const method = "POST";
-    const url = `${BACKEND_API_URL}/v1/users/account-close-request`;
+    const url = `${BACKEND_API_URL}/v1/users/account-inactive/email-request`;
     const body = null;
     const success = () =>
       // result: Types.ResData<{ feedId: number; content: string; updatedAt: string }>
       {
-        alert("이메일을 확인해 주세요! 탈퇴 링크가 전송되었습니다.");
+        alert("이메일을 확인해 주세요! 비활성화 링크가 전송되었습니다.");
+        localStorage.removeItem("access_token");
+        setIsEmailSend(true);
+        // router.push("/login");
       };
     const fail = () => {
-      alert("탈퇴 요청에 실패했습니다. 다시 시도해 주세요.");
+      alert("비활성화 요청에 실패했습니다. 다시 시도해 주세요.");
     };
+    if (isEmailSend) alert("이미 이메일이 전송 되었습니다.");
     httpRequest(method, url, body, success, fail);
   };
 
@@ -40,7 +51,7 @@ export default function CloseAccount() {
           <Stack direction="horizontal" className="mx-3 mt-3">
             <button
               className={`${styles.write} ${styles.exitBtn} custom-button`}
-              // onClick={handlerClose}
+              onClick={handlerBefore}
             >
               이전 페이지
             </button>
@@ -50,16 +61,14 @@ export default function CloseAccount() {
             <div className=" overflow-hidden px-5">
               {/* 상단: 설명 영역 */}
               <div className="mx-5">
-                <h2 className="fw-bold mt-3 mb-3 text-center">계정 탈퇴</h2>
-                <p className=" text-center fontRed">
-                  계정을 삭제하면, 모든 데이터가 영구적으로 삭제됩니다.
-                  <br />
-                  탈퇴를 진행하기 전에 반드시 아래의 사항을 확인해 주세요.
+                <h2 className="fw-bold mt-3 mb-3 text-center">계정 비활성화</h2>
+                <p className=" text-center fw-bold fontRed">
+                  계정을 일시적으로 비활성화 할 수 있습니다.
                 </p>
                 <ul className="mt-3 list-unstyled mx-5">
-                  <li>✔ 작성한 게시글 및 댓글은 복구되지 않습니다.</li>
                   <li>✔ 이메일 인증을 통해 계속 진행하실 수 있습니다.</li>
-                  <li>✔ 인증 후 2주가 지나면 탈퇴가 완료됩니다.</li>
+                  <li>✔ 작성한 게시글 및 댓글은 모두 숨겨집니다.</li>
+                  <li>✔ 다시 로그인해서 언제든지 활성화 할 수 있습니다.</li>
                 </ul>
               </div>
             </div>
@@ -68,18 +77,27 @@ export default function CloseAccount() {
               {/* 하단: 버튼 영역 */}
               <div className="text-center rounded-4 bg-white py-5 ">
                 <p className="mb-3 fontGray4 px-5">
-                  계정을 영구적으로 해지하고 싶다면 <br /> 마지막 단계를 안내하는 이메일을 다음
+                  계정을 일시적으로 비활성화하고 싶다면 <br /> 마지막 단계를 안내하는 이메일을 다음
                   주소로 보내드리겠습니다.
                 </p>
 
                 <p className="mb-3 fw-bold fontGray2">{userContext?.email}</p>
 
                 <p className={`${styles.settingName}  mx-auto`}></p>
+                {isEmailSend ? (
+                  <button className={`${styles.sendDeactivateEmailDone} fs-4 px-5 `}>
+                    <FontAwesomeIcon icon={faEnvelope} /> 이메일이 전송되었습니다
+                  </button>
+                ) : (
+                  <button
+                    className={`${styles.sendDeactivateEmail} fs-4 px-5 `}
+                    onClick={handlerAccountCloseEamil}
+                  >
+                    <FontAwesomeIcon icon={faEnvelope} /> 비활성화 이메일 보내기
+                  </button>
+                )}
 
-                <button className={`${styles.write} fs-4 px-5 `} onClick={handlerCloseAccount}>
-                  <FontAwesomeIcon icon={faEnvelope} /> 탈퇴 이메일 보내기
-                </button>
-                <p className="mt-3 text-muted small">※ 이메일 확인 후 탈퇴가 완료됩니다.</p>
+                <p className="mt-3 text-muted small">※ 이메일 확인 후 비활성화가 완료됩니다.</p>
               </div>
             </div>
           </div>
