@@ -1,7 +1,7 @@
-package com.dontgoback.dontgo.domain.user;
+package com.dontgoback.dontgo.domain.userSetting;
 
 import com.dontgoback.dontgo.domain.refreshToken.RefreshTokenService;
-import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistoryService;
+import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AccountCloseService {
+public class AccountStateService {
     private final RefreshTokenService refreshTokenService;
     private final AccountStatusHistoryService accountStatusHistoryService;
 

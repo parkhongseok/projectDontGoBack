@@ -1,4 +1,5 @@
 package com.dontgoback.dontgo.global.jpa.EmbeddedTypes;
 
-public enum TokenPupose {
+public enum TokenPurpose {
+    ACCOUNT_CLOSE, PASSWORD_RESET, ACCOUNT_INACTIVE
 }

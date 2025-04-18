@@ -101,6 +101,8 @@ public class WebOAuthSecurityConfigTest {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/token").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/logout").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/account-close").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/account-inactive").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
         );
