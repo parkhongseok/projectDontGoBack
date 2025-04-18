@@ -8,6 +8,8 @@ import com.dontgoback.dontgo.domain.feedLike.FeedLike;
 import com.dontgoback.dontgo.domain.feedLike.FeedLikeService;
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.UserService;
+import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistoryService;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.FeedLikeId;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import org.springframework.boot.CommandLineRunner;
@@ -27,7 +29,12 @@ import java.util.stream.IntStream;
 public class NotProduction {
 
     @Bean
-    CommandLineRunner initPostData(FeedService feedService, UserService userService, CommentService commentService, FeedLikeService feedLikeService) {
+    CommandLineRunner initPostData(FeedService feedService,
+                                   UserService userService,
+                                   CommentService commentService,
+                                   FeedLikeService feedLikeService,
+                                   AccountStatusHistoryService accountStatusHistoryService
+    ) {
         // Dummy user 생성
         int userMax = 20;
         List<Integer> userRange = IntStream.range(0, userMax)
@@ -50,11 +57,16 @@ public class NotProduction {
             }
         }
 
-        User visitor =  userService.createDummyUser(
-                "9000억 (방문자)",
-                "testUser@gmail.com",
-                RedBlueType.BLUE);
-        users.add(visitor);
+        // 상태 초기화
+        for (int i : userRange){
+            if(i % 2 == 0){
+                User user = users.get(i);
+                accountStatusHistoryService.initializeStatus(user, AccountStatus.ACTIVE, "신규 가입");
+            }else{
+                User user = users.get(i);
+                accountStatusHistoryService.initializeStatus(user, AccountStatus.INACTIVE, "비활성화");
+            }
+        }
 
         // Dummy 피드 생성
         int feedMax = 40;

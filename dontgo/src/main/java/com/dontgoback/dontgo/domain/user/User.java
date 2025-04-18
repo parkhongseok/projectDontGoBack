@@ -1,6 +1,8 @@
 package com.dontgoback.dontgo.domain.user;
 import com.dontgoback.dontgo.domain.feed.Feed;
+import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistory;
 import com.dontgoback.dontgo.global.jpa.BaseEntity;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,21 +11,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Getter
-//@Setter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @Table(name="users")
 public class User extends BaseEntity implements UserDetails {
-
-//    @OneToMany(mappedBy = "user")
-//    private List<Feed> feeds;
 
     @Column(name = "user_asset", nullable = true)
     private String userAsset;
@@ -38,6 +38,25 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "user_type", nullable = true)
     private RedBlueType userType;
+
+    // 유저의 설정 캐싱 (변동 시 이력과 캐싱 사항 동기화 필요) 하지만 무결성 문제로 일대일 관계로 매핑하는 방향으로 정정
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private AccountStatus currentStatus;
+//
+//    private LocalDateTime currentStatusChangedAt;
+
+    // DB 논리적 구조: → 1:N / JPA 매핑: 현재 이력 1개만 참조
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "current_status_history_id") // FK가 User 테이블에 위치
+    private AccountStatusHistory currentStatusHistory;
+
+    public void setCurrentStatusHistory(AccountStatusHistory history) {
+        this.currentStatusHistory = history;
+        if (history.getUser() != this) {
+            history.setUser(this); // 양방향 동기화
+        }
+    }
 
 //    // OAuth2 를 위해
 //    // 사용자 이름 필드 추가 -> 생성자에 닉네임 추가
@@ -91,8 +110,7 @@ public class User extends BaseEntity implements UserDetails {
 
     // 계정 사용 가능 여부 반환
     @Override
-    public boolean isEnabled(){
-        // 사용 가능 확인 로직
-        return true; // true -> 사용 가능
+    public boolean isEnabled() {
+        return this.currentStatusHistory.getAccountStatus().isAllowLogin();
     }
 }

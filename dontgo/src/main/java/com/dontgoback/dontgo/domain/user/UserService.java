@@ -1,8 +1,10 @@
 package com.dontgoback.dontgo.domain.user;
 
-import com.dontgoback.dontgo.config.mail.MailService;
-import com.dontgoback.dontgo.domain.refreshToken.TokenService;
+
 import com.dontgoback.dontgo.domain.user.dto.UserResponse;
+import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistory;
+import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistoryRepository;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.ProfileVisibility;
 import org.springframework.web.server.ResponseStatusException;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
@@ -11,15 +13,15 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.stereotype.Service;
 
-import static com.dontgoback.dontgo.global.util.EmailMasking.maskEmail;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
+import static com.dontgoback.dontgo.global.util.EmailMasking.maskEmail;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     final UserRepository userRepository;
-    final TokenService tokenService;
-    final MailService mailService;
 
     public UserResponse getUserResponse(User user) {
         return UserResponse.builder()
@@ -49,15 +51,11 @@ public class UserService {
                 .email(email)
                 .userType(type)
                 .build();
-        this.userRepository.save(user);
+        userRepository.save(user);
         return user;
     }
 
-    public void sendAccountCloseEmail(User user){
-        String token = tokenService.createAccountCloseEmailToken(user);
-        mailService.sendAccountCloseEmail(user.getEmail(), token);
+    public User save(User user){
+        return userRepository.save(user);
     }
-
-
-
 }

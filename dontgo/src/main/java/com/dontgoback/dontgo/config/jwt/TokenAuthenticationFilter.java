@@ -35,7 +35,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         // 가져온 값에서 접두사 제거
         String token = getAccessToken(authorizationHeader);
         // [인증] 가져온 토큰이 유효한지 확인 후, 유효한 경우 인증 정보 설정
-        if (tokenProvider.validToken(token)) {
+        if (tokenProvider.isTokenValid(token)) {
             // getAuthentication메서드는 USER(security) 객체 반환하여 이를 인증된 사용자로 취급할 수 있도록 아래에 전달
             Authentication authentication = tokenProvider.getAuthentication(token);
             // 여기엔 유저 이름과 권한 목록 등의 정보가 포함 ->

@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-
 import static com.dontgoback.dontgo.global.util.GlobalValues.MAX_TEXT_LENGTH;
 
 @Entity
