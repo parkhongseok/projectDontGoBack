@@ -1,19 +1,23 @@
 "use client";
 
 import "../globals.css";
-
-import { Col, Container, Form, Row, Tab, Tabs } from "react-bootstrap";
+import styles from "../components/Feed.module.css";
+import { Col, Container, Form, Row, Stack, Tab, Tabs } from "react-bootstrap";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons/faLink";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 // import * as Types from "../../utils/types";
 // import { useParams } from "next/navigation";
 // import { BACKEND_API_URL } from "../../utils/globalValues";
 
 export default function Settings() {
   const [profileSettingState, setProfileSettingState] = useState(true);
-
+  const router = useRouter();
+  const handlerBefore = () => {
+    router.back();
+  };
   const handleToggle1 = () => {
     setProfileSettingState((prev) => !prev);
   };
@@ -24,8 +28,17 @@ export default function Settings() {
       <h5 className="text-center mb-4 pt-4 topTitleText">Settings</h5>
 
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
-      <div className={`pt-4 feed-detail-container`}>
+      <div className={`feed-detail-container`}>
         {/* 본격 사용 가능 공간 */}
+        <Stack direction="horizontal" className="mx-3 mt-3">
+          <button
+            className={`${styles.write} ${styles.exitBtn} custom-button`}
+            onClick={handlerBefore}
+          >
+            이전 페이지
+          </button>
+        </Stack>
+        <hr className="feed-underline fontGray4 mt-3" />
         <Tabs
           defaultActiveKey="Main"
           id="uncontrolled-tab-example"
@@ -68,7 +81,10 @@ export default function Settings() {
                   </p>
                 </Col>
                 <Col className="d-flex align-items-center justify-content-end ">
-                  <Link href={"/settings"} className={` d-flex align-items-center p-2`}>
+                  <Link
+                    href={"/settings/account-deactivate"}
+                    className={` d-flex align-items-center p-2`}
+                  >
                     <FontAwesomeIcon
                       icon={faLink}
                       className={`fontGray3 cusorPointer`}
@@ -92,7 +108,7 @@ export default function Settings() {
                 </Col>
                 <Col className="d-flex align-items-center justify-content-end ">
                   <Link
-                    href={"/settings/close-account"}
+                    href={"/settings/account-close"}
                     className={` d-flex align-items-center p-2`}
                   >
                     <FontAwesomeIcon
