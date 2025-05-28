@@ -34,7 +34,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// dev 환경에서만 H2 의존성 추가 (./gradlew build -P devProfile 명령으로 빌드 )
-	if (project.hasProperty("devProfile")) {
+	if (project.hasProperty("dev")) {
 		runtimeOnly 'com.h2database:h2'
 	}
 
