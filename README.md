@@ -11,15 +11,15 @@
 
 ## 1. 프로젝트 개요
 
-- 프로젝트 돈고백(Dont go back) - `투자 손익 기반 익명 SNS 서비스`
+- 프로젝트 돈고백(Dont go back) - `익명 SNS 서비스`
 - 기간 : 2025.01.13 ~ (진행 중)
 - 인원 : 개인 프로젝트
 - 배포 : [https://dontgoback.kro.kr/](https://dontgoback.kro.kr/)
-- 1차 목표 (1차 목표 달성 ✅)
+- 1차 목표 (1차 목표 달성)
     <pre>
     1.  Spring Security, OAuth2, JWT 기반 회원 인증  
-    2.  JPA와 Hibernate 기반 ORM 기술 실습          
-    3.  라즈베리파이 홈서버를 구축 및 테스트 환경 구성       
+    2.  JPA와 Hibernate 기반 ORM 기술 기반 <strong>REST API</strong>       
+    3.  라즈베리파이 홈서버 구축 및 테스트 환경 구성       
     4.  AWS 서비스를 통한 배포 환경 구성                
     5.  Docker, GitHub Action 사용한 <strong>빌드 및 배포 자동화</strong> 
   </pre>
@@ -63,7 +63,7 @@
   |      /feeds/{feedId}       |   DELETE    |   게시글 삭제    |      ✅      |               |
   |         /feedLikes         |     GET     |   좋아요 토글    |      ✅      |               |
 
-- #### 요청 구조 공통 사항
+- #### HTTP 요청 구조 공통 사항
 
   |                  항목                  |           설명           |                   조건                   |
   | :------------------------------------: | :----------------------: | :--------------------------------------: |
@@ -98,13 +98,15 @@
   </br>
   </br>
 
-## 아키텍처
 
-아키텍처 결정 레코드의 일부 내용입니다. 아래에서 다루고 있지 않은 내용은 [여기](./docs/architecture/decisions/)를 참고 부탁드리겠니다.
+## 아키텍처 결정 레코드
+아래에서 소개하는 내용은 프로젝트에서 어떤 구조를 결정할 때마다, 그 과정을 **맥락/결정/결과** 순으로 작성한 아키텍처 결정 레코드의 일부 내용입니다. \
+아래에서 다루고 있지 않은 내용은 [여기](./docs/architecture/decisions/)를 참고 부탁드리겠니다.
+  </br>
+  </br>
+  </br>
 
-> ### 빌드 및 배포 자동화
-
-  <details><summary> 📌 자세히 보기 (토글 버튼) </summary>
+> # 빌드 및 배포 자동화
 
 ## 맥락
 
@@ -141,7 +143,7 @@
 - 따라서 초기 단계에서는 자유도와 단순성이 높은 EC2가 더 적합하다고 판단하였다.
 
 ## 결정
-
+!["CICD Architecture"](./docs/architecture/decisions/09-빌드-및-배포-자동화-프로세스.png)
 - GitHub Actions + Docker + Amazon ECR(Elastic Container Registry) + EC2 기반의 자동화된 빌드 및 배포 파이프라인을 구축한다.
 - 흐름
   <pre>
@@ -184,26 +186,20 @@
 - ### 장애 발생 시 복구 전략 및 간단한 모니터링 체계 필요 (일부 개선 완료)
 
   - 기존 ssh로 접속하여, docker log를 직접 확인하는 방식만 사용 \
-    -> CloudWatch 설정으로 상태 모니터링 개선
+    -> CloudWatch 설정으로 상태 모니터링 개선 
 
-  </details>
+  <br/>
+  <br/>
+  <br/>
 
-!["CI/CD Architecture"](./docs/architecture/decisions/09-빌드-및-배포-자동화-프로세스.png)
-
-> ### 시스템 구조
-
-<details><summary> 📌 자세히 보기 (토글 버튼)
-</summary>
-
+> # 시스템 구조
 ## 맥락
-
-<pre>Docker-Compose 활용한 EC2 배포</pre>
-
 서비스 운영 초기에는간편한 배포 관리를 위해 AWS EC2 단일 인스턴스에서 실행되도록 구성했다.
 이를 위해 Docker-Compose를 활용하여 `Frontend(Next.js)`, `Backend(Spring Boot)`, `DB(MariaDB)`를 하나의 EC2 내에서 컨테이너로 구동하고 있다.
 
 ## 결정
 
+!["System Architecture"](./docs/architecture/decisions/04-시스템-아키텍처.jpg)
 - 배포 구조
   | 부분 | 기능 |
   | :-------------------------------: | :--------------------------------------------: |
@@ -243,14 +239,13 @@
 | 3단계 |      ALB 추가 + Auto Scaling      |             트래픽 분산, 성능 향상             |
 | 4단계 | ECS 또는 EKS로 컨테이너 관리 전환 |               자동 스케일링 가능               |
 
-</details>
+  <br/>
+  <br/>
+  <br/>
 
-!["System Architecture"](./docs/architecture/decisions/04-시스템-아키텍처.jpg)
+> # 회원 인증/인가 구조
 
-> ### 회원 인증/인가 구조
 
-<details><summary> 📌 자세히 보기 (토글 버튼) 
-</summary>
 
 ## 맥락
 
@@ -293,6 +288,7 @@
   - 스레드별로 공유되지 않으므로 안전함
 
 ## 결정
+!["OAuth2 Architecture"](./docs/architecture/decisions/08-OAuth2-JWT-인증-인가-흐름.png)
 
 <pre>
 Spring Security 기반 JWT/OAuth2 회원 인증/인가 방식 결정
@@ -323,15 +319,11 @@ Spring Security 기반 JWT/OAuth2 회원 인증/인가 방식 결정
   - 단순 로그인만 필요하므로 OIDC(OpenID Connect) 도입이 유리
   - 하지만 OAuth2 인증 흐름을 완전히 이해하기 위해 현재는 보류
 
-</details>
+  <br/>
+  <br/>
+  <br/>
 
-!["OAuth2 Architecture"](./docs/architecture/decisions/08-OAuth2-JWT-인증-인가-흐름.png)
-
-> ### 도메인 모델 설계
-
-<details><summary> 📌 자세히 보기 (토글 버튼) 
-</summary>
-
+> # 도메인 모델 설계
 ## 맥락
 
 SNS 서비스를 운영하기 위해서 필요한 필요한 도메인을 크게 세 가지로 분류했다. \
@@ -350,6 +342,7 @@ SNS 서비스를 운영하기 위해서 필요한 필요한 도메인을 크게 
 </pre>
 
 ## 결정
+!["Domain Architecture"](./docs/architecture/decisions/05-도메인-모델-설계.jpg)
 
 <pre>
 * 대신 N을 사용하여 일대다 관계를 명확히 표기
@@ -360,15 +353,8 @@ SNS 서비스를 운영하기 위해서 필요한 필요한 도메인을 크게 
 - 답글에 대한 답글(대댓글) 지원을 고려해서, 계층형 구조를 적용할 예정
 - 좋아요 기능은 중간 단계를 통해 1:N 관계로 변환하여 성능과 유지보수를 개선
 
-</details>
 
-!["Domain Architecture"](./docs/architecture/decisions/05-도메인-모델-설계.jpg)
-
-> ### 데이터 모델 설계
-
-<details><summary> 📌 자세히 보기 (토글 버튼) 
-</summary>
-
+> # 데이터 모델 설계
 ## 맥락
 
 도메인 간 연관관계를 바탕으로, 데이터 모델링을 진행하였다. \
@@ -428,6 +414,7 @@ SNS 서비스를 운영하기 위해서 필요한 필요한 도메인을 크게 
 
 ## 결정
 
+!["Data Architecture"](./docs/architecture/decisions/06-데이터-모델-및-ERD-설계.png)
 <pre>
 1. 반정규화 상태 유지
 2. 개선 사항 검토
@@ -479,14 +466,12 @@ SNS 서비스를 운영하기 위해서 필요한 필요한 도메인을 크게 
   - 성능 유지
   - 클라이언트 부담 증가
 
-</details>
+  <br/>
+  <br/>
+  <br/>
 
-!["Data Architecture"](./docs/architecture/decisions/06-데이터-모델-및-ERD-설계.png)
+> # 엔티티 모델 설계
 
-> ### 엔티티 모델 설계
-
-<details><summary> 📌 자세히 보기 (토글 버튼) 
-</summary>
 
 ## 맥락
 
@@ -582,12 +567,12 @@ DB에서 테이블 간 연관관계는 외래키(Foreign Key)를 통한 양방�
     ```
 
 ## 결정
+!["Entity Architecture"](./docs/architecture/decisions/07-JPA-기반-엔티티-설계.jpg)
+- 결정 1. DB와 연결하기 : JPA + Hibernate 사용
 
-### 결정 1. DB와 연결하기 : JPA + Hibernate 사용
+- 결정 2. Table과 Entity 연결하기 : 참조를 통한 연관 관계 설정 사용
 
-### 결정 2. Table과 Entity 연결하기 : 참조를 통한 연관 관계 설정 사용
-
-### 결정 3. 제한된 선택지 강요 여부 : Enum을 활용한 선택지 제한 사용
+- 결정 3. 제한된 선택지 강요 여부 : Enum을 활용한 선택지 제한 사용
 
 ## 결과
 
@@ -646,10 +631,9 @@ class User {
 - 트랜잭션 실패 시 잘못된 updatedAt 값이 반환될 가능성 인지
 - 현재 프로젝트에서는 해당 기능에서 DB 반영 시간과 0.001초 수준의 차이가 허용 가능하여 PreUpdate 방식 채택
 
-</details>
 
-!["Entity Architecture"](./docs/architecture/decisions/07-JPA-기반-엔티티-설계.jpg)
 
-### 위에서 다루고 있지 않은 내용은 [여기](./docs/architecture/decisions/)를 참고 부탁드리겠니다.
 
-# 소중한 시간 내어주셔서 진심으로 감사드립니다.
+### 더 많은 내용은 [여기](./docs/architecture/decisions/)를 참고 부탁드리겠니다.
+
+# 소중한 시간 내어주셔서 감사드립니다.
