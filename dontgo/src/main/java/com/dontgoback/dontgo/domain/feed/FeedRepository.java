@@ -75,4 +75,36 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     """)
     Optional<FeedResponse> findFeedResponseById(@Param("myFeedId") Long myFeedId, @Param("currentUserId") Long currentUserId);
 
+
+//    // 개선 방식 (실패)
+//    // 개선 방식 (JOIN + GROUP BY)
+//    @Query("""
+//    SELECT
+//        f.id AS feedId,
+//        u.id AS userId,
+//        f.content AS content,
+//        f.author AS author,
+//        f.feedType AS feedType,
+//        COUNT(DISTINCT fl.id) AS likeCount,
+//        COUNT(DISTINCT c.id) FILTER (WHERE c.deletedAt IS NULL) AS commentCount,
+//        CASE WHEN COUNT(DISTINCT flCurrent.id) > 0 THEN TRUE ELSE FALSE END AS isLiked,
+//        f.createdAt AS createdAt,
+//        f.updatedAt AS updatedAt,
+//        f.deletedAt AS deletedAt
+//    FROM Feed f
+//    JOIN f.user u
+//    LEFT JOIN FeedLike fl ON fl.feed = f
+//    LEFT JOIN FeedLike flCurrent ON flCurrent.feed = f AND flCurrent.user.id = :currentUserId
+//    LEFT JOIN Comment c ON c.feed = f
+//    WHERE (:lastFeedId = 0 OR f.id < :lastFeedId) AND f.deletedAt IS NULL
+//    GROUP BY f.id, u.id, f.content, f.author, f.feedType, f.createdAt, f.updatedAt, f.deletedAt
+//    ORDER BY f.createdAt DESC
+//    """)
+//    List<FeedResponse> findFeedsResponseOptimized(@Param("lastFeedId") Long lastFeedId,
+//                                                  @Param("size") int size,
+//                                                  @Param("currentUserId") Long currentUserId);
+
+
+
+
 }
