@@ -9,13 +9,12 @@ import {
 import "../auth.css";
 
 import { Image, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
-import { useSearchParams } from "next/navigation";
+import { useQueryParam } from "../useQueryParam";
 import { useEffect, useState } from "react";
 
 export default function Login() {
-  const searchParams = useSearchParams();
-  const until = searchParams.get("until");
-  const status = searchParams.get("status"); // 쿼리 파라미터 확인
+  const until = useQueryParam("until");
+  const status = useQueryParam("status"); // 쿼리 파라미터 확인
   const [message, setMessage] = useState<React.ReactNode>(null);
 
   useEffect(() => {
