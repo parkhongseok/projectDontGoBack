@@ -4,22 +4,22 @@ spring:
   output:
     ansi:
       enabled: always
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
-#      settings:
-#        web-allow-others: true
-#  datasource:
-#    url: jdbc:h2:mem:db_dev;MODE=MYSQL
-#    driver-class-name: org.h2.Driver
-#    username: sa
-#    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
   datasource:
-    url: jdbc:mariadb://localhost:3307/testdb
-    username: testuser
-    password: testpass
-    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:h2:mem:db_dev;MODE=MYSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+#  datasource:
+#    url: jdbc:mariadb://localhost:3307/testdb
+#    username: testuser
+#    password: testpass
+#    driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     defer-datasource-initialization: true # [test] Hibernate가 먼저 테이블을 생성한 후, CommandLineRunner가 실행
     show-sql: true                      # 콘솔에 SQL 출력
