@@ -5,6 +5,8 @@ on:
     branches:
       - main
   workflow_dispatch: # 수동으로 액션 실행가능하도록 설정
+  # 아래 옵션 사용 시 빈 커밋 가능 
+  # git commit --allow-empty -m "trigger deploy [deploy]"
 
 env:
   AWS_REGION: ap-northeast-2
@@ -15,7 +17,7 @@ env:
 jobs:
   build-push:
     # ex: git commit -m "fix: typo on login page [deploy]" 등 [deploy] 포함 시에만 자동 배포
-    if: contains(github.event.head_commit.message, '[deploy]')
+    if: github.event_name != 'workflow_dispatch' && contains(github.event.head_commit.message, '[deploy]') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
