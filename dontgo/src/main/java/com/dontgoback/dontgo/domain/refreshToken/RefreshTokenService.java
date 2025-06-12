@@ -17,5 +17,9 @@ public class RefreshTokenService {
         RefreshToken refreshTokenEntity = findByRefreshToken(refreshToken);
         refreshTokenRepository.delete(refreshTokenEntity);
     }
+
+    public void deleteByUserId(Long userId){
+        refreshTokenRepository.deleteByUserId(userId);
+    }
 }
 

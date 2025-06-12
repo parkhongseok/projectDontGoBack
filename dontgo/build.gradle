@@ -33,14 +33,17 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	// dev 환경에서만 H2 의존성 추가 (./gradlew build -PdevProfile 명령으로 빌드 )
-	if (project.hasProperty("devProfile")) {
+	// dev 환경에서만 H2 의존성 추가 (./gradlew build -P devProfile 명령으로 빌드 )
+	if (project.hasProperty("dev")) {
 		runtimeOnly 'com.h2database:h2'
 	}
 
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
 	runtimeOnly 'com.mysql:mysql-connector-j' // Maria DB와 호환
 
+	// mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 	// Test
 	testImplementation 'org.springframework.security:spring-security-test'

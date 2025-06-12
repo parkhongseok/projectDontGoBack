@@ -11,15 +11,15 @@
 
 ## 1. 프로젝트 개요
 
-- 프로젝트 돈고백(Dont go back) - `투자 손익 기반 익명 SNS 서비스`
+- 프로젝트 돈고백(Dont go back) - `익명 SNS 서비스`
 - 기간 : 2025.01.13 ~ (진행 중)
 - 인원 : 개인 프로젝트
 - 배포 : [https://dontgoback.kro.kr/](https://dontgoback.kro.kr/)
-- 1차 목표 (1차 목표 달성 ✅)
+- 1차 목표 (1차 목표 달성)
     <pre>
     1.  Spring Security, OAuth2, JWT 기반 회원 인증  
-    2.  JPA와 Hibernate 기반 ORM 기술 실습          
-    3.  라즈베리파이 홈서버를 구축 및 테스트 환경 구성       
+    2.  JPA와 Hibernate 기반 ORM 기술 기반 <strong>REST API</strong>       
+    3.  라즈베리파이 홈서버 구축 및 테스트 환경 구성       
     4.  AWS 서비스를 통한 배포 환경 구성                
     5.  Docker, GitHub Action 사용한 <strong>빌드 및 배포 자동화</strong> 
   </pre>
@@ -63,7 +63,7 @@
   |      /feeds/{feedId}       |   DELETE    |   게시글 삭제    |      ✅      |               |
   |         /feedLikes         |     GET     |   좋아요 토글    |      ✅      |               |
 
-- #### 요청 구조 공통 사항
+- #### HTTP 요청 구조 공통 사항
 
   |                  항목                  |           설명           |                   조건                   |
   | :------------------------------------: | :----------------------: | :--------------------------------------: |
@@ -97,14 +97,17 @@
 
   </br>
   </br>
+  </br>
 
-## 아키텍처
+# 3. 아키텍처 결정 레코드
 
-아키텍처 결정 레코드의 일부 내용입니다. 아래에서 다루고 있지 않은 내용은 [여기](./docs/architecture/decisions/)를 참고 부탁드리겠니다.
+아래에서 소개하는 내용은 프로젝트에서 어떤 구조를 결정할 때마다, 그 과정을 **맥락/결정/결과** 순으로 작성한 아키텍처 결정 레코드의 일부 내용입니다. \
+아래에서 다루고 있지 않은 내용은 [여기](./docs/architecture/decisions/)를 참고 부탁드리겠니다.
+</br>
+</br>
+</br>
 
-> ### 빌드 및 배포 자동화
-
-  <details><summary> 📌 자세히 보기 (토글 버튼) </summary>
+> # 빌드 및 배포 자동화
 
 ## 맥락
 
@@ -141,6 +144,8 @@
 - 따라서 초기 단계에서는 자유도와 단순성이 높은 EC2가 더 적합하다고 판단하였다.
 
 ## 결정
+
+!["CICD Architecture"](./docs/architecture/decisions/09-빌드-및-배포-자동화-프로세스.png)
 
 - GitHub Actions + Docker + Amazon ECR(Elastic Container Registry) + EC2 기반의 자동화된 빌드 및 배포 파이프라인을 구축한다.
 - 흐름
@@ -186,23 +191,23 @@
   - 기존 ssh로 접속하여, docker log를 직접 확인하는 방식만 사용 \
     -> CloudWatch 설정으로 상태 모니터링 개선
 
-  </details>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
 
-!["CI/CD Architecture"](./docs/architecture/decisions/09-빌드-및-배포-자동화-프로세스.png)
-
-> ### 시스템 구조
-
-<details><summary> 📌 자세히 보기 (토글 버튼)
-</summary>
+> # 시스템 구조
 
 ## 맥락
-
-<pre>Docker-Compose 활용한 EC2 배포</pre>
 
 서비스 운영 초기에는간편한 배포 관리를 위해 AWS EC2 단일 인스턴스에서 실행되도록 구성했다.
 이를 위해 Docker-Compose를 활용하여 `Frontend(Next.js)`, `Backend(Spring Boot)`, `DB(MariaDB)`를 하나의 EC2 내에서 컨테이너로 구동하고 있다.
 
 ## 결정
+
+!["System Architecture"](./docs/architecture/decisions/04-시스템-아키텍처.jpg)
 
 - 배포 구조
   | 부분 | 기능 |
@@ -243,14 +248,11 @@
 | 3단계 |      ALB 추가 + Auto Scaling      |             트래픽 분산, 성능 향상             |
 | 4단계 | ECS 또는 EKS로 컨테이너 관리 전환 |               자동 스케일링 가능               |
 
-</details>
+  <br/>
+  <br/>
+  <br/>
 
-!["System Architecture"](./docs/architecture/decisions/04-시스템-아키텍처.jpg)
-
-> ### 회원 인증/인가 구조
-
-<details><summary> 📌 자세히 보기 (토글 버튼) 
-</summary>
+> # 회원 인증/인가 구조
 
 ## 맥락
 
@@ -294,6 +296,8 @@
 
 ## 결정
 
+!["OAuth2 Architecture"](./docs/architecture/decisions/08-OAuth2-JWT-인증-인가-흐름.png)
+
 <pre>
 Spring Security 기반 JWT/OAuth2 회원 인증/인가 방식 결정
 </pre>
@@ -319,55 +323,19 @@ Spring Security 기반 JWT/OAuth2 회원 인증/인가 방식 결정
   - 임시 방문자용 Access Token 전달을 위해 이 방식 임시적으로 유지
 
 - 현재 OAuth2를 사용하고 있지만, OIDC 도입 검토 중
+
   - 사용하지 않을 이유가 없음
   - 단순 로그인만 필요하므로 OIDC(OpenID Connect) 도입이 유리
   - 하지만 OAuth2 인증 흐름을 완전히 이해하기 위해 현재는 보류
 
-</details>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
 
-!["OAuth2 Architecture"](./docs/architecture/decisions/08-OAuth2-JWT-인증-인가-흐름.png)
-
-> ### 도메인 모델 설계
-
-<details><summary> 📌 자세히 보기 (토글 버튼) 
-</summary>
-
-## 맥락
-
-SNS 서비스를 운영하기 위해서 필요한 필요한 도메인을 크게 세 가지로 분류했다. \
-이를 기반으로 DB 스키마 설계와, JPA에서 매핑을 고려한 엔티티를 설계했다.
-
-1. 유저
-2. 게시물
-3. 댓글
-
-<pre>
-유저의 자산 정보는 외부 API에서 제공받을 계획이므로, 별도 도메인으로 분리하지 않고 "유저 닉네임의 대체 정보" 정도로만 활용
-</pre>
-<pre>
-여러 사용자가 여러 게시글과 댓글에 좋아요를 누를 수 있기 때문에, 다대다(M:N) 관계가 발생
-이를 해결하기 위해 중간 단계(게시물 좋아요 / 댓글 좋아요)를 추가하여 1:N 관계로 변환
-</pre>
-
-## 결정
-
-<pre>
-* 대신 N을 사용하여 일대다 관계를 명확히 표기
-</pre>
-
-## 결과
-
-- 답글에 대한 답글(대댓글) 지원을 고려해서, 계층형 구조를 적용할 예정
-- 좋아요 기능은 중간 단계를 통해 1:N 관계로 변환하여 성능과 유지보수를 개선
-
-</details>
-
-!["Domain Architecture"](./docs/architecture/decisions/05-도메인-모델-설계.jpg)
-
-> ### 데이터 모델 설계
-
-<details><summary> 📌 자세히 보기 (토글 버튼) 
-</summary>
+> # 데이터 모델 설계
 
 ## 맥락
 
@@ -428,6 +396,8 @@ SNS 서비스를 운영하기 위해서 필요한 필요한 도메인을 크게 
 
 ## 결정
 
+!["Data Architecture"](./docs/architecture/decisions/06-데이터-모델-및-ERD-설계.png)
+
 <pre>
 1. 반정규화 상태 유지
 2. 개선 사항 검토
@@ -475,18 +445,19 @@ SNS 서비스를 운영하기 위해서 필요한 필요한 도메인을 크게 
   - 클라이언트에서 author와 feedType을 변환
 
 - 기대 효과
+
   - DB 공간 절약
   - 성능 유지
   - 클라이언트 부담 증가
 
-</details>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
 
-!["Data Architecture"](./docs/architecture/decisions/06-데이터-모델-및-ERD-설계.png)
-
-> ### 엔티티 모델 설계
-
-<details><summary> 📌 자세히 보기 (토글 버튼) 
-</summary>
+> # 엔티티 모델 설계
 
 ## 맥락
 
@@ -583,11 +554,13 @@ DB에서 테이블 간 연관관계는 외래키(Foreign Key)를 통한 양방�
 
 ## 결정
 
-### 결정 1. DB와 연결하기 : JPA + Hibernate 사용
+!["Entity Architecture"](./docs/architecture/decisions/07-JPA-기반-엔티티-설계.jpg)
 
-### 결정 2. Table과 Entity 연결하기 : 참조를 통한 연관 관계 설정 사용
+- 결정 1. DB와 연결하기 : JPA + Hibernate 사용
 
-### 결정 3. 제한된 선택지 강요 여부 : Enum을 활용한 선택지 제한 사용
+- 결정 2. Table과 Entity 연결하기 : 참조를 통한 연관 관계 설정 사용
+
+- 결정 3. 제한된 선택지 강요 여부 : Enum을 활용한 선택지 제한 사용
 
 ## 결과
 
@@ -646,10 +619,165 @@ class User {
 - 트랜잭션 실패 시 잘못된 updatedAt 값이 반환될 가능성 인지
 - 현재 프로젝트에서는 해당 기능에서 DB 반영 시간과 0.001초 수준의 차이가 허용 가능하여 PreUpdate 방식 채택
 
-</details>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
-!["Entity Architecture"](./docs/architecture/decisions/07-JPA-기반-엔티티-설계.jpg)
+> # 이메일 인증 시스템 신뢰도 향상을 위한 Amazon SES 도입
 
-### 위에서 다루고 있지 않은 내용은 [여기](./docs/architecture/decisions/)를 참고 부탁드리겠니다.
+Date: 2025-04-18
 
-# 소중한 시간 내어주셔서 진심으로 감사드립니다.
+## 상태
+
+적용 중
+
+## 맥락
+
+### 문제 1. Gmail SMTP 방식의 한계
+
+- 회원 탈퇴 기능에서 인증 메일을 전송하기 위해 초기에는 Gmail SMTP 서버를 사용하였다.
+- Google 보안 정책에 따라 앱 비밀번호를 발급받고, IMAP/POP 설정을 변경해야 했으며, SMTP 서버 정보를 Spring 설정에 포함시켜야 했다.
+- 발신자는 `your_email@gmail.com`과 같은 Gmail 개인 계정이었고, HTML 템플릿과 임시 토큰을 포함한 메일을 정상적으로 발송할 수 있었다.
+- 하지만 메일 수신자가 Gmail일 경우에도 스팸함으로 분류되는 문제가 지속적으로 발생하였다.
+
+### 문제 2. 발신 도메인 신뢰도 부족
+
+- 도메인 기반 인증(SPF, DKIM 등)이 불가능하여 신뢰도 낮은 메일로 인식되었고, 실제 Gmail → Gmail 간에도 신뢰할 수 없는 메일로 처리되었다.
+- 스팸 이슈를 줄이기 위해 DNS에 SPF 레코드를 등록하였지만, Gmail SMTP 방식에서는 발신 도메인에 대한 신뢰성을 직접 설정할 수 없었고, 여전히 스팸함으로 분류되었다.
+
+## 결정
+
+### 해결책 1. Amazon SES 도입 및 도메인 기반 메일 발신 시스템 전환
+
+| 항목             | 설명                                    |
+| ---------------- | --------------------------------------- |
+| 사용한 서비스    | Amazon SES (Simple Email Service)       |
+| 도메인           | dontgoback.kro.kr                       |
+| MAIL FROM 도메인 | mail.dontgoback.kro.kr                  |
+| 발신자 주소      | noreply@mail.dontgoback.kro.kr          |
+| SMTP 서버        | email-smtp.ap-northeast-2.amazonaws.com |
+| 인증 방식        | SES SMTP 자격 증명 (IAM 아님)           |
+
+- Gmail SMTP 설정을 제거하고, Spring Mail 설정을 Amazon SES로 전환하였다.
+- SES 콘솔에서 도메인을 인증하고, MAIL FROM 도메인을 설정하였다.
+- 발신 도메인에 대한 신뢰도 확보를 위해 다음과 같은 DNS 레코드를 등록하였다:
+  - SPF (TXT): v=spf1 include:amazonses.com -all
+  - DKIM (CNAME × 3): SES가 제공한 키 값 등록
+  - MAIL FROM용 MX 및 SPF 레코드 등록
+
+### 해결책 2. Spring Mail 발신자 구조 개선
+
+| 항목             | 설명                                                   |
+| ---------------- | ------------------------------------------------------ |
+| 이메일 발송 방식 | JavaMailSender를 이용한 SMTP 방식                      |
+| 메일 내용        | HTML 템플릿 기반 (Thymeleaf)                           |
+| 포함 정보        | 인증 메시지, 임시 토큰, 탈퇴 확정 링크, 만료 시간 표시 |
+| 예외 처리        | 메일 발송 실패 시 에러 로그 및 fallback 처리 예정      |
+
+- 기존의 Gmail 의존 로직을 제거하고, 자체 도메인을 활용한 메일 시스템으로 전환함으로써 탈퇴 인증 흐름 전반의 신뢰도를 높였다.
+- 사용자 입장에서는 noreply@mail.dontgoback.kro.kr에서 메일이 수신되며, 스팸 분류 없이 안정적으로 전달되도록 개선 중이다.
+
+## 결과
+
+!["비활성화 인증 이메일 화면"](./docs/architecture/decisions/11-Amazon-SES-이메일-인증-시스템-도입1.png)
+!["탈퇴 인증 이메일 화면"](./docs/architecture/decisions/11-Amazon-SES-이메일-인증-시스템-도입2.png)
+
+- Gmail SMTP 기반의 스팸 문제를 해결하고, 도메인 기반의 발신 시스템으로 신뢰도를 크게 향상시켰다.
+- DNS 레코드를 통한 SPF/DKIM 검증과 MAIL FROM 도메인 설정을 완료하여, 이메일 발송 신뢰성이 크게 개선되었으며, 수신자 측 스팸 분류 문제가 해소될 것으로 기대된다.
+- Spring에서의 메일 발송 코드도 단순화되었고, 향후 AWS SDK 방식으로의 전환도 가능하도록 구성되어 있다.
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+> # 인덱스 생성을 통한 DB 성능 향상
+
+Date: 2025-05-29
+
+## 상태
+
+적용 중
+
+## 맥락
+
+### 문제 1. 대용량 피드 조회 시 성능 저하
+
+- 피드 기반 SNS에서 메인 피드 목록 조회 쿼리는 사용 빈도가 높고, 응답 속도가 UX에 직접적인 영향을 미친다.
+
+- 실험 데이터 기준, 약 1,000,000건의 피드 중에서 id < ? AND deleted_at IS NULL 조건을 걸고 최신순으로 정렬한 후 LIMIT 10을 사용하는 구조였다.
+
+- 하지만, 정렬 및 필터링 조건에서 인덱스가 제대로 활용되지 않아 Using filesort, Using temporary 등이 실행 계획에 나타났으며, 응답 시간은 수천 ms까지 상승하였다.
+
+### 문제 2. JOIN을 활용한 서브쿼리 제거 시도 실패
+
+- 쿼리 자체의 구조 개선을 통한 성능 개선을 시도했으나 오히려 역효과가 발생하였다.
+- 데이터가 늘어날 수록, JOIN의 비용이 증가하여, 수행시간이 오히려 증가하는 문제 발생했다.
+
+### 문제 3. 성능 측정의 불편함
+
+- 조건을 변경해가며 여러번 수행시간을 측정하고, 집계하고 시각화하는 과정에서 많은 시간 자원 소모
+- 자동화 필요성 인지
+
+## 결정
+
+### 해결책 1. 사용자 중심 정렬 최적화 인덱스 적용
+
+```
+CREATE INDEX idx_feeds_deleted_created ON feeds(deleted_at, created_at DESC)
+
+CREATE INDEX idx_comment_feed_deleted ON comments(feed_id, deleted_at)
+```
+
+| 항목               | 인덱스 적용 전                  | 인덱스 적용 후                                |
+| ------------------ | ------------------------------- | --------------------------------------------- |
+| feeds 접근 방식    | ref (user_id 외래키 기준 접근)  | range (deleted_at, created_at 기준 범위 조회) |
+| 정렬 처리 방식     | Using temporary; Using filesort | 제거됨 (filesort 없음)                        |
+| users 접근 방식    | index (풀 인덱스 스캔)          | eq_ref (정확한 row 단건 접근)                 |
+| 댓글 서브쿼리 처리 | where 조건만 사용               | where + index (복합 인덱스 활용)              |
+
+- feeds 테이블의 접근 방식이 ref에서 range로 변경되어 범위 스캔이 가능해짐
+- users 테이블도 기존 index scan에서 eq_ref로 변경되어, 정확한 row 참조 방식으로 최적화
+- comment 테이블은 deleted_at IS NULL 조건을 포함한 인덱스(idx_comment_feed_deleted) 덕분에 조건부 where절에 대한 인덱스 사용이 명확해짐
+
+### 해결책 2. Python 활용한 측정, 집계, 시각화 자동화
+
+이 부분은
+[ QueryBenchmark ](https://github.com/parkhongseok/QueryBenchmark)의 Github의 링크를 참조해주세요.
+
+## 결과
+
+!["메인 피드 조회 평균 실행 시간 비교"](./docs/architecture/decisions/12-인덱스-생성을-통한-DB-성능-향상.png)
+
+① 복합 인덱스(feeds.deleted_at, created_at)를 통한 정렬 제거가 가장 큰 성능 개선 효과. 특히 최신 피드 조회 시 filesort와 temporary table 제거로 인해 조회 시간이 **약1,683배 개선**
+
+② 중간 깊이의 피드에 대해서는 댓글 테이블(comment)의 인덱스만으로도 충분한 성능 개선. 이는 서브쿼리 필터 조건에 효율적으로 인덱스가 작용한 결과로 보임
+
+③ 과거 피드 조회는 인덱스 유무에 관계없이 매우 빠르게 처리되었으며, 오히려 최적화의 필요성이 낮았음
+
+더 자세한 내용은 [블로그](https://keinmall.tistory.com/21)를 확인해주세요
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+> # 지금까지 프로젝트를 진행하며 작성해온, 아키텍처 결정 레코드 (ADR)에 관한 내용이었습니다.
+>
+> ## 더 많은 내용은 [여기](./docs/architecture/decisions/)를 참고 부탁드리겠니다.
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+# 소중한 시간 내어주셔서 감사드립니다.

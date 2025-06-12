@@ -97,7 +97,7 @@ export default function Feed({ feed }: PropsType) {
       <Stack direction="horizontal" gap={3}>
         <div>
           <Link className={`px-5 `} href={`/profile/${feed.userId}`} legacyBehavior>
-            <p className={`${styles.userName} ${feedTypeClass} pointer`}>{feed.author}</p>
+            <p className={`${styles.userName} ${feedTypeClass} cusorPointer`}>{feed.author}</p>
           </Link>
         </div>
         <div className="vr" />
@@ -140,7 +140,7 @@ export default function Feed({ feed }: PropsType) {
       ) : (
         <div className={`${styles.contentContainer}`}>
           <Link className={`px-5 `} href={`/post/${feed.feedId}`} legacyBehavior>
-            <p onClick={handleFeedClick} className={`${styles.content} pointer`}>
+            <p onClick={handleFeedClick} className={`${styles.content} cusorPointer`}>
               {feed.content}
             </p>
           </Link>
@@ -176,9 +176,9 @@ export default function Feed({ feed }: PropsType) {
                 <FontAwesomeIcon
                   icon={faComment}
                   // size="2x"
-                  className={` ${styles.comment} ${styles.likeBtn} pointer`}
+                  className={` ${styles.comment} ${styles.likeBtn} cusorPointer`}
                 />
-                <span className={`${styles.comment} ms-1 pointer`}>{feed.commentCount}</span>
+                <span className={`${styles.comment} ms-1 cusorPointer`}>{feed.commentCount}</span>
               </Link>
             </>
           )}

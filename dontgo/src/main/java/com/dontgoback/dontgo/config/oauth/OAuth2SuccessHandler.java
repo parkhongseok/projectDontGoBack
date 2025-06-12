@@ -6,11 +6,14 @@ import com.dontgoback.dontgo.domain.refreshToken.RefreshToken;
 import com.dontgoback.dontgo.domain.refreshToken.RefreshTokenRepository;
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.UserService;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 import com.dontgoback.dontgo.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.time.Duration;
 
 import static com.dontgoback.dontgo.global.util.GlobalValues.*;
@@ -30,15 +34,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public static final String REFRESH_TOKEN_COOKIE_NAME = REFRESH_TOKEN_NAME;
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
-
-    @Value("${app.FRONTEND_URL}")
-    public String REDIRECT_PATH;
-
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
-    private  final UserService userService;
-
+    private final UserService userService;
+    @Value("${app.FRONTEND_URL}")
+    public String REDIRECT_PATH;
     @Value("${cookie.secure}")
     private boolean secureCookie;
 
@@ -48,6 +49,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                         Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         User user = userService.findByEmail((String) oAuth2User.getAttributes().get("email"));
+
+        if (!user.isEnabled()) {
+            // 토큰 제거, 리다이렉션 등 비정상 처리
+            response.sendRedirect(REDIRECT_PATH + "/login?status=SUSPENDED");
+            return;
+        }
+
 
         // 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
         /* TokenProvider를 사용하여 리프레시 토큰을 만들고, saveRefreshToken() 메서드를 호출하여 해당 토큰을 DB에 유저 id와 함께 저장
@@ -73,7 +81,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     // 생성된 리프레시 토큰을 전달받아서 DB에 저장
-    private void saveRefreshToken(User user, String newRefreshToken){
+    private void saveRefreshToken(User user, String newRefreshToken) {
         RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId())
                 .map(entity -> entity.update(newRefreshToken))
                 .orElse(new RefreshToken(user, newRefreshToken));
@@ -88,8 +96,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME); // 기존 리프레시 토큰 제거 하고
         boolean httpOnly = true;
-
-
         boolean httpsOnly = false;
         CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge, httpOnly, httpsOnly); // 새로운 거 추가
     }

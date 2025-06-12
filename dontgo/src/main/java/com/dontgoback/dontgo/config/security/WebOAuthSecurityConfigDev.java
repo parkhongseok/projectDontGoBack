@@ -46,7 +46,7 @@ public class WebOAuthSecurityConfigDev {
     @Bean
     public WebSecurityCustomizer configure() {     // Spring Security 기능 비활성화
         return (web) -> web.ignoring()
-                .requestMatchers(toH2Console())
+//                .requestMatchers(toH2Console())
                 .requestMatchers("/img/**", "/css/**", "/js/**");
     }
 
@@ -104,6 +104,8 @@ public class WebOAuthSecurityConfigDev {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/token").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/logout").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/account-close").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/account-inactive").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
         );

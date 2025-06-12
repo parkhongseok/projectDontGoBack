@@ -3,12 +3,11 @@ package com.dontgoback.dontgo.domain.comment;
 import com.dontgoback.dontgo.domain.comment.dto.*;
 import com.dontgoback.dontgo.domain.feed.Feed;
 
-import com.dontgoback.dontgo.domain.feed.dto.DeleteFeedResponse;
+
 import com.dontgoback.dontgo.domain.user.User;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

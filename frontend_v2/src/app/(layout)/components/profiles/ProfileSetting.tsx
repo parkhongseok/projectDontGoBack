@@ -5,6 +5,9 @@ import "../../globals.css";
 import { useUser } from "../../contexts/UserContext";
 import styles from "../Feed.module.css";
 import { Col, Container, Form, OverlayTrigger, Row, Stack, Tooltip } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLink } from "@fortawesome/free-solid-svg-icons/faLink";
+import Link from "next/link";
 
 type propsType = {
   setIsSettingOpen: Dispatch<SetStateAction<boolean>>;
@@ -12,15 +15,13 @@ type propsType = {
 
 export default function ProfileSetting({ setIsSettingOpen }: propsType) {
   const [profileSettingState, setProfileSettingState] = useState(true);
-  const [accountStatus, setAccountStatus] = useState(true);
   const { userContext } = useUser();
 
   const handleToggle1 = () => {
     setProfileSettingState((prev) => !prev);
   };
-  const handleToggle2 = () => {
-    setAccountStatus((prev) => !prev);
-  };
+
+  const handleAccountEdit = () => {};
 
   const handlerClose = () => {
     setIsSettingOpen(false);
@@ -34,9 +35,8 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
     // const body = profileSettingRequest;
     // const success = (result: {}) => {};
     // const fail = () => {
-      // alert("서버 오류가 발생했습니다.");
+    // alert("서버 오류가 발생했습니다.");
     // };
-
     // httpRequest(method, url, body, success, fail);
   };
 
@@ -102,19 +102,18 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
             <Container className="d-flex align-items-center">
               <Row className="ms-4 me-4 w-100 align-items-center">
                 <Col className="">
-                  <p className={`${styles.settingName} ms-5`}>계정 비활성화</p>
+                  <p className={`${styles.settingName} ms-5`} onClick={handleAccountEdit}>
+                    계정 비활성화 또는 삭제
+                  </p>
                 </Col>
                 <Col className="d-flex align-items-center justify-content-end ">
-                  <div className={` d-flex align-items-center p-2`}>
-                    <Form.Check
-                      reverse
-                      type="switch"
-                      id="custom-switch"
-                      checked={!accountStatus}
-                      onChange={handleToggle2}
-                      className={`${styles.settingSwitch} `}
+                  <Link href={"/settings"} className={` d-flex align-items-center p-2`}>
+                    <FontAwesomeIcon
+                      icon={faLink}
+                      className={`fontGray3 cusorPointer`}
+                      onClick={handleAccountEdit}
                     />
-                  </div>
+                  </Link>
                 </Col>
               </Row>
             </Container>

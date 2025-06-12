@@ -88,3 +88,12 @@
 .pt-10 {
   padding-top: 100px;
 }
+
+.login-box-arelt {
+  width: var(--login-box-width);
+  min-width: var(--feed-min-width);
+  min-height: 5vh;
+  background-color: var(--white);
+  border-radius: 30px;
+  border: 2px solid var(--gray4);
+}
