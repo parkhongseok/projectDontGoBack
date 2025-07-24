@@ -52,7 +52,7 @@ Date: 2025-02-25
 Spring Security 기반 JWT/OAuth2 회원 인증/인가 방식 결정
 </pre>
 
-!["OAuth2 Architecture"](./08-OAuth2-JWT-인증-인가-흐름.png)
+!["OAuth2 Architecture"](../src/08-OAuth2-JWT-인증-인가-흐름.png)
 
 ## 결과
 

@@ -1,48 +1,360 @@
 # 프로젝트 돈고백(Dont go back)
 
-### 목차
+```
+목차
 
-1. 프로젝트 개요
-2. 개발 환경 및 API 구조
-3. 아키텍처 결정 레코드
+  1. 프로젝트 개요
+  2. 주요 기능
+  3. 아키텍처
+  4. 문제 해결
+```
 
 </br>
 </br>
 
-## 1. 프로젝트 개요
+# 1. 프로젝트 개요
 
-- 프로젝트 돈고백(Dont go back) - `익명 SNS 서비스`
+- 소개 : `소셜 로그인 기반 익명 SNS 서비스 <돈고백, Dont Go Back>`
 - 기간 : 2025.01.13 ~ (진행 중)
 - 인원 : 개인 프로젝트
 - 배포 : [https://dontgoback.kro.kr/](https://dontgoback.kro.kr/)
-- 1차 목표 (1차 목표 달성)
-    <pre>
-    1.  Spring Security, OAuth2, JWT 기반 회원 인증  
-    2.  JPA와 Hibernate 기반 ORM 기술 기반 <strong>REST API</strong>       
-    3.  라즈베리파이 홈서버 구축 및 테스트 환경 구성       
-    4.  AWS 서비스를 통한 배포 환경 구성                
-    5.  Docker, GitHub Action 사용한 <strong>빌드 및 배포 자동화</strong> 
+
+- 기술 스택 :
+
+  |      분류      |               도구               |  버전   |
+  | :------------: | :------------------------------: | :-----: |
+  |      언어      |        Java / TypeScript         | 21 / ^5 |
+  |    Frontend    |             Next.js              | 15.1.7  |
+  |    Backend     |           Spring boot            |  3.4.0  |
+  |       DB       |             MariaDB              | 10.11.6 |
+  |  Testing tool  |          Junit, Mockio           |         |
+  |     DevOps     |      GitHub Action, Docker       |         |
+  | Infrastructure | Raspberry Pi / AWS EC2, ECR, SES |         |
+
+<br/>
+<br/>
+
+# 2. 주요 기능
+
+## 2-1. 소셜 로그인
+
+- <strong>OAuth2</strong> 기반 구글 소셜 로그인
+- <strong>JWT</strong> 기반 로그인 및 로그아웃 상태 관리
+- <strong>Spring Security</strong> 상에서 위의 두 가지 기능 구현
+  <strong> </strong>
+
+## 2-2. 계정 탈퇴 및 비활성화 시 이메일 인증
+
+- <strong> AWS SES (Simple Email Service) </strong> 기반 이메일 발송
+- 이메일 발송 방식 : JavaMailSender를 이용한 SMTP 방식
+- 메일 내용 : Thymeleaf 기반 HTML 템플릿
+
+## 2-3. 게시글 / 댓글 / 좋아요 기능
+
+- 조회, 작성, 수정, 삭제, 좋아요
+- JPA 및 Hibernate 기반 <strong>REST API</strong>
+- 무한스크롤 기반 메인 피드, 프로필, 답글 조회
+- 게시글 작성/수정 시 글자수 제한 및 줄바꿈 반복 제거
+
+## 2-4. 프로필 페이지
+
+- 회원 별 작성한 게시물 조회
+- 본인 프로필 설정 페이지 제공
+
+## 2-5. 기타
+
+- <strong> 라즈베리파이 홈서버 구축 </strong> 및 배포 테스트 환경 구성
+- <strong>AWS EC2, ECR</strong>을 통한 배포 파이프라인 구성
+- Docker Compose, GitHub Action 기반 <strong>빌드 및 배포 자동화</strong>
+
+  </br>
+  </br>
+
+# 3. 아키텍처
+
+```
+[목차]
+  3-1. 시스템 구조
+  3-2. OAuth2 및 JWT 기반 인증/인가 아키텍처
+  3-3. 빌드 및 배포 자동화 구조
+```
+
+아키텍처를 결정하기까지 과정을 `맥락`, `결정`, `결과` 순서로 내용을 소개합니다. <br/>
+더 다양한 주제는 [여기](./docs/architecture/decisions/)에서 확인하실 수 있습니다.
+
+<br/>
+<br/>
+
+## 3-1. 시스템 구조
+
+!["System Architecture"](./docs/architecture/src/04-시스템-아키텍처-요약.png)
+<br/>
+
+- `AWS EC2` 내 `Docker` 컨테이너 위에서 **프론트엔드, 백엔드, 데이터베이스**가 각각 독립적으로 작동하며, `Nginx`를 통해 요청이 적절하게 라우팅됩니다.
+- `Google OAuth`와 `AWS SES`를 외부 서비스로 연동하여 회원 인증과 메일 발송을 처리합니다.
+
+  <br/>
+  <br/>
+
+## 맥락
+
+- 초기에는 빈번한 수정과, 빌드 및 배포가 필요했고, 이를 위해 AWS EC2 단일 인스턴스에서 실행되도록 구성했습니다.
+- 이를 위해 Docker-Compose를 활용하여 `Frontend(Next.js)`, `Backend(Spring Boot)`, `DB(MariaDB)`를 하나의 EC2 내에서 컨테이너로 구동하고 있습니다.
+
+  <br/>
+  <br/>
+
+## 결정
+
+!["System Architecture"](./docs/architecture/src/04-시스템-아키텍처.png)
+
+### Backend (Spring Boot)
+
+- <strong>REST API 및 핵심 비즈니스 로직 처리</strong> <br/>
+  피드 작성, 댓글, 좋아요 등 주요 SNS 기능을 담당하며, 클라이언트에 REST API를 제공합니다.
+
+- <strong>OAuth2 기반 인증 및 JWT 발급</strong> <br/>
+  Google OAuth를 통해 인증된 사용자의 정보를 받아 JWT를 생성 및 발급합니다.
+
+- <strong>계정 상태 및 탈퇴 스케줄 관리</strong> <br/>
+  탈퇴 요청 시 계정을 비활성화하고, 2주 유예 기간 후 자동 삭제 처리하는 예약 스케줄을 수행합니다.
+
+### Frontend (Next.js)
+
+- <strong>CSR/SSR 혼합 렌더링 처리</strong> <br/>
+  초기 페이지는 서버 사이드 렌더링으로 제공하고, 이후에는 클라이언트 사이드 렌더링으로 사용자 경험을 향상시킵니다.
+
+- <strong>Context API 기반 상태 관리</strong> <br/>
+  로그인 상태, 필요한 피드 및 댓글 등을 전역 상태로 관리합니다.
+
+- <strong>API 연동 및 데이터 시각화</strong> <br/>
+  백엔드로부터 받은 정보를 가공하여 사용자에게 보여주는 역할을 수행합니다.
+
+### Database (MariaDB)
+
+- <strong>도메인 데이터 영속화</strong> <br/>
+  사용자, 피드, 댓글, 좋아요 등 핵심 데이터를 안정적으로 저장합니다.
+
+- <strong>상태 및 시간 기반 이력 관리</strong> <br/>
+  계정 상태 이력, 작성된 피드 등 시간 순 이력 데이터를 관리합니다.
+
+- <strong>복합 인덱스를 활용한 성능 최적화</strong> <br/>
+  deleted_at, created_at 등을 포함한 복합 인덱스를 통해 피드 조회 성능을 최적화합니다.
+
+### Nginx (Load Balancer)
+
+- <strong>도메인 라우팅 처리</strong> <br/>
+  /api/\* 요청은 백엔드로, 나머지 요청은 프론트엔드로 전달하여 정적 리소스와 API 요청을 분기합니다.
+
+- <strong>HTTPS 리디렉션 및 보안 연결 유지</strong> <br/>
+  모든 요청을 HTTPS로 리디렉션하여 보안성을 확보합니다.
+
+### AWS SES (Simple Email Service)
+
+- <strong>회원 탈퇴 및 비활성화 인증 메일 발송</strong> <br/>
+  탈퇴/비활성화 요청 시 인증 이메일을 전송하여 사용자 확인 절차를 수행합니다.
+
+- <strong>전송 자동화 및 오류 대응 처리</strong> <br/>
+  메일 실패 시 재시도 로직 및 로그 관리를 통해 안정적인 메일 서비스를 제공합니다.
+
+### Google OAuth Server
+
+- <strong>Google Authentication Server</strong> <br/>
+  인증 요청을 받아 인증 코드와 액세스 토큰을 발급합니다.
+
+- <strong>Google Resource Server</strong> <br/>
+  발급된 액세스 토큰을 통해 사용자 이메일 정보를 제공합니다.
+
+  <br/>
+  <br/>
+
+## 결과
+
+- 현재는 단일 EC2 인스턴스 내에서 모든 구성 요소가 함께 동작하고 있어, 초기 개발 및 운영 측면에서는 관리가 간편하다는 장점이 있었습니다.
+- 그러나 서비스 안정성과 확장성 측면에서 다음과 같은 문제점이 발견되었습니다.
+
+<pre>
+1. EC2 단일 인스턴스 운영의 문제
+  - 부분 장애 발생 시 전체 서비스 중단 가능성
+  - Docker 컨테이너 개별 관리 어려움
+
+2. DB의 확장성 및 안정성 문제
+  - 현재 DB의 복구 및 백업 기능 부재
+  - EC2 서버 장애 시, 데이터 손실 가능성
+
+3. Server-Side Rendering 필요성 검토
+  - 실제 SSR이 필요한 페이지가 많지 않음
+
+</pre>
+
+점진적으로 아래와 같은 개선 방향을 고려하고 있습니다.
+
+| 단계  |             개선 사항             |                   기대 효과                    |
+| :---: | :-------------------------------: | :--------------------------------------------: |
+| 1단계 |      DB 분리 : aws RDS + EBS      |   데이터 안정성 확보 및 백업/복구 기능 강화    |
+| 2단계 | 프론트엔드 분리 : S3 + CloudFront | 서버 부하 감소, 프론트엔드 독립 배포 구조 확보 |
+| 3단계 |      ALB 추가 + Auto Scaling      |     트래픽 분산 처리 및 시스템 유연성 향상     |
+| 4단계 | ECS 또는 EKS로 컨테이너 관리 전환 |     무중단 배포 및 자동 스케일링 환경 구축     |
+
+  <br/>
+  <br/>
+  <br/>
+
+## 3-2. OAuth2 및 JWT 기반 인증/인가 아키텍처
+
+!["OAuth2 Architecture"](./docs/architecture/src/08-OAuth2-JWT-인증-인가-흐름-요약.png)
+
+- 사용자는 구글을 통해 인증하고, 백엔드는 사용자 정보를 바탕으로 JWT를 발급하여 인증 상태를 유지합니다.
+
+| 항목        | 설명                                                           |
+| ----------- | -------------------------------------------------------------- |
+| 인증 수단   | Google OAuth2 (Authorization Code Flow)                        |
+| 사용자 식별 | JWT Access Token 활용                                          |
+| 재인증 방식 | Refresh Token을 통한 토큰 재발급                               |
+| 저장 위치   | Access Token → localStorage / Refresh Token → HttpOnly Cookie  |
+| 보안 강화   | HTTPS 전용 통신, HttpOnly 쿠키 설정, Spring Security 기반 구성 |
+
+## 맥락
+
+본 프로젝트에서는 다음과 같은 인증 관련 요구사항을 만족시키기 위해 OAuth2 + JWT 기반 인증 방식을 적용하였습니다.
+
+<pre>
+  1. 사용자는 간편하게 로그인할 수 있어야 한다.
+  2. 인증 상태는 일정 시간 동안 안전하게 유지되어야 한다.
+  3. 사용자 정보는 보안적으로 보호되어야 한다.
+</pre>
+
+이에 따라 인증과 인가 흐름은 아래 세 가지 기준을 중심으로 설계하였습니다.
+
+<strong> 1. 간편한 로그인 수단 선택: `Google OAuth2` </strong> <br/>
+
+- 사용자가 매번 ID/PW를 입력하는 방식은 번거롭기 때문에, **소셜 로그인 방식이 적합**하다고 판단했습니다
+- 단, 다양한 소셜 로그인 제공 시 혼란 가능성을 고려하여, Google 단일 플랫폼 기반 로그인을 채택하였습니다.
+
+<br/>
+
+<strong> 2. 인증 상태 유지 방식 결정: `JWT 기반 인증 `</strong> <br/>
+
+- 세션-쿠키 방식은 서버 측 세션 관리를 요구하므로 확장성에 불리하다고 판단했습니다.
+- 따라서 **OAuth2를 통한 사용자 인증 위임 후, JWT를 활용한 토큰 기반 인증 방식**을 채택하였습니다.
+  - `Access Token`은 짧은 유효 기간을 갖고,
+  - `Refresh Token`은 장기적으로 재발급을 위한 용도로 사용됩니다.
+- 클라이언트 측에서는 이 두 토큰을 각각 `localStorage`, `cookie`에 저장합니다.
+
+<br/>
+
+<strong> 3. 보안 강화 및 서버 설정: `Spring Security 적용` </strong> <br/>
+
+- OAuth2와 JWT 기반 인증 구조 위에 **Spring Security**를 적용하여 보안을 강화하였습니다.
+- 토큰은 반드시 HTTPS 환경에서만 통신되도록 하고, 민감한 정보가 담긴 쿠키에는 다음 옵션을 적용하였습니다:
+
+  - `Secure` : HTTPS 환경에서만 전송
+  - `HttpOnly` : JavaScript 접근 차단
+
+- 이를 위해 사전에 다음과 같은 작업이 선행되었습니다.
+
+  <pre>
+  1. EC2에 고정 IP 할당
+  2. 도메인 연결 (A 레코드 설정)
+  3. SSL 인증서 발급 및 Nginx HTTPS 리버스 프록시 구성
   </pre>
 
-  </br>
-  </br>
+<br/>
+<br/>
 
-## 2. 개발 환경 및 API 구조
+## 결정
 
-> ### 기술 스택
+!["OAuth2 Architecture"](./docs/architecture/src/08-OAuth2-JWT-인증-인가-흐름.png)
 
-- 개요
-  | 분류 | 도구 | 버전 |
-  | :------------: | :---------------------------------------------------------------------------: | :-----: |
-  | 언어 | Java / TypeScript | 21 / ^5 |
-  | Frontend | Next.js | 15.1.7 |
-  | Backend | Spring boot | 3.4.0 |
-  | DB | MariaDB| 10.11.6 |
-  | Testing tool | Junit, Mockio | |
-  | DevOps | GitHub Action, Docker | |
-  | Infrastructure | Raspberry Pi / AWS EC2, ECR | |
+해당 다이어그램은 프로젝트에서 사용 중인 Google OAuth2 + JWT 인증/인가 구조를 전체 흐름 기준으로 시각화한 것입니다. <br/>
+아키텍처는 총 세 주체로 구성되며, 좌측에서 우측으로 인증 흐름이 순차적으로 진행됩니다:
 
-> ### API 개요
+- **사용자 브라우저 (Resource Owner)**
+
+- **서비스 서버 (Client Application)**
+
+- **Google 서버 (Authorization Server + Resource Server)**
+
+### 1단계: 사용자 인증 요청
+
+- 사용자가 `구글 로그인 버튼`을 클릭하면, 프론트엔드는 백엔드의 `/oauth2/authorization/google` 엔드포인트를 호출합니다.
+
+- 이후 리다이렉트를 통해 Google 로그인 페이지로 이동하며, 사용자는 Google ID/PW를 입력하여 인증을 수행합니다.
+
+### 2단계: 인가 코드 발급 및 전달
+
+- 인증이 완료되면 Google 서버는 `인가 코드(code)` 를 포함한 리디렉션 URL로 다시 돌아옵니다.
+
+- 백엔드는 해당 code 값을 파라미터로 받아 인증 요청을 처리합니다.
+
+### 3단계: 액세스 토큰 및 유저 정보 획득
+
+- 백엔드는 받은 `code`를 이용해 Google 서버에 액세스 토큰을 요청합니다.
+
+- Google 서버는 토큰을 발급하고, 해당 토큰으로부터 사용자 프로필 정보(이메일, 이름 등)를 요청하여 받아옵니다.
+
+### 4단계: 자체 JWT 발급 및 저장
+
+- 서비스 서버는 Google 유저 정보를 기반으로 자체 `User` 엔티티를 생성하거나 조회한 후, 자체 발급한 **JWT Access Token**과 **Refresh Token**을 생성합니다.
+
+- 이 토큰은 다음과 같이 브라우저에 저장됩니다:
+
+  - `Access Token`: localStorage 또는 쿠키
+
+  - `Refresh Token`: HttpOnly 쿠키로 분리 저장
+
+### 5단계: 로그인 완료 및 인증 상태 유지
+
+- 토큰 저장이 완료되면, 브라우저는 인증된 상태로 서비스 접근이 가능해집니다.
+
+- 이후 클라이언트는 모든 요청 시 `Access Token`을 함께 전송하며, 서버는 이를 검증하여 인가를 수행합니다.
+
+- `Access Token`이 만료된 경우, `Refresh Token`을 이용해 재발급을 요청합니다.
+
+### 보안 고려 사항
+
+- JWT는 암호화되지 않으므로 반드시 HTTPS 위에서만 통신하도록 설정하였습니다.
+
+- Refresh Token은 HttpOnly + Secure 쿠키에 저장되어 JavaScript로 접근할 수 없습니다.
+
+- 인증 객체는 `SecurityContextHolder`에 저장되어 요청마다 전역적으로 접근이 가능하며,
+  스레드 간 공유되지 않아 **성능 및 보안 측면 모두에서 유리**합니다.
+
+<br/>
+<br/>
+
+## 결과
+
+- 현재는 JWT 기반 OAuth2 인증 흐름을 안정적으로 운영하고 있습니다.
+
+- **성능 측면 개선**: <br/>
+
+  - 매 요청마다 DB에서 사용자 정보를 조회하던 과정을 줄였습니다.
+
+  ```
+    기존: SecurityContext → Principal → getEmail → findByEmail → User 객체 획득
+    개선: @AuthenticationPrincipal User me → 즉시 인증 객체 접근 가능
+  ```
+
+- **보안 취약점 발견 및 개선 진행 중** : <br/>
+
+  - 과거에는 `Access Token`을 URL 쿼리 파라미터로 전달하는 방식이 존재하였고,
+    로그아웃 후 이전 페이지로 돌아가도 토큰이 재사용되는 문제가 있었습니다.
+
+  - 임시 해결책으로, **로컬스토리지에 토큰을 저장한 뒤 URL을 즉시 제거**하는 방식으로 대응하였으나,
+    이는 보안상 근본적인 해결책이 아니며,
+    향후 Access Token 또한 HttpOnly 쿠키로 전환하는 개선 작업을 계획 중입니다.
+
+  - 다만, 방문자 모드에서는 여전히 URL 기반 토큰 전달 방식을 임시적으로 유지하고 있습니다.
+
+- **향후 도입 고려 사항** :`OIDC(OpenID Connect)` <br/>
+
+  - 현재는 OAuth2의 Authorization Code Flow만 사용하고 있으나,
+    단순 로그인 기능만 필요한 상황에서는 OIDC가 더 적합할 수 있습니다.
+
+  - OAuth2 인증 플로우에 대한 충분한 이해를 위해 현재는 도입을 보류하고 있습니다.
+
+## 3-3. 주요 API 구조
 
 - 주요 엔드포인트 (baseURL : `https://dontgoback.kro.kr/api/v1` )
   | 회원 End Point | HTTP Method | 설명 | Access Token | Refresh Token |
@@ -95,7 +407,7 @@
   }
   </pre>
 
-  </br>
+  </pre>
   </br>
   </br>
 
@@ -173,7 +485,7 @@
 
     - 개선 방향 제시
       <pre>
-      DB를 분리하고, 프론트 정적 리소스의 외부 저장소 활용 시, 
+      DB를 분리하고, 프론트 정적 리소스의 외부 저장소 활용 시,
       Backend만 Elastic Beanstalk로 대체 가능
       이 경우, 모니터링, 배포 편의성 측면에서 이점이 있을 수 있음.
       </pre>
@@ -308,7 +620,7 @@ Spring Security 기반 JWT/OAuth2 회원 인증/인가 방식 결정
 
   - 이 방식을 통해 DB에서 인증 회원 정보를 다시 조회하는 과정을 요청마다 1회 줄일 수 있었다.
   <pre>
-    UserDeteils를 상속받은 User객체를 구현하여, 이를 인증 객체로 사용하도록 수정 
+    UserDeteils를 상속받은 User객체를 구현하여, 이를 인증 객체로 사용하도록 수정
       기존 : Principal 객체 -> getEmail -> findByEmail -> User객체 획득)
       현재 : @AuthenticationPrincipal User me 즉시 획득)
   </pre>
@@ -372,7 +684,7 @@ Spring Security 기반 JWT/OAuth2 회원 인증/인가 방식 결정
 
   <pre>
   정규화 상태의 단점
-    1. 조회 성능 감소 
+    1. 조회 성능 감소
        author와 feedType을 저장할 필요가 없지만, 조회할 때마다 JOIN이 필요하다.
   </pre>
 
@@ -466,7 +778,7 @@ Spring Security 기반 JWT/OAuth2 회원 인증/인가 방식 결정
 <pre>
 └── 1. 도메인 설계
           ├── 2. DB의 Table 설계
-          │    
+          │
           └── 3. Backend의 Entity 설계
 </pre>
 
@@ -573,16 +885,19 @@ JPA 기반 엔티티 설계를 통해 객체 지향적인 개발이 가능해졌
 
 - 참조형 필드의 setter 또는 add 메서드를 구현할 때, 한쪽에서만 정보를 추가하면 DB에 값이 정상적으로 반영되지 않는 문제가 있었다. 따라서 아래와 같이 한쪽에서 추가하더라도 양쪽 모두에서 그 정보를 갱신해줘야 했다.
 
-```
+````
+
 class User {
-    @OneToMany(mappedBy = "user")
-    private List<Feed> feeds = new ArrayList<>();
+@OneToMany(mappedBy = "user")
+private List<Feed> feeds = new ArrayList<>();
 
     public void addFeed(Feed feed) {
         this.feeds.add(feed); // User -> Feed 연결
         feed.setUser(this); // Feed -> User 연결
     }
+
 }
+
 ```
 
 - 불필요한 조회 발생으로 인한 성능 저하 문제와 개발 복잡성 증가를 고려하여, ManyToOne에서만 매핑하여 단방향 관계를 유지하기로 결정했다.
@@ -604,16 +919,17 @@ class User {
   - 변경이 반영되기 이전 시간이 불러와졌다.
   - 갱신 시간은 DB에서 직접 작성되며, 쓰기 지연 저장소에서 트랜잭션이 커밋하기 이전에 값을 불러왔기에 당연지사 이전의 값이 불러와진 것
 
-  ```
-  @LastModifiedDate
-  protected LocalDateTime updatedAt;
+```
 
-  @PreUpdate
-  public void preUpdate() {
-  this.updatedAt = LocalDateTime.now();
-  }
+@LastModifiedDate
+protected LocalDateTime updatedAt;
 
-  ```
+@PreUpdate
+public void preUpdate() {
+this.updatedAt = LocalDateTime.now();
+}
+
+```
 
 - entityManager.flush()를 사용하여 강제 반영할 수도 있지만, 추가적인 DB 트래픽이 발생하는 문제 존재
 - 트랜잭션 실패 시 잘못된 updatedAt 값이 반환될 가능성 인지
@@ -664,9 +980,9 @@ Date: 2025-04-18
 - Gmail SMTP 설정을 제거하고, Spring Mail 설정을 Amazon SES로 전환하였다.
 - SES 콘솔에서 도메인을 인증하고, MAIL FROM 도메인을 설정하였다.
 - 발신 도메인에 대한 신뢰도 확보를 위해 다음과 같은 DNS 레코드를 등록하였다:
-  - SPF (TXT): v=spf1 include:amazonses.com -all
-  - DKIM (CNAME × 3): SES가 제공한 키 값 등록
-  - MAIL FROM용 MX 및 SPF 레코드 등록
+- SPF (TXT): v=spf1 include:amazonses.com -all
+- DKIM (CNAME × 3): SES가 제공한 키 값 등록
+- MAIL FROM용 MX 및 SPF 레코드 등록
 
 ### 해결책 2. Spring Mail 발신자 구조 개선
 
@@ -729,9 +1045,11 @@ Date: 2025-05-29
 ### 해결책 1. 사용자 중심 정렬 최적화 인덱스 적용
 
 ```
+
 CREATE INDEX idx_feeds_deleted_created ON feeds(deleted_at, created_at DESC)
 
 CREATE INDEX idx_comment_feed_deleted ON comments(feed_id, deleted_at)
+
 ```
 
 | 항목               | 인덱스 적용 전                  | 인덱스 적용 후                                |
@@ -781,3 +1099,5 @@ CREATE INDEX idx_comment_feed_deleted ON comments(feed_id, deleted_at)
 <br/>
 
 # 소중한 시간 내어주셔서 감사드립니다.
+```
+````
