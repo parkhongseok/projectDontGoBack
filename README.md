@@ -33,8 +33,8 @@
   | Infrastructure | Raspberry Pi / AWS EC2, ECR, SES |         |
 
 - 문제 해결 사례 :
-  - 실행 계획 분석과 인덱싱을 통한 `DB 쿼리 성능 개선` : [https://keinmall.tistory.com/21](https://keinmall.tistory.com/21)
-  - 스왑 공간 확보 및 systemd를 통한 `서버 장애 대응 및 복구 자동화` : [https://keinmall.tistory.com/20](https://keinmall.tistory.com/20)
+  - 블로그 포스트 1. [실행 계획 분석과 인덱싱을 통한 **_DB 쿼리 성능 개선_**](https://keinmall.tistory.com/21)
+  - 블로그 포스트 2. [스왑 공간 확보 및 systemd를 통한 **_서버 장애 대응 및 복구 자동화_** ](https://keinmall.tistory.com/20)
 
 <br/>
 <br/>
@@ -44,15 +44,15 @@
 
 ### ① 소셜 로그인
 
-- `OAuth2` 기반 구글 소셜 로그인
-- `JWT` 기반 로그인 및 로그아웃 상태 관리
-- `Spring Security` 상에서 위의 두 가지 기능 구현
+- **OAuth2** 기반 구글 소셜 로그인
+- **JWT** 기반 로그인 및 로그아웃 상태 관리
+- **Spring Security** 상에서 위의 두 가지 기능 구현
 
 ---
 
 ### ② 계정 탈퇴 및 비활성화 시 이메일 인증
 
-- `AWS SES (Simple Email Service)` 기반 이메일 발송
+- **AWS SES (Simple Email Service)** 기반 이메일 발송
 - 이메일 발송 방식 : JavaMailSender를 이용한 SMTP 방식
 - 메일 내용 : Thymeleaf 기반 HTML 템플릿
 
@@ -60,8 +60,7 @@
 
 ### ③ 게시글 / 댓글 / 좋아요 기능
 
-- 조회, 작성, 수정, 삭제, 좋아요
-- JPA 및 Hibernate 기반 `REST API`
+- JPA 및 Hibernate 기반 **REST API**
 - **무한스크롤** 기반 메인 피드, 프로필, 답글 조회
 - 게시글 작성/수정 시 **글자수 제한 및 줄바꿈 반복 제거**
 
@@ -77,9 +76,9 @@
 
 ### ⑤ 기타
 
-- **라즈베리파이 홈서버 구축** 및 배포 테스트 환경 구성
-- `AWS EC2`, `ECR`을 통한 배포 파이프라인 구성
-- Docker Compose, GitHub Action 기반 `빌드 및 배포 자동화`
+- **_라즈베리파이 홈서버 구축_** 및 배포 테스트 환경 구성
+- **AWS EC2**, **ECR**을 통한 배포 파이프라인 구성
+- Docker Compose, GitHub Action 기반 **_빌드 및 배포 자동화_**
 
   </br>
   </br>
@@ -93,14 +92,14 @@
 [3-1. 시스템 구조](#3-1-시스템-구조)  
  [3-2. OAuth2 및 JWT 기반 인증/인가 아키텍처](#3-2-oauth2-및-jwt-기반-인증인가-아키텍처)  
  [3-3. 빌드 및 배포 자동화](#3-3-빌드-및-배포-자동화)
- 
+
 ---
 
 <br/>
 <br/>
 
-아키텍처 결정 과정을 `맥락`, `결정`, `결과` 순서로 소개합니다.  
-더 다양한 주제는 [여기](./docs/architecture/decisions/)에서 확인하실 수 있습니다.
+아키텍처 결정 과정을 **_맥락_**, **_결정_**, **_결과_** 순서로 소개합니다.  
+더 다양한 주제의 문서는 [여기](./docs/architecture/decisions/)에서 확인해보실 수 있습니다.
 
 <br/>
 <br/>
@@ -110,8 +109,8 @@
 !["System Architecture"](./docs/architecture/src/04-시스템-아키텍처-요약.png)
 <br/>
 
-- `AWS EC2 인스턴스 내에서 Docker 기반`으로 프론트엔드(Next.js), 백엔드(Spring Boot), 데이터베이스(MariaDB)를 **각각 컨테이너로 분리하여 실행** 하고 있습니다.
-- `Nginx`는 리버스 프록시로서 요청을 각 서비스로 분기하며, 외부 서비스로는 `Google OAuth`와 `AWS SES`를 연동하여 인증 및 메일 전송을 처리합니다.
+- **AWS EC2 인스턴스 내에서 Docker 기반**으로 프론트엔드(Next.js), 백엔드(Spring Boot), 데이터베이스(MariaDB)를 **각각 컨테이너로 분리하여 실행** 하고 있습니다.
+- **Nginx**는 리버스 프록시로서 요청을 각 서비스로 분기하며, 외부 서비스로는 **Google OAuth**와 **AWS SES**를 연동하여 인증 및 메일 전송을 처리합니다.
 
   <br/>
   <br/>
@@ -365,9 +364,9 @@ JWT 기반 Google OAuth 인증 인가 아키텍처는 아래와 같이 총 세 �
 
 ### 2단계: 인가 코드 발급 및 전달
 
-- 인증이 완료되면 Google 서버는 `인가 코드(code)` 를 포함한 리디렉션 URL로 다시 돌아옵니다.
+- 인증이 완료되면 Google 서버는 `인가 코드 (Authentication Code)` 를 포함한 리디렉션 URL로 다시 돌아옵니다.
 
-- 백엔드는 해당 code 값을 파라미터로 받아 인증 요청을 처리합니다.
+- 백엔드는 해당 `인가코드` 값을 파라미터로 받아 인증 요청을 처리합니다.
 
 <br/>
 
@@ -377,7 +376,7 @@ JWT 기반 Google OAuth 인증 인가 아키텍처는 아래와 같이 총 세 �
 
 ### 3단계: 액세스 토큰 및 유저 정보 획득
 
-- 백엔드는 받은 `code`를 이용해 Google 서버에 액세스 토큰을 요청합니다.
+- 백엔드는 받은 `인가코드`를 이용해 Google 서버에 액세스 토큰을 요청합니다.
 
 - Google 서버는 토큰을 발급하고, 해당 토큰으로부터 사용자 프로필 정보(이메일, 이름 등)를 요청하여 받아옵니다.
 
@@ -639,7 +638,7 @@ GitHub Actions, Docker, Amazon ECR, EC2를 활용하여 자동화된 빌드 및 
 <br/>
 <br/>
 
-> 더 많은 내용은 [여기](./docs/architecture/decisions/)를 참고 부탁드리겠니다.  
+> 더 다양한 주제의 문서는 [여기](./docs/architecture/decisions/)에서 확인해보실 수 있습니다.  
 > **기술 스택의 선정 이유** 및 **도메인, 데이터, 엔티티 모델 설계** 등을 다루고 있습니다.
 
 <br/>
@@ -650,4 +649,5 @@ GitHub Actions, Docker, Amazon ECR, EC2를 활용하여 자동화된 빌드 및 
 <br/>
 
 # 소중한 시간 내어주셔서 감사드립니다.
+
 [맨 위로 가기](#프로젝트-돈고백dont-go-back)
