@@ -9,7 +9,6 @@
 //import com.dontgoback.dontgo.domain.feedLike.FeedLikeService;
 //import com.dontgoback.dontgo.domain.user.User;
 //import com.dontgoback.dontgo.domain.user.UserService;
-//import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistoryService;
 //import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 //import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.FeedLikeId;
 //import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;

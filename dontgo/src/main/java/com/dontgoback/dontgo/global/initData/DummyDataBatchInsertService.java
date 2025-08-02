@@ -1,13 +1,13 @@
 //package com.dontgoback.dontgo.global.initData;
 //
+//import com.dontgoback.dontgo.domain.assetHistory.AssetHistoryService;
 //import com.dontgoback.dontgo.domain.comment.Comment;
 //import com.dontgoback.dontgo.domain.feed.Feed;
 //import com.dontgoback.dontgo.domain.feedLike.FeedLike;
 //import com.dontgoback.dontgo.domain.user.User;
-//import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistoryService;
+//import com.dontgoback.dontgo.domain.accountStateHistory.AccountStatusHistoryService;
 //import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 //import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.FeedLikeId;
-//import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 //import jakarta.persistence.EntityManager;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.context.annotation.Profile;
@@ -23,16 +23,17 @@
 //public class DummyDataBatchInsertService {
 //    private final EntityManager em;
 //    private final AccountStatusHistoryService accountStatusHistoryService;
+//    private final AssetHistoryService assetHistoryService;
 //
 //    /** 한 번만 실행되는 더미 데이터 삽입 */
 //    @Transactional
 //    public void insertDummyData() {
 //
 //        /* ===================== 1. 파라미터 ===================== */
-//        int writerCount      = 10_000;   // 메인 유저
-//        int feedPerWriter    = 100;      // 10 000 feeds
-//        int commentPoolSize  = 100_00;     // 댓글 작성 전용 유저
-//        int likePoolSize     = 100_00;     // 좋아요 전용 유저
+//        int writerCount      = 10;   // 메인 유저
+//        int feedPerWriter    = 10;      // 10 000 feeds
+//        int commentPoolSize  = 10;     // 댓글 작성 전용 유저
+//        int likePoolSize     = 10;     // 좋아요 전용 유저
 //        int batchSize        = 500;     // flush 단위
 //        /* ======================================================= */
 //
@@ -43,16 +44,13 @@
 //        List<User> likerPool     = new ArrayList<>(likePoolSize);
 //
 //        for (int i = 0; i < commentPoolSize; i++) {
-//            User c = makeUser("commenter", i);
-//            em.persist(c);
-//            accountStatusHistoryService.initializeStatus(c, AccountStatus.ACTIVE, "commenter");
+//            User c = makeAccount("commenter", i);
+//
 //            commenterPool.add(c);
 //            insertsSinceFlush += 2;
 //        }
 //        for (int i = 0; i < likePoolSize; i++) {
-//            User l = makeUser("liker", i);
-//            em.persist(l);
-//            accountStatusHistoryService.initializeStatus(l, AccountStatus.ACTIVE, "liker");
+//            User l = makeAccount("liker", i);
 //            likerPool.add(l);
 //            insertsSinceFlush += 2;
 //        }
@@ -64,9 +62,7 @@
 //        for (int w = 0; w < writerCount; w++) {
 //
 //            /* 3-1. writer 유저 */
-//            User writer = makeUser("writer", w);
-//            em.persist(writer);
-//            accountStatusHistoryService.initializeStatus(writer, AccountStatus.ACTIVE, "writer");
+//            User writer = makeAccount("writer", w);
 //            insertsSinceFlush += 2;
 //
 //            /* 3-2. 피드 10개 */
@@ -117,13 +113,22 @@
 //            em.clear();
 //        }
 //    }
-//
 //    /* ---------- 유틸: 고유 이메일을 보장하는 User 빌더 ---------- */
 //    private User makeUser(String prefix, int seq) {
 //        return User.builder()
-//                .userAsset(prefix + "_" + seq)
 //                .email(prefix + seq + "@example.com")
-//                .userType(seq % 2 == 0 ? RedBlueType.BLUE : RedBlueType.RED)
 //                .build();
 //    }
+//
+//    /* ---------- 유틸: 고유 이메일을 보장하는 User 빌더 ---------- */
+//    private User makeAccount(String email, int seq) {
+//        User user = makeUser(email, seq);
+//        em.persist(user);
+//        accountStatusHistoryService.initializeStatus(user, AccountStatus.ACTIVE, "email");
+//        em.persist(user);
+//        assetHistoryService.createHistory(user, 100_000);
+//
+//        return user;
+//    }
+//
 //}

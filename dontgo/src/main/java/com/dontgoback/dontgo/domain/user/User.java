@@ -1,8 +1,7 @@
 package com.dontgoback.dontgo.domain.user;
-import com.dontgoback.dontgo.domain.feed.Feed;
-import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistory;
+import com.dontgoback.dontgo.domain.accountStateHistory.AccountStatusHistory;
+import com.dontgoback.dontgo.domain.assetHistory.AssetHistory;
 import com.dontgoback.dontgo.global.jpa.BaseEntity;
-import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,8 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,8 +22,27 @@ import java.util.List;
 @Table(name="users")
 public class User extends BaseEntity implements UserDetails {
 
-    @Column(name = "user_asset", nullable = true)
-    private String userAsset;
+//    @Column(name = "user_asset", nullable = true)
+//    private String userAsset1;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "current_asset_history_id")
+    private AssetHistory currentAssetHistory;
+
+    public void setCurrentAssetHistory(AssetHistory assethistory) {
+        this.currentAssetHistory = assethistory;
+        if (assethistory.getUser() != this) {
+            assethistory.setUser(this); // 양방향 동기화
+        }
+    }
+
+    public String getUserAsset(){
+        return this.currentAssetHistory.getAssetName();
+    }
+
+    public RedBlueType getUserType(){
+        return this.currentAssetHistory.getAssetType();
+    }
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -35,9 +51,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "password")
     private final String password = "";
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", nullable = true)
-    private RedBlueType userType;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "user_type", nullable = true)
+//    private RedBlueType userType;
 
     // 유저의 설정 캐싱 (변동 시 이력과 캐싱 사항 동기화 필요) 하지만 무결성 문제로 일대일 관계로 매핑하는 방향으로 정정
 //    @Enumerated(EnumType.STRING)

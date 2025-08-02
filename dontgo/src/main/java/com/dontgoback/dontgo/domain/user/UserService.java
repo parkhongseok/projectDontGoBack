@@ -2,9 +2,6 @@ package com.dontgoback.dontgo.domain.user;
 
 
 import com.dontgoback.dontgo.domain.user.dto.UserResponse;
-import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistory;
-import com.dontgoback.dontgo.domain.userSetting.AccountStatusHistoryRepository;
-import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.ProfileVisibility;
 import org.springframework.web.server.ResponseStatusException;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
@@ -12,9 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.dontgoback.dontgo.global.util.EmailMasking.maskEmail;
 
@@ -47,9 +41,9 @@ public class UserService {
 
     public User createDummyUser(String userAsset, String email, RedBlueType type) {
         User user = User.builder()
-                .userAsset(userAsset)
+//                .userAsset(userAsset)
                 .email(email)
-                .userType(type)
+//                .userType(type)
                 .build();
         userRepository.save(user);
         return user;
