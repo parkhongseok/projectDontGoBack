@@ -2,7 +2,7 @@ package com.dontgoback.dontgo.domain.user;
 
 import com.dontgoback.dontgo.config.jwt.TokenProvider;
 import com.dontgoback.dontgo.config.mail.MailService;
-import com.dontgoback.dontgo.domain.userSetting.AccountStateService;
+import com.dontgoback.dontgo.domain.accountStateHistory.AccountStateService;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.TokenPurpose;
 import com.dontgoback.dontgo.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;

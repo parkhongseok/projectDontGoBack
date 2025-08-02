@@ -1,8 +1,5 @@
-package com.dontgoback.dontgo.domain.userSetting;
+package com.dontgoback.dontgo.domain.accountStateHistory;
 
-import com.dontgoback.dontgo.domain.user.User;
-import com.dontgoback.dontgo.global.jpa.BaseEntity;
-import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.DarkMode;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.ProfileVisibility;
 import jakarta.persistence.*;

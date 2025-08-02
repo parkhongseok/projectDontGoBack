@@ -1,11 +1,11 @@
 //package com.dontgoback.dontgo.global.initData;
 //
+//import com.dontgoback.dontgo.domain.accountStateHistory.AccountStatusHistoryService;
 //import com.dontgoback.dontgo.domain.assetHistory.AssetHistoryService;
 //import com.dontgoback.dontgo.domain.comment.Comment;
 //import com.dontgoback.dontgo.domain.feed.Feed;
 //import com.dontgoback.dontgo.domain.feedLike.FeedLike;
 //import com.dontgoback.dontgo.domain.user.User;
-//import com.dontgoback.dontgo.domain.accountStateHistory.AccountStatusHistoryService;
 //import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 //import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.FeedLikeId;
 //import jakarta.persistence.EntityManager;
@@ -20,7 +20,7 @@
 //@Service
 //@Profile("dev")
 //@RequiredArgsConstructor
-//public class DummyDataBatchInsertService {
+//public class DummyDataBatchInsertService2 {
 //    private final EntityManager em;
 //    private final AccountStatusHistoryService accountStatusHistoryService;
 //    private final AssetHistoryService assetHistoryService;
@@ -44,13 +44,16 @@
 //        List<User> likerPool     = new ArrayList<>(likePoolSize);
 //
 //        for (int i = 0; i < commentPoolSize; i++) {
-//            User c = makeAccount("commenter", i);
-//
+//            User c = makeUser("commenter", i);
+//            em.persist(c);
+//            accountStatusHistoryService.initializeStatus(c, AccountStatus.ACTIVE, "commenter");
 //            commenterPool.add(c);
 //            insertsSinceFlush += 2;
 //        }
 //        for (int i = 0; i < likePoolSize; i++) {
-//            User l = makeAccount("liker", i);
+//            User l = makeUser("liker", i);
+//            em.persist(l);
+//            accountStatusHistoryService.initializeStatus(l, AccountStatus.ACTIVE, "liker");
 //            likerPool.add(l);
 //            insertsSinceFlush += 2;
 //        }
@@ -62,7 +65,9 @@
 //        for (int w = 0; w < writerCount; w++) {
 //
 //            /* 3-1. writer 유저 */
-//            User writer = makeAccount("writer", w);
+//            User writer = makeUser("writer", w);
+//            em.persist(writer);
+//            accountStatusHistoryService.initializeStatus(writer, AccountStatus.ACTIVE, "writer");
 //            insertsSinceFlush += 2;
 //
 //            /* 3-2. 피드 10개 */
@@ -121,14 +126,13 @@
 //    }
 //
 //    /* ---------- 유틸: 고유 이메일을 보장하는 User 빌더 ---------- */
-//    private User makeAccount(String email, int seq) {
+//    private void makeAccount(String email, int seq) {
 //        User user = makeUser(email, seq);
 //        em.persist(user);
 //        accountStatusHistoryService.initializeStatus(user, AccountStatus.ACTIVE, "email");
 //        em.persist(user);
 //        assetHistoryService.createHistory(user, 100_000);
 //
-//        return user;
 //    }
 //
 //}

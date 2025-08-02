@@ -1,4 +1,4 @@
-package com.dontgoback.dontgo.domain.userSetting;
+package com.dontgoback.dontgo.domain.accountStateHistory;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
