@@ -29,11 +29,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
+        String token = getAccessToken(request);
 
-        // 요청 헤더의 Authorization 키의 값 조회
-        String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
-        // 가져온 값에서 접두사 제거
-        String token = getAccessToken(authorizationHeader);
         // [인증] 가져온 토큰이 유효한지 확인 후, 유효한 경우 인증 정보 설정
         if (tokenProvider.isTokenValid(token)) {
             // getAuthentication메서드는 USER(security) 객체 반환하여 이를 인증된 사용자로 취급할 수 있도록 아래에 전달
@@ -42,6 +39,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             // [인가] 시큐리티가 해당 사용자를 인증된 사용자로 취급하도록 결정되는 부분
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
         // 후속 필터 작업을 이어갈 수 있도록 메서드
         filterChain.doFilter(request, response);
     }
@@ -49,7 +47,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     // 요청 헤더에서 키가 'Authorization'인 필드의 값을 갖고와서,
     // 접두사인 Bearer를 제외한 값을 얻음
     // 만약 값이 null이거나 Beare로 시작하지 않으면 null 반환
-    private String getAccessToken(String authorizationHeader){
+    private String getAccessToken(HttpServletRequest request){
+        // 요청 헤더의 Authorization 키의 값 조회
+        String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
+
         if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)){
             return authorizationHeader.substring(TOKEN_PREFIX.length());
         }
