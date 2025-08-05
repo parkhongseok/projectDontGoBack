@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-public class DontgoApplication {
+public class DgCoreServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DontgoApplication.class, args);
+		SpringApplication.run(DgCoreServerApplication.class, args);
 	}
 
 }
