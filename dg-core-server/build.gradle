@@ -24,40 +24,51 @@ repositories {
 }
 
 dependencies {
+	// === Core ===
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security' //spring security
-	implementation 'org.springframework.boot:spring-boot-starter-validation' // validation
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// === Dev ===
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	// lombok
+
+	// === Lombok ===
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// === DataBase ===
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// dev 환경에서만 H2 의존성 추가 (./gradlew build -P devProfile 명령으로 빌드 )
 	if (project.hasProperty("dev")) {
 	}
 	runtimeOnly 'com.h2database:h2'
-
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
 	runtimeOnly 'com.mysql:mysql-connector-j' // Maria DB와 호환
 
-	// mail
+	// === JWT ===
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5' 		// 인터페이스 정의
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'   		// 실제 로직
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'   	// Claims <-> JSON
+
+	// === Mail ===
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-	// Test
-	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testRuntimeOnly 'com.h2database:h2' // test 시에만 실행
-	testCompileOnly 'org.projectlombok:lombok:1.18.30'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
-	// oauth2 for Open Id Connect
+	// === OAuth2 ===
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	// jwt
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// === Test ===
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.assertj:assertj-core'
+
+	// === TEST DB ===
+	testRuntimeOnly 'com.h2database:h2' // test 시에만 실행
+
 }
 
 tasks.named('test') {

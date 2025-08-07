@@ -2,6 +2,7 @@ package com.dontgoback.dontgo.domain.user;
 
 
 import com.dontgoback.dontgo.domain.user.dto.UserResponse;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.ProfileVisibility;
 import org.springframework.web.server.ResponseStatusException;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.dontgoback.dontgo.global.util.EmailMasking.maskEmail;
 
@@ -39,14 +42,8 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "인증 실패. 올바른 사용자 정보가 아닙니다."));
     }
 
-    public User createDummyUser(String userAsset, String email, RedBlueType type) {
-        User user = User.builder()
-//                .userAsset(userAsset)
-                .email(email)
-//                .userType(type)
-                .build();
-        userRepository.save(user);
-        return user;
+    public List<User> getActiveUsers(){
+        return userRepository.findAllActiveUsers();
     }
 
     public User save(User user){
