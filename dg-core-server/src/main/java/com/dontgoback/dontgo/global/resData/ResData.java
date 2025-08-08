@@ -25,7 +25,7 @@ public class ResData<T> {
 
     @JsonIgnore
     public boolean isSuccess() {
-        return resultCode.startsWith("S-");
+        return resultCode.startsWith("S");
     }
 
     @JsonIgnore

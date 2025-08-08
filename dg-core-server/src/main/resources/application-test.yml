@@ -58,11 +58,12 @@ app:
   FRONTEND_URL: https://dontgoback.kro.kr
   BACKEND_API_URL: https://dontgoback.kro.kr/api
 
-interserver:
-  jwt:
-    public-key-url: ${INTERSERVER_JWT_PUBLIC_KEY_URL}
-    issuer:  ${INTERSERVER_JWT_ISSUER}
+inter-server:
   auth:
+    host: ${AUTH_SERVER_HOST}
     client:
       id: ${INTERSERVER_AUTH_CLIENT_ID}
       secret: ${INTERSERVER_AUTH_CLIENT_SECRET}
+
+    extension:
+      host: ${EXTENSION_SERVER_HOST}

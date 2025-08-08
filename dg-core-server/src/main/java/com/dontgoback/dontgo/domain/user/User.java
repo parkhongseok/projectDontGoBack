@@ -91,7 +91,7 @@ public class User extends BaseEntity implements UserDetails {
         return List.of(new SimpleGrantedAuthority("user"));
     }
 
-    // 사용자 id(고유한 값) 반환
+    // 사용자 id(고유한 값) 반환 따라서 자산 정보 대신 email 사용
     @Override
     public String getUsername(){
         return email;
