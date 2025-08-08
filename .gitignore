@@ -1,2 +1,4 @@
 .env
 docs/architecture/note
+.vscode
+.DS_Store
