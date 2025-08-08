@@ -36,4 +36,12 @@ public class AssetHistory{
     public RedBlueType getAssetType() {
         return AssetFormatter.getTypeFormat(amount);
     }
+
+    public static AssetHistory of(User user, long amount) {
+        return AssetHistory.builder()
+                .user(user)
+                .amount(amount)
+                .changedAt(LocalDateTime.now()) // 현재 시점 기록
+                .build();
+    }
 }

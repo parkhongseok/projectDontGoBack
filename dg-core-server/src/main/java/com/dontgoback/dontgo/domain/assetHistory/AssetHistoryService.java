@@ -3,6 +3,7 @@ package com.dontgoback.dontgo.domain.assetHistory;
 import com.dontgoback.dontgo.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -22,6 +23,5 @@ public class AssetHistoryService {
 
         return assetHistoryRepository.save(history);
     }
-
 
 }
