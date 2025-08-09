@@ -107,7 +107,7 @@ public class WebOAuthSecurityConfigDev {
                 .requestMatchers(HttpMethod.GET, "/api/v1/users/account-close").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/users/account-inactive").permitAll()
                 .requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll()
+                .requestMatchers("/test/internal/batch/asset-refresh/run").permitAll()
         );
         return http.build();
     }

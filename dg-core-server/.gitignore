@@ -40,6 +40,5 @@ out/
 GlobalValulus
 WebOAuthSecurityConfig
 application-secret.yml
-application.yml
 
 .env

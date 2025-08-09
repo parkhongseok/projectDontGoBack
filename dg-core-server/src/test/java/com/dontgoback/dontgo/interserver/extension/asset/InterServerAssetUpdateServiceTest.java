@@ -7,6 +7,7 @@ import com.dontgoback.dontgo.domain.assetHistory.AssetHistoryRepository;
 import com.dontgoback.dontgo.domain.user.AccountCreateService;
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.UserRepository;
+import com.dontgoback.dontgo.global.exception.UnauthorizedException;
 import com.dontgoback.dontgo.interserver.auth.jwt.InterServerApiExecutor;
 import com.dontgoback.dontgo.interserver.extension.asset.dto.UpdateAssetResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,8 @@ import java.util.List;
 import java.util.function.Function;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -46,7 +49,7 @@ public class InterServerAssetUpdateServiceTest {
     @Autowired
     private AccountCreateService accountCreateService;
 
-
+    /* ---------- 정상 응답 ---------- */
     @Test
     @DisplayName("자산 응답 수신 후 → DB에 이력 저장 및 유저 상태 반영")
     void should_persist_asset_history_and_update_user() {
@@ -56,13 +59,13 @@ public class InterServerAssetUpdateServiceTest {
         long updatedAsset = 7777L;
         UpdateAssetResponse fakeResponse = new UpdateAssetResponse(user.getId(), updatedAsset);
 
-        Mockito.when(apiExecutor.executeWithToken(Mockito.any()))
+        when(apiExecutor.executeWithToken(any()))
                 .thenAnswer(invocation -> {
                     Function<String, UpdateAssetResponse> fn = invocation.getArgument(0);
                     return fn.apply("fake.jwt.token");
                 });
 
-        Mockito.when(assetClient.updateAsset(Mockito.anyLong(), Mockito.anyString(), Mockito.any()))
+        when(assetClient.updateAsset(Mockito.anyLong(), anyString(), any()))
                 .thenReturn(fakeResponse);
 
         // when
@@ -76,5 +79,33 @@ public class InterServerAssetUpdateServiceTest {
         // 2. 유저의 현재 자산 변경 확인
         User updatedUser = userRepository.findById(user.getId()).orElseThrow();
         assertThat(updatedUser.getCurrentAssetHistory().getAmount()).isEqualTo(updatedAsset);
+    }
+
+
+    /* ---------- 부분 실패 격리 ---------- */
+    @Test
+    @DisplayName("여러 유저 중 일부 실패해도 나머지는 저장된다")
+    void partial_failures_are_isolated() {
+        User u1 = accountCreateService.createUserWithDefaultHistories("u1@x.com");
+        User u2 = accountCreateService.createUserWithDefaultHistories("u2@x.com");
+
+        when(apiExecutor.executeWithToken(any())).thenAnswer(inv -> {
+            Function<String, UpdateAssetResponse> fn = inv.getArgument(0);
+            return fn.apply("jwt");
+        });
+        when(assetClient.updateAsset(eq(u1.getId()), anyString(), any()))
+                .thenReturn(new UpdateAssetResponse(u1.getId(), 1111L));
+        when(assetClient.updateAsset(eq(u2.getId()), anyString(), any()))
+                .thenThrow(new RuntimeException("ext down"));
+
+        assetUpdateService.updateAllActiveUsersAsset();
+
+        // u1만 성공했는지
+        assertThat(assetHistoryRepository.findAll())
+                .anyMatch(h -> h.getUser().getId().equals(u1.getId()) && h.getAmount() == 1111L);
+        // u2는 currentAssetHistory가 그대로인지
+        User u2Reload = userRepository.findById(u2.getId()).orElseThrow();
+        assertThat(u2Reload.getCurrentAssetHistory().getAmount())
+                .isEqualTo(u2.getCurrentAssetHistory().getAmount());
     }
 }
