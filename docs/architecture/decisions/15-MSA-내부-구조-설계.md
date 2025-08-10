@@ -1,15 +1,15 @@
-# MSA 전환 개요: Core·Auth·Extension 3-서버 아키텍처
+# MSA 내부 구조 설계
 
 Date: 2025-08-02  
 Status: Accepted
 
 <br/>
 
-## 요약
+## 개요
 
 !["Entity Architecture"](../src/15-MSA-전환-개요-3-서버-아키텍처-요약.png)
 
-Core·Auth·Extension로 분리한 3-서버 MSA의 통신 흐름에 대한 요약입니다.
+아래는 Core·Auth·Extension로 분리한 3-서버 MSA의 통신 흐름에 대한 요약입니다.
 
 > 1. **dg-core-server** : 기존 기능(도메인 기능) 수행, 내부 서버 오케스트르레이션
 > 2. **dg-auth-server** : S256 기반 JWT 발급·공개키 제공
