@@ -30,7 +30,7 @@ public class AssetFormatter {
         return amount<0  ? "-" + result : result;
     }
 
-    public static RedBlueType getTypeFormat(long amount) {
-        return amount >= 0 ? RedBlueType.BLUE : RedBlueType.RED;
+    public static RedBlueType getTypeFormat(Double multiplier) {
+        return multiplier >= 1 ? RedBlueType.BLUE : RedBlueType.RED;
     }
 }

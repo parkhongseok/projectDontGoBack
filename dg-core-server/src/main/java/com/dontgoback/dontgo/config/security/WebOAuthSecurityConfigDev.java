@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -50,8 +51,29 @@ public class WebOAuthSecurityConfigDev {
                 .requestMatchers("/img/**", "/css/**", "/js/**");
     }
 
+    // 1. 공개(Public) 엔드포인트를 위한 필터 체인
+    // - 가장 먼저 실행되도록 @Order(1) 설정
+    // - TokenAuthenticationFilter가 포함되지 않은 매우 가벼운 체인
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain publicEndpointsFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher( // 이 필터 체인이 처리할 경로들을 명시적으로 지정
+                        "/test/internal/batch/asset-refresh/run",
+                        "/api/token",
+                        "/api/logout",
+                        "/api/v1/users/account-close",
+                        "/api/v1/users/account-inactive"
+                )
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()) // 모든 요청 허용
+                .csrf(AbstractHttpConfigurer::disable); // 간단한 API이므로 CSRF 비활성화
+        return http.build();
+    }
+
+    // 2. 인증이 필요한 핵심 API 및 OAuth를 위한 메인 필터 체인
+    @Bean
+    @Order(2) // 공개 엔드포인트 필터 체인 다음에 실행
+    public SecurityFilterChain mainFilterChain(HttpSecurity http) throws Exception {
         // 토큰 방식 인증을 사용하기 때문에, 기존의 폼로그인과, 세션 방식 비활성화
         http
                 .cors(cors -> cors.configurationSource(
@@ -96,19 +118,9 @@ public class WebOAuthSecurityConfigDev {
                 )
         );
 
-
-        // 위에서 인증 실패 시, 인증을 다시 요청해야함 이때, 인증 관련 api 자체는 인증없이 접근 가능하도록 설정하고
-        // 이외의 모든 페이지는 인증되지 않으면 401 에러 반환
-        // 토큰 재발급 URL은 인증 없이 접근이 가능해야함
-        // 나머지 API URL은 인증이 필요
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/token").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/logout").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/users/account-close").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/users/account-inactive").permitAll()
-                .requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll()
-        );
+        // publicEndpointsFilterChain에서 처리되지 않은 모든 요청은 이 체인으로 들어오게 됨
+        // 따라서 여기서는 모든 요청에 대해 인증을 요구하도록 단순화할 수 있음
+        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated());
         return http.build();
     }
 

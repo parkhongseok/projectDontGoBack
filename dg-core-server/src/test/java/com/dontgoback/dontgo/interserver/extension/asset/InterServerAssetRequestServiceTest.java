@@ -3,6 +3,7 @@ package com.dontgoback.dontgo.interserver.extension.asset;
 import com.dontgoback.dontgo.global.exception.UnauthorizedException;
 import com.dontgoback.dontgo.global.resData.ResData;
 import com.dontgoback.dontgo.interserver.extension.ExtensionServerProperties;
+import com.dontgoback.dontgo.interserver.extension.asset.dto.FakeUpdateAssetResponse;
 import com.dontgoback.dontgo.interserver.extension.asset.dto.UpdateAssetRequest;
 import com.dontgoback.dontgo.interserver.extension.asset.dto.UpdateAssetResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -59,7 +59,7 @@ public class InterServerAssetRequestServiceTest {
     void should_return_asset_when_successful() {
         // given
         long asset = 1500L;
-        UpdateAssetResponse responseBody = new UpdateAssetResponse(userId, asset);
+        UpdateAssetResponse responseBody = new FakeUpdateAssetResponse(userId, asset);
         ResData<UpdateAssetResponse> responseWrapper = ResData.of("S", "Success", responseBody);
         ResponseEntity<ResData<UpdateAssetResponse>> mockResponse =
                 ResponseEntity.ok(responseWrapper);
@@ -75,7 +75,7 @@ public class InterServerAssetRequestServiceTest {
         UpdateAssetResponse result = assetRequestService.updateAsset(userId, jwt, request);
 
         // then
-        assertThat(result.getAsset()).isEqualTo(asset);
+        assertThat(result.getUpdatedAsset()).isEqualTo(asset);
     }
 
     /* ---------- 401 인증 실패 ---------- */
@@ -113,5 +113,4 @@ public class InterServerAssetRequestServiceTest {
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("자산 갱신 실패");
     }
-
 }

@@ -54,7 +54,7 @@ public class InterServerAssetRequestService {
             // ResDataParser 유틸리티 사용하여 응답 파싱 + 실패 처리
             UpdateAssetResponse data = ResDataParser.extract(response);
 
-            log.info("자산 갱신 성공 - userId: {}, 결과 자산: {}", userId, data.getAsset());
+            log.info("자산 갱신 성공 - userId: {}, 결과 자산: {}", userId, data.getUpdatedAsset());
             return data;
 
         } catch (UnauthorizedException e) {

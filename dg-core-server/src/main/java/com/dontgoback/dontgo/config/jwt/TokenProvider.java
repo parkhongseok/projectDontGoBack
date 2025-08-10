@@ -5,8 +5,11 @@ import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.TokenPurpose;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,10 +17,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+import java.util.Base64;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +30,16 @@ import java.util.Set;
 public class TokenProvider {
 
     private final JwtProperties jwtProperties;
+    private Key key;
+    private JwtParser parser;
+
+    @PostConstruct
+    public void init() {
+        byte[] keyBytes = Base64.getDecoder().decode(jwtProperties.getSecretKey());
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.parser = Jwts.parserBuilder().setSigningKey(this.key).build();
+    }
+
     // 일반 Access, Refresh 토큰 발급용
     public String generateToken(User user, Duration expiredAt) {
         Date now = new Date();
@@ -35,7 +50,6 @@ public class TokenProvider {
         Date now = new Date();
         return makeToken(new Date(now.getTime() + expiredAt.toMillis()), user, purpose);
     }
-
 
     private String makeToken(Date expiry, User user) {
         Date now = new Date();
@@ -48,7 +62,7 @@ public class TokenProvider {
                 .setSubject(user.getEmail())          // 패이로드 sub : 유저 이메일
                 .claim("id", user.getId())      // 클레임 id : 유저 ID
                 // 서명 : 비밀값 + 해시값을 HS256 방식으로 암호화
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -64,16 +78,14 @@ public class TokenProvider {
                 .setSubject(user.getEmail())
                 .claim("id", user.getId())
                 .claim("purpose", purpose)
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     // JWT 유효성 검증
     public boolean isTokenValid(String token) {
         try {
-            Jwts.parser()
-                    .setSigningKey(jwtProperties.getSecretKey()) // 비밀값으로 복호화
-                    .parseClaimsJws(token);
+            parser.parseClaimsJws(token);
             return true;
         } catch (Exception e) { // 복호화 시 에러 나면 유효하지 않은 토큰
             log.warn("유효하지 않은 Token: {}", e.getMessage());
@@ -125,9 +137,7 @@ public class TokenProvider {
     }
 
     private Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtProperties.getSecretKey())
-                .parseClaimsJws(token)
+        return parser.parseClaimsJws(token)
                 .getBody();
     }
 }

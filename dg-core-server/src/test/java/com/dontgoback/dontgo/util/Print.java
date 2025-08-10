@@ -1,4 +1,4 @@
-package com.dontgoback.dontgo.utils;
+package com.dontgoback.dontgo.util;
 
 public class Print {
     public static void log(String str){

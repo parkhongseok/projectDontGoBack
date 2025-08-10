@@ -2,7 +2,7 @@ package com.dontgoback.dontgo.interserver.auth.jwt;
 
 import com.dontgoback.dontgo.interserver.auth.AuthServerProperties;
 import com.dontgoback.dontgo.interserver.auth.client.InterServerClientProperties;
-import com.dontgoback.dontgo.utils.Print;
+import com.dontgoback.dontgo.util.Print;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

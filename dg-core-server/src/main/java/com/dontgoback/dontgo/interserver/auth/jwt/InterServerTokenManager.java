@@ -34,7 +34,7 @@ public class InterServerTokenManager {
             log.info("JWT 없음 또는 만료됨 → 새로 발급 요청");
             String newToken = jwtRequestService.requestJwt();
             if (newToken == null) {
-                log.error("❌ 인증 서버로부터 JWT를 발급받을 수 없습니다.");
+                log.error("인증 서버로부터 JWT를 발급받을 수 없습니다.");
                 throw new IllegalStateException("JWT 발급 실패");
             }
             this.holder = new InterServerTokenHolder(newToken, LocalDateTime.now(clock));
@@ -50,10 +50,10 @@ public class InterServerTokenManager {
      * @return 새로 발급된 JWT 문자열
      */
     public String forceRefresh() {
-        log.info("🔁 토큰 강제 재발급 시작");
+        log.info("토큰 강제 재발급 시작");
         String newToken = jwtRequestService.requestJwt();
         if (newToken == null) {
-            log.error("❌ JWT 강제 재발급 실패");
+            log.error("JWT 강제 재발급 실패");
             throw new IllegalStateException("JWT 재발급 실패");
         }
         this.holder = new InterServerTokenHolder(newToken, LocalDateTime.now(clock));
