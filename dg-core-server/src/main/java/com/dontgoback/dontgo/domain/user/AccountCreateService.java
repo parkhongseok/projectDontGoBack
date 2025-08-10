@@ -27,7 +27,8 @@ public class AccountCreateService {
         userRepository.save(user);
 
         // 자산 이력 생성
-        AssetHistory assetHistory = assetHistoryService.create(user, DEFAULT_USER_ASSET);
+        AssetHistory assetHistory = assetHistoryService
+                                        .create(user, DEFAULT_USER_ASSET);
         user.setCurrentAssetHistory(assetHistory);
 
         // 계정 상태 이력 직접 생성

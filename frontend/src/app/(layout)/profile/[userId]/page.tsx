@@ -65,6 +65,7 @@ export default function ProfileMain() {
       setLastFeedId(newFeeds[newFeeds.length - 1].feedId);
       setFeedsLoading(false);
     };
+    
     const fail = () => {
       setFeedsLoading(false);
       console.error("피드 불러오기 실패");
