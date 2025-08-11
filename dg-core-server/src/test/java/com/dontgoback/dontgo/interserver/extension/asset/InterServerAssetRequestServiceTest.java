@@ -38,9 +38,9 @@ public class InterServerAssetRequestServiceTest {
     private final long userId = 42L;
     private final String jwt = "test.jwt.token";
     private final UpdateAssetRequest request = new UpdateAssetRequest(10000L);
-    private final String targetUrl = "http://localhost:8082/msa/ext/api/update-asset/42";
+    private final String targetUrl = "http://localhost:8092/msa/ext/api/update-asset/42";
     private final FakeExtensionServerProperties extProps =
-            new FakeExtensionServerProperties("http://localhost:8082/msa/ext/api");
+            new FakeExtensionServerProperties("http://localhost:8092/msa/ext/api");
 
     public static class FakeExtensionServerProperties extends ExtensionServerProperties {
         public FakeExtensionServerProperties(String host) {

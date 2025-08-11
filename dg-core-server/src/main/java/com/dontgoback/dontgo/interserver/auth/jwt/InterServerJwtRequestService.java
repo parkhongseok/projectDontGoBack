@@ -34,7 +34,7 @@ public class InterServerJwtRequestService {
     }
 
     public String requestJwt() {
-        String url = authServerProps.getHost() + "/token";
+        String url = authServerProps.getHost() + "/msa/auth/api/token";
         log.info("인증 서버에 JWT 발급 요청 시작 → URL: {}", url);
 
         HttpEntity<InterServerJwtRequest> requestEntity = buildRequestEntity();

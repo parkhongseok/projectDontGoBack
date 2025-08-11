@@ -3,7 +3,6 @@ package com.dontgoback.dontgo.interserver.extension.asset;
 import com.dontgoback.dontgo.global.exception.UnauthorizedException;
 import com.dontgoback.dontgo.global.resData.ResData;
 import com.dontgoback.dontgo.global.resData.ResDataParser;
-import com.dontgoback.dontgo.interserver.auth.jwt.dto.InterServerJwtRequest;
 import com.dontgoback.dontgo.interserver.extension.ExtensionServerProperties;
 import com.dontgoback.dontgo.interserver.extension.asset.dto.UpdateAssetRequest;
 import com.dontgoback.dontgo.interserver.extension.asset.dto.UpdateAssetResponse;
@@ -39,7 +38,7 @@ public class InterServerAssetRequestService {
      * @return UpdateAssetResponse (새로운 자산 값)
      */
     public UpdateAssetResponse updateAsset(long userId, String jwt, UpdateAssetRequest request) {
-        String url = String.format("%s/update-asset/%d", extServerProps.getHost(), userId);
+        String url = String.format("%s/msa/ext/api/update-asset/%d", extServerProps.getHost(), userId);
         log.debug("자산 갱신 요청 → URL: {}, asset: {}", url, request.getAsset());
 
         HttpEntity<UpdateAssetRequest> requestEntity = buildRequestEntity(request, jwt);
