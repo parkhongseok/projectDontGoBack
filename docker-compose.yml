@@ -41,7 +41,7 @@ services:
       - app_network
     image: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com/dontgoback:backend-${TAG}
     # build:
-    #   context: ./dontgo # 백엔드 코드가 있는 디렉토리 (Dockerfile이 포함된 위치)
+    #   context: ./dg-core-server # 백엔드 코드가 있는 디렉토리 (Dockerfile이 포함된 위치)
     container_name: backend_container
     ports:
       - "8090:8090" # 백엔드의 8080 포트를 노출
@@ -60,7 +60,7 @@ services:
       - app_network
     image: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com/dontgoback:frontend-${TAG}
     # build:
-    #   context: ./frontend_v2 # 프론트엔드 코드가 있는 디렉토리 (Dockerfile이 포함된 위치)
+    #   context: ./frontend # 프론트엔드 코드가 있는 디렉토리 (Dockerfile이 포함된 위치)
     container_name: frontend_container
     ports:
       - "3000:3000" # Next.js의 기본 포트인 3000을 외부에 노출
