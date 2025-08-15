@@ -89,7 +89,7 @@ public class WebOAuthSecurityConfigDev {
                 );
 
         // 헤더를 확인할 커스텀 필터를 추가 (헤더에서 유저 토큰 뜯어서 유효하다면, 이제 시큐리티 상에서 인증된 유저로 취급)
-        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new TokenAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         // 인증이 필요한 API 요청에서 401 반환
         http.exceptionHandling(ex -> ex
@@ -112,7 +112,8 @@ public class WebOAuthSecurityConfigDev {
                         .baseUri("/api/login/oauth2/code/*") // 리다이렉트 경로 변경 개발환경에서도 작동하도록
                 )
                 // 성공적으로 완료된 경우 실행될 핸들러
-                .successHandler(oAuth2SuccessHandler()) // 인증 성공 시 실행할 핸들러 호출 (커스텀 핸들러 호출)
+                .successHandler(
+                        oAuth2SuccessHandler()) // 인증 성공 시 실행할 핸들러 호출 (커스텀 핸들러 호출)
                 .userInfoEndpoint(userInfo ->
                         userInfo.userService(oAuth2UserCustomService) // OAuth2 사용자 서비스 설정
                 )
@@ -148,16 +149,18 @@ public class WebOAuthSecurityConfigDev {
                 userService);
     }
 
-    @Bean
-    public Filter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
-    }
+// 이녀석이 BEAN으로 등록되면, 자동으로 전역으로 작동하기에, 허가된 url에서도 jwt 검증이 발생함 -> 곤란
+//    @Bean
+//    public Filter tokenAuthenticationFilter() {
+//        return new TokenAuthenticationFilter(tokenProvider);
+//    }
 
     @Bean
     public OAuth2AuthorizationRequestBasedOnCookieRepository
     oAuth2AuthorizationRequestBasedOnCookieRepository() {
         return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
+
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
