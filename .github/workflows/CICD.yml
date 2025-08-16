@@ -35,13 +35,13 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build and Push Backend
-        working-directory: ./dontgo
+        working-directory: ./dg-core-server
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPO:backend-$TAG .
           docker push $ECR_REGISTRY/$ECR_REPO:backend-$TAG
 
       - name: Build and Push Frontend
-        working-directory: ./frontend_v2
+        working-directory: ./frontend
         run: |
           echo "NEXT_PUBLIC_BACKEND_API_URL=https://dontgoback.kro.kr/api" >> .env.production
           echo "NEXT_PUBLIC_FRONTEND_URL=https://dontgoback.kro.kr" >> .env.production

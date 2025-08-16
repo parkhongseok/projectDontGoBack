@@ -8,7 +8,6 @@ import * as Types from "../../utils/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Profile from "../../components/profiles/Profile";
 import styles from "../../components/Feed.module.css";
-import Chart from "../../components/profiles/Chart";
 import Footer from "../../components/Footer";
 import { httpRequest } from "../../utils/httpRequest";
 import { useParams } from "next/navigation";
@@ -16,6 +15,7 @@ import Loading from "../../components/Loading";
 import { useUser } from "../../contexts/UserContext";
 import { useFeed } from "../../contexts/FeedContext";
 import { BACKEND_API_URL } from "../../utils/globalValues";
+import Chart from "../../components/profiles/Chart";
 
 export default function ProfileMain() {
   const { userId } = useParams<{ userId: string }>();
@@ -167,7 +167,7 @@ export default function ProfileMain() {
         {/* 사이드바가 차지하지 않는 나머지 공간 */}
 
         <Profile userProps={userState} />
-        <Chart />
+        <Chart userId={userId}/>
         <Tabs
           defaultActiveKey="Main"
           id="uncontrolled-tab-example"

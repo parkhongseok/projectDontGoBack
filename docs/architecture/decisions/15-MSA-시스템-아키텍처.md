@@ -1,4 +1,4 @@
-# MSA 내부 구조 설계
+# MSA 시스템 아키텍처
 
 Date: 2025-08-02  
 Status: Accepted

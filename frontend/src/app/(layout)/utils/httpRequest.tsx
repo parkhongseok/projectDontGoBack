@@ -2,13 +2,13 @@
 
 import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "./globalValues";
 
-// 쿠키에서 값 가져오기 함수
-export function getCookie(name: string) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift();
-  return undefined;
-}
+// // 쿠키에서 값 가져오기 함수
+// export function getCookie(name: string) {
+//   const value = `; ${document.cookie}`;
+//   const parts = value.split(`; ${name}=`);
+//   if (parts.length === 2) return parts.pop()?.split(";").shift();
+//   return undefined;
+// }
 
 // 상태 코드 관련 유틸리티
 const isSuccessStatus = (status: number) => [200, 201].includes(status);
