@@ -3,11 +3,8 @@ package com.dontgoback.dontgo.config.jwt;
 
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.TokenPurpose;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.UserRole;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +35,11 @@ public class TokenProvider {
         byte[] keyBytes = Base64.getDecoder().decode(jwtProperties.getSecretKey());
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.parser = Jwts.parserBuilder().setSigningKey(this.key).build();
+
+        log.warn("[JWT] provider={} alg=HS256 issuer={} keyHash={}",
+            System.identityHashCode(this),
+            jwtProperties.getIssuer(),
+            java.util.Arrays.hashCode(keyBytes)); // 프로파일/환경 불일치 탐지
     }
 
     // 일반 Access, Refresh 토큰 발급용
@@ -61,12 +63,12 @@ public class TokenProvider {
                 .setExpiration(expiry)                // 패이로드 exp : expiry 멤버 변수
                 .setSubject(user.getEmail())          // 패이로드 sub : 유저 이메일
                 .claim("id", user.getId())      // 클레임 id : 유저 ID
+                .claim("role", user.getRole().name())
                 // 서명 : 비밀값 + 해시값을 HS256 방식으로 암호화
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Overloading
     private String makeToken(Date expiry, User user, TokenPurpose purpose) {
         Date now = new Date();
 
@@ -84,13 +86,32 @@ public class TokenProvider {
 
     // JWT 유효성 검증
     public boolean isTokenValid(String token) {
+
         try {
-            parser.parseClaimsJws(token);
+            // null 체크 추가: null이 들어올 경우를 대비한 방어 코드
+            if (token == null) {
+                log.warn("Token is null");
+                return false;
+            }
+            Jws<Claims> jws = parser.parseClaimsJws(token);
+            var h = jws.getHeader(); var c = jws.getBody();
+//            log.warn("[JWT] valid alg={} iss={} sub={} exp={} now={}",
+//                    h.getAlgorithm(), c.getIssuer(), c.getSubject(), c.getExpiration(), new Date());
             return true;
-        } catch (Exception e) { // 복호화 시 에러 나면 유효하지 않은 토큰
-            log.warn("유효하지 않은 Token: {}", e.getMessage());
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.warn("잘못된 JWT 서명입니다: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.warn("만료된 JWT 토큰입니다: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.warn("지원되지 않는 JWT 토큰입니다: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            // 이 예외는 토큰이 비어있거나(empty) 다른 라이브러리 내부 문제일 때 발생할 수 있습니다.
+            log.warn("JWT 토큰이 잘못되었습니다: {}", e.getMessage());
+        } catch (Exception e){
+            log.warn("[JWT] invalid: {}", e.toString());
             return false;
         }
+        return false;
     }
 
     public boolean isPurposeTokenValid(String token, TokenPurpose expectedPurpose) {
@@ -110,10 +131,13 @@ public class TokenProvider {
     // 유저가 로그인 요청 -> 헤더에서 토큰 get -> [인증] -> 이 함수 파라미터로 전달 -> principal 유저등을 필드로 갖는 객체 반환
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
-        Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        Set<SimpleGrantedAuthority> authorities = Collections.singleton(
+                new SimpleGrantedAuthority("ROLE_" + claims.get("role", String.class))
+        );
 
         User user = User.builder()
                 .id(claims.get("id", Long.class))
+                .role(UserRole.valueOf(claims.get("role", String.class))) // 없애야할지
                 .email(claims.getSubject())
                 .build();
 

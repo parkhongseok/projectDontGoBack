@@ -1,0 +1,25 @@
+.backButton {
+  /* 기본 스타일 초기화 */
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  
+  /* 아이콘 정렬 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 50%; /* 동그란 모양 */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.backButton:hover {
+  /* Bootstrap의 아주 연한 회색 변수를 사용 */
+  background-color: var(--bs-gray-200, #e9ecef);
+}
+
+/* SVG 아이콘의 색상을 부모 요소의 color 속성값으로 설정 */
+.backButton svg {
+  stroke: currentColor;
+}

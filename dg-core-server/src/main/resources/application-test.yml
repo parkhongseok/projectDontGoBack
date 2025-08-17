@@ -49,6 +49,7 @@ logging:
     org.hibernate.type: TRACE
 
 jwt:
+  issuer: ${JWT_ISSUER}
   secretKey: ${JWT_SECRET_KEY}
 
 cookie:

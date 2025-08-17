@@ -52,18 +52,27 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
           {/* 본격 사용 가능 공간 */}
           <Stack gap={1} direction="vertical" className="pb-4 pt-2">
             {/* 상단  취소 / 게시글 작성 / ... */}
-            <Stack direction="horizontal" className="mx-5">
-              <>
-                <button
-                  className={`${styles.write} ${styles.exitBtn} custom-button`}
-                  onClick={handlerClose}
-                >
-                  취소
-                </button>
-              </>
-              <h6 className={`ms-auto ${styles.createBoxTop}`}>프로필 설정</h6>
-              <h6 className={`ms-auto more ${styles.createBoxTop} ps-3 pb-2`}>. . .</h6>
-            </Stack>
+            <div className="d-flex justify-content-between align-items-center mx-5">
+              {/* 왼쪽: 취소 버튼 */}
+              <button
+                className={`${styles.write} ${styles.exitBtn} custom-button`}
+                onClick={handlerClose}
+              >
+                취소
+              </button>
+
+              {/* 중앙: 제목 */}
+              <h6 className={`${styles.createBoxTop} m-0`}>프로필 설정</h6>
+
+              {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
+              <button
+                className={`${styles.write} ${styles.exitBtn} custom-button`}
+                style={{ visibility: "hidden" }}
+                aria-hidden="true"
+              >
+                취소
+              </button>
+            </div>
             <hr className="feed-underline fontGray4 mt-4" />
             <Container className="d-flex align-items-center">
               <Row className="ms-4 me-4 mt-2 w-100 align-items-center">
@@ -92,6 +101,7 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
                       checked={!profileSettingState}
                       onChange={handleToggle1}
                       className={`${styles.settingSwitch}`}
+                      disabled
                     />
                   </div>
                 </Col>

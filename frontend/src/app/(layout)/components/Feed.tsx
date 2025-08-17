@@ -1,7 +1,7 @@
 import "../globals.css";
 
 import styles from "./Feed.module.css";
-import { Dropdown, Stack } from "react-bootstrap";
+import { Dropdown, Spinner, Stack } from "react-bootstrap";
 import * as Types from "../utils/types";
 import Link from "next/link";
 import { useFeed } from "../contexts/FeedContext";
@@ -16,6 +16,7 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { httpRequest } from "../utils/httpRequest";
 import { BACKEND_API_URL } from "../utils/globalValues";
+import Badge from "./Badge";
 
 type PropsType = {
   feed: Types.Feed | null; // Props의 타입 정의
@@ -31,13 +32,20 @@ export default function Feed({ feed }: PropsType) {
   const [isFeedDeleteOpen, setIsFeedDeleteOpen] = useState(false);
 
   const [feedState, setFeedState] = useState(feed);
+
   useEffect(() => {
     if (!feed) return;
     setFeedState(feed);
   }, [feed]);
 
   if (!feed || !userContext) {
-    return <div className="loading">피드 또는 유저 로딩중</div>;
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
+    );
   }
 
   const fetchFeedLike = () => {
@@ -85,6 +93,26 @@ export default function Feed({ feed }: PropsType) {
     if (pathname === "/" || /\/profile\/\d+$/.test(pathname))
       setCrudMyFeed({ C: false, R: false, U: true, D: false });
   };
+
+
+  // 뱃지를 렌더링하는 헬퍼 함수
+  const renderBadge = () => {
+    // 최우선 순위: 내가 쓴 글인지 확인
+    if (feed.userId === userContext.userId) {
+      return <Badge role="me">나</Badge>;
+    }
+    // 관리자가 쓴 글인지 확인
+    if (feed.userRole === 'ADMIN') {
+      return <Badge role="admin">관리자</Badge>;
+    }
+    // 방문자가 쓴 글인지 확인
+    if (feed.userRole === 'GUEST') {
+      return <Badge role="guest">방문자</Badge>;
+    }
+    // 그 외 일반 유저는 뱃지를 표시하지 않음
+    return null;
+  };
+
   // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
   const feedTypeClass = styles[feed.feedType] || "";
 
@@ -95,10 +123,11 @@ export default function Feed({ feed }: PropsType) {
         <DeletePopUp feedId={feed.feedId} setIsFeedDeleteOpen={setIsFeedDeleteOpen} />
       )}
       <Stack direction="horizontal" gap={3}>
-        <div>
-          <Link className={`px-5 `} href={`/profile/${feed.userId}`} legacyBehavior>
-            <p className={`${styles.userName} ${feedTypeClass} cusorPointer`}>{feed.author}</p>
+        <div className="d-flex align-items-center"> {/* 이름과 뱃지를 정렬하기 위한 div */}
+          <Link className="px-5" href={`/profile/${feed.userId}`} legacyBehavior>
+            <p className={`${styles.userName} ${feedTypeClass} cusorPointer mb-0`}>{feed.author}</p>
           </Link>
+          {renderBadge()} {/* 헬퍼 함수 호출 */}
         </div>
         <div className="vr" />
         <div className="">

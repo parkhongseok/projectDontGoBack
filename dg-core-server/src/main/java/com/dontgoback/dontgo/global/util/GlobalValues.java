@@ -9,5 +9,5 @@ public class GlobalValues {
     // JPA의 속성에서도 사용 가능 => DI를 활용한 방식으로 리팩터링 고려
     public static final String ACCESS_TOKEN_NAME = "access_token";
     public static final String REFRESH_TOKEN_NAME = "refresh_token";
-
+    public static final String REFRESH_TOKEN_API_PATH = "/api/token";
    }

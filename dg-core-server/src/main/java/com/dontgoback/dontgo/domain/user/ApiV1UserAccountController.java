@@ -28,6 +28,9 @@ public class ApiV1UserAccountController {
     private final TokenProvider tokenProvider;
     private final AccountStateService accountStateService;
 
+    @Value("${cookie.secure}")
+    private boolean secureCookie;
+
     @Value("${app.FRONTEND_URL}")
     public String FRONT_URL;
 
@@ -45,6 +48,7 @@ public class ApiV1UserAccountController {
         return ResponseEntity.ok("이메일을 확인해주세요");
     }
 
+    // email링크를 클릭하며 필요한 작업 따라서 필터에서 열어야함, 단, GET 메서드만
     @GetMapping("/account-close")
     public ResponseEntity<?> doCloseAccount(@RequestParam("token") String token,
                                             HttpServletRequest request,
@@ -64,7 +68,7 @@ public class ApiV1UserAccountController {
         accountStateService.closeAccount(user);
 
         // 클라이언트 쿠키 무효화 (중요!)
-        CookieUtil.deleteCookie(request, response, "refresh_token");
+        CookieUtil.deleteCookie(request, response, "refresh_token", secureCookie);
 
         // 5. 리다이렉트 (성공 or 실패)
         LocalDate untilDate = LocalDate.now().plusDays(14);
@@ -88,6 +92,7 @@ public class ApiV1UserAccountController {
         return ResponseEntity.ok("이메일을 확인해주세요");
     }
 
+    // email링크를 클릭하며 필요한 작업 따라서 필터에서 열어야함, 단, GET 메서드만
     @GetMapping("/account-inactive")
     public ResponseEntity<?> DeactivateAccount(@RequestParam("token") String token,
                                             HttpServletRequest request,
@@ -107,7 +112,7 @@ public class ApiV1UserAccountController {
         accountStateService.deactivateAccount(user);
 
         // 클라이언트 쿠키 무효화
-        CookieUtil.deleteCookie(request, response, "refresh_token");
+        CookieUtil.deleteCookie(request, response, "refresh_token", secureCookie);
 
         // 5. 리다이렉트 (성공 or 실패)
         LocalDate untilDate = LocalDate.now().plusDays(14);

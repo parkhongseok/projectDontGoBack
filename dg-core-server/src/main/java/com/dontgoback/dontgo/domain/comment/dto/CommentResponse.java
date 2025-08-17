@@ -1,5 +1,7 @@
 package com.dontgoback.dontgo.domain.comment.dto;
 
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.UserRole;
+
 import java.time.LocalDateTime;
 
 public interface CommentResponse {
@@ -8,6 +10,7 @@ public interface CommentResponse {
     Long getUserId(); // 컬럼 별칭 "userId"와 매핑
     String getContent();
     String getAuthor();
+    UserRole getUserRole();
     String getCommentType();
     int getLikeCount();
     int getSubCommentCount();

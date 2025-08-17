@@ -1,21 +1,19 @@
 "use client";
 
-import {
-  ACCESS_TOKEN_FOR_VISITER,
-  ACCESS_TOKEN_NAME,
-  BACKEND_API_URL,
-  FRONTEND_URL,
-} from "@/app/(layout)/utils/globalValues";
-import "../auth.css";
+import { BACKEND_API_URL } from "@/app/(layout)/utils/globalValues";
 
+import "../auth.css";
+import { useRouter } from "next/navigation";
 import { Image, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
 import { useQueryParam } from "../useQueryParam";
 import { useEffect, useState } from "react";
+import { httpRequest } from "@/app/(layout)/utils/httpRequest";
 
 export default function Login() {
   const until = useQueryParam("until");
   const status = useQueryParam("status"); // 쿼리 파라미터 확인
   const [message, setMessage] = useState<React.ReactNode>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (status === "close-success") {
@@ -44,11 +42,24 @@ export default function Login() {
     } else {
       setMessage(null);
     }
-  }, [status]);
+  }, [status, until]);
 
   const handlerVisit = () => {
-    localStorage.setItem(ACCESS_TOKEN_NAME, ACCESS_TOKEN_FOR_VISITER || "");
-    window.location.href = FRONTEND_URL;
+    const method = "POST";
+    const url = `${BACKEND_API_URL}/guest`; // 백엔드의 방문자 로그인 API 경로
+    const body = null;
+
+    const success = () => {
+      console.log("방문자 로그인 성공. 메인 페이지로 이동합니다.");
+      router.push("/"); // 성공 시 메인 페이지로 리다이렉트
+    };
+
+    const fail = () => {
+      console.error("방문자 로그인에 실패했습니다.");
+      alert("둘러보기에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    };
+
+    httpRequest(method, url, body, success, fail);
   };
 
   return (

@@ -4,15 +4,12 @@ import com.dontgoback.dontgo.domain.feed.Feed;
 import com.dontgoback.dontgo.domain.feed.FeedService;
 import com.dontgoback.dontgo.domain.user.AccountCreateService;
 import com.dontgoback.dontgo.domain.user.User;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,8 +25,14 @@ public class CreateDummyUser {
        return args -> {
            for (int i = 0; i < NUMBER_OF_USERS; i++){
                String email = "apple" + i;
-               User user = accountCreateService.createUserWithDefaultHistories(email);
-               feedService.createDummyFeed(user, "%d번 피드입니다.".formatted(i+1));
+               User user = accountCreateService.createDefaultAccount(email);
+               Feed feed = Feed.builder()
+                               .user(user)
+                               .content( "%d번 피드입니다.".formatted(i+1))
+                               .feedType(RedBlueType.BLUE)
+                               .author(user.getUserAsset())
+                               .build();
+               feedService.saveFeed(feed);
            }
        };
     }

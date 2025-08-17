@@ -7,7 +7,8 @@ export type Feed = {
   userId: number;
   content: string;
   author: string;
-  feedType: string;
+  userRole: 'ADMIN' | 'USER' | 'GUEST';
+  feedType: 'RED' | 'BLUE';
   likeCount: number;
   commentCount: number;
   isLiked?: boolean;
@@ -21,7 +22,8 @@ export type User = {
   email: string;
   profileVisibility: string;
   userName: string;
-  userType: string;
+  userType: 'RED' | 'BLUE';
+  userRole: 'ADMIN' | 'USER' | 'GUEST';
 };
 
 export type Comment = {
@@ -29,8 +31,9 @@ export type Comment = {
   feedId: number;
   userId: number;
   author: string;
+  userRole: 'ADMIN' | 'USER' | 'GUEST';
   content: string;
-  commentType: string;
+  commentType: 'RED' | 'BLUE';
   likeCount: number;
   subCommentCount: number;
   isLiked?: boolean;
@@ -48,7 +51,7 @@ export type AssetHistoryPoint = {
   amount: number;
   changeAmount: number | null; // 첫 값은 null일 수 있으므로
   changePercent: number | null; // 첫 값은 null일 수 있으므로
-  type: string; // "RED" | "BLUE"
+  type: 'RED' | 'BLUE'
 };
 
 /**

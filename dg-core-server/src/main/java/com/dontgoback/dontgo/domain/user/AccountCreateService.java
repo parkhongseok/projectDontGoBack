@@ -5,6 +5,7 @@ import com.dontgoback.dontgo.domain.accountStateHistory.AccountStatusHistoryServ
 import com.dontgoback.dontgo.domain.assetHistory.AssetHistory;
 import com.dontgoback.dontgo.domain.assetHistory.AssetHistoryService;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.AccountStatus;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,20 @@ public class AccountCreateService {
     private final long DEFAULT_USER_ASSET = 10000000;
 
     @Transactional
-    public User createUserWithDefaultHistories(String email) {
+    public User createDefaultAccount(String email){
+        return createDefaultAccount(email, UserRole.USER, "신규 가입");
+    }
+
+    @Transactional
+    public User createGuestAccount(String guestEmail) {
+        return createDefaultAccount(guestEmail, UserRole.GUEST, "방문자 가입");
+    }
+
+
+    private User createDefaultAccount(String email, UserRole role, String reason) {
         User user = User.builder()
                 .email(email)
+                .role(role)
                 .build();
         userRepository.save(user);
 
@@ -32,11 +44,13 @@ public class AccountCreateService {
         user.setCurrentAssetHistory(assetHistory);
 
         // 계정 상태 이력 직접 생성
-        AccountStatusHistory newStatusHistory = accountStatusHistoryService.create(user, AccountStatus.ACTIVE, "신규 가입" );
+        AccountStatusHistory newStatusHistory =
+                accountStatusHistoryService.create(user, AccountStatus.ACTIVE, reason);
         user.setCurrentStatusHistory(newStatusHistory);
 
-        return userRepository.save(user);
+        return userRepository.saveAndFlush(user);
     }
+
 
     @Transactional
     public User tryUpdateUserWithAccountHistories(User user){

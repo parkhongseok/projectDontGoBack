@@ -66,7 +66,7 @@ public class InterServerAssetUpdateServiceTest {
         // 이 시점에 AccountCreateService가 AssetHistoryService를 통해 '오늘' 날짜의 초기 자산 이력을 생성합니다.
         LocalDate today = LocalDate.now();
         clockHelper.setClock(today);
-        User user = accountCreateService.createUserWithDefaultHistories("test@email.com");
+        User user = accountCreateService.createDefaultAccount("test@email.com");
 
         long updatedAsset = 7777L;
         UpdateAssetResponse fakeResponse = new FakeUpdateAssetResponse(user.getId(), updatedAsset);
@@ -111,8 +111,8 @@ public class InterServerAssetUpdateServiceTest {
         LocalDate today = LocalDate.now();
         clockHelper.setClock(today);
 
-        User u1 = accountCreateService.createUserWithDefaultHistories("u1@x.com");
-        User u2 = accountCreateService.createUserWithDefaultHistories("u2@x.com");
+        User u1 = accountCreateService.createDefaultAccount("u1@x.com");
+        User u2 = accountCreateService.createDefaultAccount("u2@x.com");
 
         // when: '내일' 날짜로 자산 업데이트 시도
         LocalDate tomorrow = today.plusDays(1);

@@ -16,6 +16,7 @@ import { useUser } from "../../contexts/UserContext";
 import { useFeed } from "../../contexts/FeedContext";
 import { BACKEND_API_URL } from "../../utils/globalValues";
 import Chart from "../../components/profiles/Chart";
+import GoBackButton from "../../components/GoBackButton";
 
 export default function ProfileMain() {
   const { userId } = useParams<{ userId: string }>();
@@ -65,7 +66,7 @@ export default function ProfileMain() {
       setLastFeedId(newFeeds[newFeeds.length - 1].feedId);
       setFeedsLoading(false);
     };
-    
+
     const fail = () => {
       setFeedsLoading(false);
       console.error("피드 불러오기 실패");
@@ -161,13 +162,21 @@ export default function ProfileMain() {
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <h5 className="text-center mb-4 pt-4 topTitleText">Profile</h5>
+      <div className="d-flex justify-content-between align-items-center pt-4 mb-4">
+        {/* 왼쪽: 뒤로가기 버튼 */}
+        <GoBackButton size={30} />
 
+        {/* 중앙: 제목 (m-0으로 기본 마진 제거) */}
+        <h5 className="topTitleText m-0">Profile</h5>
+
+        {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
+        <div style={{ width: `${30}px` }} />
+      </div>
       <div className="pt-4 feeds-container">
         {/* 사이드바가 차지하지 않는 나머지 공간 */}
 
         <Profile userProps={userState} />
-        <Chart userId={userId}/>
+        <Chart userId={userId} />
         <Tabs
           defaultActiveKey="Main"
           id="uncontrolled-tab-example"

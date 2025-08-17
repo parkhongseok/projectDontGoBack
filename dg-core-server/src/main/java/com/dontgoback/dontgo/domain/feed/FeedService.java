@@ -69,6 +69,7 @@ public class FeedService {
                 .userId(user.getId())
                 .content(feed.getContent())
                 .author(feed.getAuthor())
+                .userRole(user.getRole())
                 .feedType(feed.getFeedType())
                 .createdAt(feed.getCreatedAt())
                 .updatedAt(feed.getUpdatedAt())
@@ -115,18 +116,6 @@ public class FeedService {
     // 삭제된 피드인지 확인
     public boolean isFeedDeleted(Feed feed){
         return feed.getDeletedAt() != null;
-    }
-
-    @Transactional
-    public Feed createDummyFeed(User user, String content) {
-        Feed feed = Feed.builder()
-                .user(user)
-                .content(content)
-                .author(user.getUserAsset())
-                .feedType(user.getUserType())
-                .build();
-        this.feedRepository.save(feed);
-        return feed;
     }
 
     public Feed findById(Long id) {

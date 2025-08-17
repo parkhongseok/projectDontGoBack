@@ -2,130 +2,103 @@
 
 import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "./globalValues";
 
-// // 쿠키에서 값 가져오기 함수
-// export function getCookie(name: string) {
-//   const value = `; ${document.cookie}`;
-//   const parts = value.split(`; ${name}=`);
-//   if (parts.length === 2) return parts.pop()?.split(";").shift();
-//   return undefined;
-// }
-
 // 상태 코드 관련 유틸리티
-const isSuccessStatus = (status: number) => [200, 201].includes(status);
-// const isBadRequest = (status: number) => status === 400; // 잘못된 요청
+const isSuccessStatus = (status: number): boolean => status === 200 || status === 201;
 const isUnauthorized = (status: number) => status === 401; // 인증 실패
-// const isForbidden = (status: number) => status === 403; // 권한 부족
 const isNotFound = (status: number) => status === 404; // 리소스 없음
 
-// 토큰 관리 유틸리티
-const getAccessToken = () => localStorage.getItem(ACCESS_TOKEN_NAME);
-// const getRefreshToken = () => getCookie(REFRESH_TOKEN_NAME);
-const setAccessToken = (token: string) => localStorage.setItem(ACCESS_TOKEN_NAME, token);
-const redirectToLogin = () => window.location.replace("/login");
+const redirectToLogin = (): void => {
+  // 현재 위치가 이미 로그인 페이지라면 중복 리다이렉션을 방지
+  if (window.location.pathname !== "/login") {
+    window.location.replace("/login");
+  }
+};
 
 // 응답 처리 유틸리티
-const parseJsonSafely = async (response: Response) => {
+const parseJsonSafely = async (response: Response): Promise<any> => {
   try {
-    return await response.json();
+    // 응답 본문이 비어있을 수 있으므로 확인 (e.g., 204 No Content)
+    const text = await response.text();
+    return text ? JSON.parse(text) : null;
   } catch (error) {
     console.error("⚠️ JSON 파싱 실패:", error);
     return null;
   }
 };
 
-const handleSuccessResponse = async (response: Response, success: (result: any) => void) => {
-  const data = await parseJsonSafely(response);
-  console.log("✅ Parsed Response Data:", data);
-  success(data);
-};
-
-const handleErrorResponse = async (response: Response, fail: () => void) => {
-  const errorData = await parseJsonSafely(response);
-  console.error(`❌ 요청 실패: ${response.status}`, errorData);
-  fail();
-};
-
-// 토큰 갱신 관련 로직
-const refreshAccessToken = async () => {
-  console.log("🔄 액세스 토큰 갱신 시도");
-
-  const response = await fetch(`${BACKEND_API_URL}/token`, {
-    method: "GET",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-  });
-
-  if (!response.ok) {
-    console.error("❌ 토큰 갱신 요청 실패", await response.json());
-    throw new Error("Token refresh failed");
-  }
-
-  return response.json();
-};
-
-const retryOriginalRequest = (
-  method: string,
-  url: string,
-  body: any,
-  success: (result: any) => void,
-  fail: () => void
-) => {
-  console.log("🔁 원본 요청 재시도");
-  httpRequest(method, url, body, success, fail);
-};
-
-const handleUnauthorizedError = async (
-  method: string,
-  url: string,
-  body: any,
-  success: (result: any) => void,
-  fail: () => void
-) => {
-  // const refreshToken = getRefreshToken();
-  // if (!refreshToken) {
-  //   console.error("❌ Refresh Token 없음");
-  //   redirectToLogin();
-  //   fail();
-  //   return;
-  // }
-
+// --- Core Logic ---
+/**
+ * 백엔드에 토큰 재발급을 요청
+ * 성공 여부(true/false)만 반환하며, 토큰 자체는 다루지 않음
+ * @returns {Promise<boolean>} 토큰 재발급 성공 여부
+ */
+const refreshAccessToken = async (): Promise<boolean> => {
+  console.log("🔄 액세스 토큰 갱신 요청");
   try {
-    const { accessToken } = await refreshAccessToken();
-    setAccessToken(accessToken);
-    console.log("🔑 새 액세스 토큰 발급 완료");
-    retryOriginalRequest(method, url, body, success, fail);
+    const response = await fetch(`${BACKEND_API_URL}/token`, {
+      // 경로 확인!
+      method: "POST", // GET -> POST로 변경
+      credentials: "include", // HttpOnly 쿠키(리프레시 토큰)를 보내기 위해 필수!
+    });
+    return response.ok; // 200-299 상태 코드면 true, 아니면 false
   } catch (error) {
-    console.error("🔴 토큰 갱신 실패:", error);
-    redirectToLogin();
-    fail();
+    console.error("🚨 토큰 갱신 중 네트워크 오류:", error);
+    return false;
   }
 };
 
-// 메인 HTTP 요청 함수
+/**
+ * 모든 API 요청을 처리하는 메인 함수
+ * 자동 토큰 갱신 및 재시도 로직이 포함
+ */
 export async function httpRequest(
   method: string,
   url: string,
   body: any,
   success: (result: any) => void,
-  fail: () => void
-) {
+  fail: () => void,
+  retryCount = 0 // 재시도 횟수 추적을 위한 파라미터 추가
+): Promise<void> {
+  // 1. 원본 요청 실행
   try {
     const response = await fetch(url, {
       method,
+      credentials: "include", // ✨ 모든 요청에 HttpOnly 쿠키를 자동으로 포함시킴
       headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
         "Content-Type": "application/json",
       },
+      // 🗑️ 'Authorization' 헤더는 이제 필요 없습니다.
       body: body ? JSON.stringify(body) : null,
     });
 
+    // 2. 응답 상태에 따른 분기 처리
     if (isSuccessStatus(response.status)) {
-      await handleSuccessResponse(response, success);
+      const data = await parseJsonSafely(response);
+      console.log("✅ 요청 성공:", data);
+      success(data);
       return;
     }
 
     if (isUnauthorized(response.status)) {
-      await handleUnauthorizedError(method, url, body, success, fail);
+      console.warn("❗ 401 Unauthorized. 토큰 갱신을 시도합니다.");
+
+      // 재시도 횟수 제한 (무한 루프 방지)
+      if (retryCount > 0) {
+        console.error("🔴 토큰 갱신 후에도 인증 실패. 로그인 페이지로 이동합니다.");
+        redirectToLogin();
+        return;
+      }
+
+      // 3. 토큰 갱신 및 원본 요청 재시도
+      const isRefreshSuccess = await refreshAccessToken();
+
+      if (isRefreshSuccess) {
+        console.log("✅ 토큰 갱신 성공. 원본 요청을 재시도합니다.");
+        await httpRequest(method, url, body, success, fail, retryCount + 1);
+      } else {
+        console.error("🔴 최종 토큰 갱신 실패. 로그인 페이지로 이동합니다.");
+        redirectToLogin();
+      }
       return;
     }
 
@@ -135,103 +108,12 @@ export async function httpRequest(
       return;
     }
 
-    await handleErrorResponse(response, fail);
+    // 그 외 4xx, 5xx 에러 처리
+    const errorData = await parseJsonSafely(response);
+    console.error(`❌ 요청 실패: ${response.status}`, errorData);
+    fail();
   } catch (error) {
-    console.error("🚨 요청 중 네트워크 오류:", error);
+    console.error("🚨 요청 중 심각한 네트워크 오류:", error);
     fail();
   }
 }
-
-// export function httpRequest(
-//   method: string,
-//   url: string,
-//   body: any,
-//   success: (result: any) => void,
-//   fail: () => void
-// ) {
-//   let accessToken = localStorage.getItem(ACCESS_TOKEN_NAME);
-
-//   fetch(url, {
-//     method,
-//     credentials: "include",
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//       "Content-Type": "application/json",
-//     },
-//     body: body ? JSON.stringify(body) : null,
-//   })
-//     .then(async (response) => {
-//       // 200 또는 201이면 정상 처리
-//       if (response.status === 200 || response.status === 201) {
-//         const data = await response.json();
-//         console.log("✅ Parsed Response Data:", data); // 로그 추가
-//         success(data);
-//         return;
-//       }
-
-//       // 응답 본문이 있는 경우, JSON을 먼저 파싱
-//       let errorData = null;
-//       // JSON 타입의 응답인지 확인
-//       const contentType = response.headers.get("content-type");
-//       if (contentType && contentType.includes("application/json")) {
-//         try {
-//           errorData = await response.json();
-//         } catch (err) {
-//           console.error("⚠️ JSON 파싱 실패:", err);
-//         }
-//       } else {
-//         // JSON이 아닌 응답(text/plain, 204 No Content)에서 json() 호출 막음
-//         console.warn("⚠️ JSON이 아닌 응답:", await response.text());
-//       }
-
-//       // 401 (Unauthorized) 이면서 refresh_token이 있을 경우, 토큰 갱신 시도
-//       const refreshToken = getCookie(REFRESH_TOKEN_NAME);
-//       if (response.status === 401 && refreshToken) {
-//         console.log("🔄 액세스 토큰 만료, 리프레시 토큰으로 재발급 시도");
-
-//         fetch("http://localhost:8090/api/token", {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({ refreshToken }),
-//         })
-//           .then(async (res) => {
-//             if (!res.ok) {
-//               console.error("❌ Refresh token request failed", await res.json());
-//               throw new Error("Refresh token request failed");
-//             }
-//             return res.json();
-//           })
-//           .then((result) => {
-//             console.log("🔑 새 액세스 토큰 발급 완료");
-//             localStorage.setItem(ACCESS_TOKEN_NAME, result.accessToken);
-//             // 새 토큰으로 요청 재시도
-//             httpRequest(method, url, body, success, fail);
-//           })
-//           .catch((err) => {
-//             // window.history.replaceState(null, "", "/login"); // 현재 페이지 url만 변경, 히스토리에 기록, 페이지 이동 x
-//             window.location.replace("/login"); // ✅ 즉시 로그인 페이지로 이동 (히스토리 기록 없음)
-//             console.error("🔴 토큰 갱신 실패:", err);
-//             fail(); // ✅ 리프레시 토큰이 유효하지 않음
-//           });
-//       } else if (response.status === 401) {
-//         // 401 + 리프레시 토큰 없음 → 로그인 페이지로 이동
-//         console.error("❌ Refresh Token 없음");
-//         window.location.replace("/login");
-//         fail();
-//       } else if (response.status === 404) {
-//         // 🔥 404 (Not Found) → "존재하지 않는 게시물입니다" 메시지 출력
-//         console.warn(`🚫 404 Not Found: ${url}`);
-//         fail();
-//       } else {
-//         // 응답 결과가 다른 경우 500 등
-//         fail();
-//         console.error(`❌ 요청 실패: ${response.status}`, errorData);
-//       }
-//     })
-//     .catch((err) => {
-//       console.error("🚨 요청 중 네트워크 오류:", err);
-//       fail();
-//     });
-// }

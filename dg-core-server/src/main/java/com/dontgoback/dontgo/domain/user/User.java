@@ -3,6 +3,7 @@ import com.dontgoback.dontgo.domain.accountStateHistory.AccountStatusHistory;
 import com.dontgoback.dontgo.domain.assetHistory.AssetHistory;
 import com.dontgoback.dontgo.global.jpa.BaseEntity;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -21,9 +22,6 @@ import java.util.List;
 @SuperBuilder
 @Table(name="users")
 public class User extends BaseEntity implements UserDetails {
-
-//    @Column(name = "user_asset", nullable = true)
-//    private String userAsset1;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "current_asset_history_id")
@@ -51,16 +49,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "password")
     private final String password = "";
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "user_type", nullable = true)
-//    private RedBlueType userType;
-
-    // 유저의 설정 캐싱 (변동 시 이력과 캐싱 사항 동기화 필요) 하지만 무결성 문제로 일대일 관계로 매핑하는 방향으로 정정
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private AccountStatus currentStatus;
-//
-//    private LocalDateTime currentStatusChangedAt;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role", nullable = false)
+    private UserRole role;
 
     // DB 논리적 구조: → 1:N / JPA 매핑: 현재 이력 1개만 참조
     @OneToOne(fetch = FetchType.EAGER)
@@ -74,21 +65,22 @@ public class User extends BaseEntity implements UserDetails {
         }
     }
 
-//    // OAuth2 를 위해
-//    // 사용자 이름 필드 추가 -> 생성자에 닉네임 추가
-//    @Column(name = "nickname", unique = true)
-//    private String nickname;
-//
-    // 사용자 이름 변경
-//    public User update(String nickname){
-//        this.email = email;
-//        return this;
-//    }
-
     // 권한 반환
+    /** UserRole 과 getAuthorities()의 관계
+     *  1. getAuthorities():
+     *      Spring Security에서 UserDetails 인터페이스의 getAuthorities() 메서드는
+     *      해당 유저가 어떤 권한(들)을 가지고 있는지를 Collection<? extends GrantedAuthority> 형태로 반환
+     *  2. SimpleGrantedAuthority:
+     *      SimpleGrantedAuthority의 가장 일반적인 구현체로, 권한 문자열 하나를 감싸는 간단한 클래스
+     *  3. "ROLE_" 접두사 (Prefix):
+     *      Spring Security의 기본 규칙 중 하나로, 역할(Role) 기반으로 권한을 체크할 때,
+     *      권한 문자열이 "ROLE_"로 시작해야 함
+     *      예를 들어, ADMIN 역할은 "ROLE_ADMIN"이라는 문자열 권한으로 인식
+     *   4. 이후 컨트롤러 등에서 @PreAuthorize("hasRole('ADMIN')")과 같은 권한 검증 로직이 정상적으로 동작
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
-        return List.of(new SimpleGrantedAuthority("user"));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     // 사용자 id(고유한 값) 반환 따라서 자산 정보 대신 email 사용
