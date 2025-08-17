@@ -42,7 +42,7 @@ public class AssetHistorySeeder implements CommandLineRunner {
     @Value("${seed.asset.volatility.sigma:0.02}")     private double sigma;
     @Value("${seed.asset.clamp.minPercent:-5.0}")     private double minPct;
     @Value("${seed.asset.clamp.maxPercent:5.0}")      private double maxPct;
-    @Value("${seed.asset.secretSalt:change-me}")      private String salt;
+    @Value("${seed.asset.secretSalt:secretSalt}")      private String salt;
 
     private static final String LOCK_KEY = "asset_history_seed_v2"; // 🔁 버전 올려 새로운 시드 허용
 

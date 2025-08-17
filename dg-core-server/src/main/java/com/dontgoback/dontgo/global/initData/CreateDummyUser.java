@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 @RequiredArgsConstructor
 @Profile({"dev", "!test"})
 public class CreateDummyUser {
-    private final int NUMBER_OF_USERS = 10;
+    private final int NUMBER_OF_USERS = 3;
     private final long DEFAULT_USER_ASSET = 10000000;
     private final AccountCreateService accountCreateService;
     private final FeedService feedService;

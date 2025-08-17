@@ -68,3 +68,13 @@ services:
 volumes:
   mariadb_data: # MariaDB 데이터를 영속적으로 저장할 볼륨
     driver: local
+
+  # ▶ 딱 1회 실행용 시더 컨테이너
+  seeder:
+    image: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com/dontgoback:backend-${TAG}
+    env_file: /home/ubuntu/.env
+    environment:
+      - SPRING_PROFILES_ACTIVE=seed
+      - JAVA_TOOL_OPTIONS=-Dseed.only=true # 웹서버 미기동 후 종료
+    command: ["java", "-jar", "/app/app.jar"] # 백엔드 jar 엔트리포인트 경로에 맞게
+    restart: "no" # 자동 재시작 금지
