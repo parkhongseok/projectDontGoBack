@@ -1,7 +1,7 @@
 import "../globals.css";
 
 import styles from "./Feed.module.css";
-import { Dropdown, Stack } from "react-bootstrap";
+import { Dropdown, Spinner, Stack } from "react-bootstrap";
 import * as Types from "../utils/types";
 import Link from "next/link";
 import { useFeed } from "../contexts/FeedContext";
@@ -16,6 +16,8 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { httpRequest } from "../utils/httpRequest";
 import { BACKEND_API_URL } from "../utils/globalValues";
+import Badge from "./Badge";
+import BadgeMe from "./BadgeMe";
 
 type PropsType = {
   feed: Types.Feed | null; // Props의 타입 정의
@@ -31,13 +33,23 @@ export default function Feed({ feed }: PropsType) {
   const [isFeedDeleteOpen, setIsFeedDeleteOpen] = useState(false);
 
   const [feedState, setFeedState] = useState(feed);
+
   useEffect(() => {
     if (!feed) return;
     setFeedState(feed);
   }, [feed]);
 
   if (!feed || !userContext) {
-    return <div className="loading">피드 또는 유저 로딩중</div>;
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "200px" }}
+      >
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
+    );
   }
 
   const fetchFeedLike = () => {
@@ -68,8 +80,7 @@ export default function Feed({ feed }: PropsType) {
     setFeedContext(feed.feedId == feedContext?.feedId ? feedContext : feed);
   };
   const handleFeedClick = () => {
-    if (feed.feedId == feedContext?.feedId)
-      setFeedContext(feed.feedId == feedContext?.feedId ? feedContext : feed);
+    if (feed.feedId == feedContext?.feedId) setFeedContext(feed);
   };
   const handleFeedLike = () => {
     if (feedState) {
@@ -85,6 +96,21 @@ export default function Feed({ feed }: PropsType) {
     if (pathname === "/" || /\/profile\/\d+$/.test(pathname))
       setCrudMyFeed({ C: false, R: false, U: true, D: false });
   };
+
+  // 뱃지를 렌더링하는 헬퍼 함수
+  const renderBadge = () => {
+    return (
+      <>
+        {/* 역할(Role) 기반 뱃지 */}
+        {feed.userRole === "ADMIN" && <Badge role="admin">관리자</Badge>}
+        {feed.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
+
+        {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
+        {feed.userId === userContext.userId && <BadgeMe role="me">나</BadgeMe>}
+      </>
+    );
+  };
+
   // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
   const feedTypeClass = styles[feed.feedType] || "";
 
@@ -95,10 +121,12 @@ export default function Feed({ feed }: PropsType) {
         <DeletePopUp feedId={feed.feedId} setIsFeedDeleteOpen={setIsFeedDeleteOpen} />
       )}
       <Stack direction="horizontal" gap={3}>
-        <div>
-          <Link className={`px-5 `} href={`/profile/${feed.userId}`} legacyBehavior>
-            <p className={`${styles.userName} ${feedTypeClass} cusorPointer`}>{feed.author}</p>
+        <div className="d-flex align-items-center">
+          {/* 이름과 뱃지를 정렬하기 위한 div */}
+          <Link className="px-5" href={`/profile/${feed.userId}`} legacyBehavior>
+            <p className={`${styles.userName} ${feedTypeClass} cusorPointer mb-0`}>{feed.author}</p>
           </Link>
+          {renderBadge()} {/* 헬퍼 함수 호출 */}
         </div>
         <div className="vr" />
         <div className="">

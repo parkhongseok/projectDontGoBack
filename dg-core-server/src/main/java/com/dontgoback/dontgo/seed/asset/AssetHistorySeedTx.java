@@ -2,8 +2,10 @@ package com.dontgoback.dontgo.seed.asset;
 
 import com.dontgoback.dontgo.domain.assetHistory.AssetHistory;
 import com.dontgoback.dontgo.domain.assetHistory.AssetHistoryRepository;
+import com.dontgoback.dontgo.domain.feed.Feed;
 import com.dontgoback.dontgo.domain.user.User;
 import com.dontgoback.dontgo.domain.user.UserRepository;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -77,4 +79,6 @@ public class AssetHistorySeedTx {
         }
         em.flush(); em.clear();
     }
+
+
 }

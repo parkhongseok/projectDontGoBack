@@ -19,6 +19,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                     u.id AS userId,
                     c.content AS content,
                     c.author AS author,
+                    u.role AS userRole,
                     c.commentType AS commentType,
                     (SELECT COUNT(l) FROM CommentLike l WHERE l.comment = c) AS likeCount,
                     (SELECT COUNT(sc) FROM Comment sc WHERE sc.parentComment = c AND sc.deletedAt IS NULL) AS subCommentCount,

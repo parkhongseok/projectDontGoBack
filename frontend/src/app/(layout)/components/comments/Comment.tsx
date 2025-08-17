@@ -16,6 +16,8 @@ import { httpRequest } from "../../utils/httpRequest";
 import { useFeed } from "../../contexts/FeedContext";
 import { usePathname } from "next/navigation";
 import { BACKEND_API_URL } from "../../utils/globalValues";
+import Badge from "../Badge";
+import BadgeMe from "../BadgeMe";
 
 type CommentProps = {
   comment: Types.Comment;
@@ -83,6 +85,21 @@ export default function Comment({ comment }: CommentProps) {
     fetchCommentLike();
     if (/\/post\/\d+$/.test(pathname)) setCrudMyComment({ C: false, R: false, U: true, D: false });
   };
+
+  // 뱃지를 렌더링하는 헬퍼 함수
+  const renderBadge = () => {
+    return (
+      <>
+        {/* 역할(Role) 기반 뱃지 */}
+        {comment.userRole === "ADMIN" && <Badge role="admin">관리자</Badge>}
+        {comment.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
+
+        {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
+        {comment.userId === userContext.userId && <BadgeMe role="me">나</BadgeMe>}
+      </>
+    );
+  };
+
   const feedTypeClass = styles[comment.commentType] || "";
   return (
     <Stack className="px-5" gap={3}>
@@ -94,8 +111,11 @@ export default function Comment({ comment }: CommentProps) {
         />
       )}
       <Stack direction="horizontal" gap={3}>
-        <div>
-          <p className={`${styles.userName} ${feedTypeClass}`}>{comment.author}</p>
+        <div className="d-flex align-items-center">
+          {" "}
+          {/* 이름과 뱃지를 정렬하기 위한 div */}
+          <p className={`${styles.userName} ${feedTypeClass} mb-0`}>{comment.author}</p>
+          {renderBadge()} {/* 헬퍼 함수 호출 */}
         </div>
         <div className="vr" />
         <div className="">

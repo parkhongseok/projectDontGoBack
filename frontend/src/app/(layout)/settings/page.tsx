@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons/faLink";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import GoBackButton from "../components/GoBackButton";
 // import * as Types from "../../utils/types";
 // import { useParams } from "next/navigation";
 // import { BACKEND_API_URL } from "../../utils/globalValues";
@@ -24,8 +25,17 @@ export default function Settings() {
 
   return (
     <>
-      {/* dropdown 버튼이 들어올 자리 */}
-      <h5 className="text-center mb-4 pt-4 topTitleText">Settings</h5>
+        {/* dropdown 버튼이 들어올 자리 */}
+        <div className="d-flex justify-content-between align-items-center pt-4 mb-4">
+          {/* 왼쪽: 뒤로가기 버튼 */}
+          <GoBackButton size={30} />
+  
+          {/* 중앙: 제목 (m-0으로 기본 마진 제거) */}
+          <h5 className="topTitleText m-0">Settings</h5>
+  
+          {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
+          <div style={{ width: `${30}px` }} />
+        </div>
 
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
       <div className={`feed-detail-container`}>
@@ -63,6 +73,7 @@ export default function Settings() {
                       checked={!profileSettingState}
                       onChange={handleToggle1}
                       className={``}
+                      disabled
                     />
                   </div>
                 </Col>

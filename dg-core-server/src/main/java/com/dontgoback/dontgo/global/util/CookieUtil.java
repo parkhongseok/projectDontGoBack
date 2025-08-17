@@ -13,14 +13,32 @@ import java.util.Optional;
 // 유저에게 보낼 응답에 쿠키를 추가하거나, 삭제하거나, 쿠키자체를 변환
 public class CookieUtil {
     // 요청값(이름, 값, 만료 기간)을 바탕으로 쿠키 추가
-    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge,  boolean httpOnly, boolean secure){
+    public static void addCookie(
+                                HttpServletResponse response,
+                                String name,
+                                String value,
+                                int maxAge,
+                                boolean httpOnly,
+                                boolean secure,
+                                String path){
         Cookie cookie = new Cookie(name, value);
         cookie.setMaxAge(maxAge);
-        cookie.setPath("/");
+        cookie.setPath(path);
         cookie.setHttpOnly(httpOnly);  // HttpOnly 설정 (JavaScript 접근 불가)
         cookie.setSecure(secure);      // Secure 설정 (HTTPS에서만 쿠키 전달)
         response.addCookie(cookie);
     }
+
+    // 기존 코드를 위해 오버로딩
+    public static void addCookie(HttpServletResponse response,
+                                 String name,
+                                 String value,
+                                 int maxAge,
+                                 boolean httpOnly,
+                                 boolean secure) {
+        addCookie(response, name, value, maxAge, httpOnly, secure, "/"); // 기본 path는 "/"
+    }
+
 
     public static Optional<Cookie> findCookie(Cookie[] cookies, String name){
         return Optional.ofNullable(cookies)
@@ -33,7 +51,10 @@ public class CookieUtil {
     /*실제로 쿠키를 삭제하는 방법은 없으므로,
     파라미터로 넘어온 키의 쿠키를 비어있는 값으로 바꾸고,
     만료 시간을 0으로 설정하여, 쿠키가 재생성되자마자 만료 처리*/
-    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name){
+    public static void deleteCookie(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    String name,
+                                    boolean secure){
         Cookie[] cookies = request.getCookies();
         Optional<Cookie> optionalCookie = findCookie(cookies, name);
         if (optionalCookie.isPresent()) {

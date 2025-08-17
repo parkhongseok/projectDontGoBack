@@ -60,6 +60,7 @@ public class CommentService {
                 .userId(user.getId())
                 .content(comment.getContent())
                 .author(comment.getAuthor())
+                .userRole(user.getRole())
                 .commentType(comment.getCommentType())
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
@@ -94,18 +95,6 @@ public class CommentService {
         return new DeleteCommentResponse(comment.getId());
     }
 
-    public Comment createDummyComment(Feed feed, User user, String content) {
-        Comment comment = Comment.builder()
-                .feed(feed)
-                .user(user)
-                .author(user.getUserAsset())
-                .commentType(user.getUserType())
-                .content(content)
-                .build();
-        commentRepository.save(comment);
-        return comment;
-    }
-
     // 저장
     public void saveComment(Comment comment) {
         try {
@@ -119,11 +108,4 @@ public class CommentService {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "%d번 답글을 찾을 수 없습니다.".formatted(id)));
     }
-
-    // 삭제 여부 검사
-    public boolean isCommentDeleted(Comment comment){
-        return comment.getDeletedAt() != null;
-    }
-
-
 }

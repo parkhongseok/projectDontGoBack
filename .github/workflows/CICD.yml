@@ -5,6 +5,12 @@ on:
     branches:
       - main
   workflow_dispatch: # 수동으로 액션 실행가능하도록 설정
+    inputs:
+      run_seed:
+        description: "Run one-time seed job on EC2 after deploy?"
+        required: false
+        default: "false"
+
   # 아래 옵션 사용 시 빈 커밋 가능 
   # git commit --allow-empty -m "trigger deploy [deploy]"
 
@@ -71,6 +77,35 @@ jobs:
               docker pull $ECR_REGISTRY/$ECR_REPO:backend-$TAG && \
               docker pull $ECR_REGISTRY/$ECR_REPO:frontend-$TAG && \
               docker-compose -f /home/ubuntu/docker-compose.yml up -d"
+
+# run_seed=true로 수동 실행했을 때만 seeder가 돌고,
+# 락이 있으면 즉시 종료 → 재실행 안전.
+# 일반 자동 배포(push with [deploy])에선 seeder 스텝이 건너뜀.
+      - name: Run one-time Seeder (optional)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_seed == 'true' }}
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            -i ~/.ssh/ec2_key.pem \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_IP }} \
+            "
+              set -e
+              export AWS_REGION=${AWS_REGION}
+              export ECR_REGISTRY=${ECR_REGISTRY}
+              export ECR_REPO=${ECR_REPO}
+              export TAG=${TAG}
+
+              # 최신 이미지 로그인/풀
+              docker login -u AWS -p \$(aws ecr get-login-password --region $AWS_REGION) $ECR_REGISTRY
+              docker pull $ECR_REGISTRY/$ECR_REPO:backend-$TAG
+
+              # ▶ seeder만 단발 실행
+              docker compose -f /home/ubuntu/docker-compose.yml run --rm seeder
+
+              # 로그 확인 (선택)
+              # docker logs \$(docker ps -aq --filter 'name=seeder' --last 1)
+
+              echo 'Seed job finished. (If lock existed, it should have exited quickly)'
+            "
 
 # docker image prune -a -f --filter 'until=24h'"
 

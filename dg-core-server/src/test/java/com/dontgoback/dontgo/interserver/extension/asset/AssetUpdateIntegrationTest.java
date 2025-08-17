@@ -68,7 +68,7 @@ public class AssetUpdateIntegrationTest {
         clockHelper.setClock(today);
 
         // 테스트용 유저 생성
-        testUser = accountCreateService.createUserWithDefaultHistories("test@email.com");
+        testUser = accountCreateService.createDefaultAccount("test@email.com");
         defaultAsset = testUser.getCurrentAssetHistory().getAmount(); // 10000000L
     }
 

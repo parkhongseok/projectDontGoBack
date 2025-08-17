@@ -42,7 +42,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
     }
 
     private User createNewUser(String email){
-        return accountCreateService.createUserWithDefaultHistories(email);
+        return accountCreateService.createDefaultAccount(email);
     }
 
 

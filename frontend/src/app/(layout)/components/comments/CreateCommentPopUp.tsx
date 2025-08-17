@@ -11,6 +11,8 @@ import { useFeed } from "../../contexts/FeedContext";
 import { useUser } from "../../contexts/UserContext";
 import { httpRequest } from "../../utils/httpRequest";
 import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/globalValues";
+import BadgeMe from "../BadgeMe";
+import Badge from "../Badge";
 
 type propsType = { setShowWriteBox: Dispatch<SetStateAction<boolean>>; feed: Types.Feed };
 
@@ -82,6 +84,21 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
   if (!userContext) {
     return <div className="loading" />;
   }
+
+  // 뱃지를 렌더링하는 헬퍼 함수
+  const renderBadge = () => {
+    return (
+      <>
+        {/* 역할(Role) 기반 뱃지 */}
+        {userContext.userRole === "ADMIN" && <Badge role="admin">관리자</Badge>}
+        {userContext.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
+
+        {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
+        {userContext.userId === userContext.userId && <BadgeMe role="me">나</BadgeMe>}
+      </>
+    );
+  };
+
   const feedTypeClass = styles[userContext.userType] || "";
   const PLACEHOLER = feed?.userId == userContext?.userId ? `나에게` : `${feed.author} 님에게`;
   return (
@@ -112,9 +129,13 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
-              <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>
-                {userContext.userName}
-              </p>
+              <div className="d-flex align-items-center  mt-2">
+                {/* 이름과 뱃지를 정렬하기 위한 div */}
+                <p className={`${feedTypeClass} ${styles.userName} fontRedLight init`}>
+                  {userContext.userName}
+                </p>
+                {renderBadge()} {/* 헬퍼 함수 호출 */}
+              </div>
               <textarea
                 onInput={(e) => autoResize(e)}
                 rows={5}

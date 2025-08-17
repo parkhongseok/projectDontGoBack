@@ -13,8 +13,11 @@ import { httpRequest } from "../../utils/httpRequest";
 import { useUser } from "../../contexts/UserContext";
 import Loading from "../../components/Loading";
 import { BACKEND_API_URL } from "../../utils/globalValues";
+import GoBackButton from "../../components/GoBackButton";
+import { useRouter } from "next/navigation";
 
 export default function FeedDetile() {
+  const router = useRouter();
   const {
     feedContext,
     setFeedContext,
@@ -26,7 +29,6 @@ export default function FeedDetile() {
 
   const { userContext } = useUser();
   const { feedId } = useParams<{ feedId: string }>();
-
   const [comments, setComments] = useState<Types.Comment[]>([]);
   // 댓글 패이징
   const [lastCommentId, setLastCommentId] = useState(0);
@@ -52,6 +54,7 @@ export default function FeedDetile() {
     };
     const fail = () => {
       console.error(`${feedId}번 게시물 조회 실패`);
+      router.back();
     };
     httpRequest(method, url, body, success, fail);
   }, [feedId, setFeedContext]);
@@ -78,7 +81,7 @@ export default function FeedDetile() {
     };
     const fail = () => {
       setCommentsLoading(false); // 로딩 끝
-      console.error(`${feedId}번 게시물의 댓글 조회 실패`);
+      console.error(`🔴 ${feedId}번 게시물의 댓글 조회 실패`);
     };
     httpRequest(method, url, body, success, fail);
   }, [commentsLoading, hasMoreComments, feedId]);
@@ -86,11 +89,11 @@ export default function FeedDetile() {
   // 상세 피드에 필요한 데이터만 fetch
   useEffect(() => {
     const fetchInitialData = async () => {
-      if (!feedContext?.feedId) await fetchFeed();
+      if (!feedContext?.feedId || String(feedContext.feedId) != feedId) await fetchFeed();
       if (lastCommentId == 0 && hasMoreComments) await fetchComments();
     };
     fetchInitialData();
-  }, []);
+  }, [feedId]);
 
   // 답글 부분 comment
   // 나의 답글 생성 반영 함수
@@ -170,11 +173,22 @@ export default function FeedDetile() {
       clearTimeout(timeoutId);
     };
   }, [commentsLoading, fetchComments, lastCommentId]);
+
   if (!userContext) return <Loading />;
+
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <h5 className="text-center mb-4 pt-4 topTitleText">Post</h5>
+      <div className="d-flex justify-content-between align-items-center pt-4 mb-4">
+        {/* 왼쪽: 뒤로가기 버튼 */}
+        <GoBackButton size={30} />
+
+        {/* 중앙: 제목 (m-0으로 기본 마진 제거) */}
+        <h5 className="topTitleText m-0">POST</h5>
+
+        {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
+        <div style={{ width: `${30}px` }} />
+      </div>
 
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
       {/* 사이드바가 차지하지 않는 나머지 공간 */}

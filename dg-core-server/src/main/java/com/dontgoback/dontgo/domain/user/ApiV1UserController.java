@@ -42,6 +42,4 @@ public class ApiV1UserController {
                 data
         );
     }
-
-
 }

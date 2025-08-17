@@ -2,6 +2,7 @@ package com.dontgoback.dontgo.domain.user.dto;
 
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.ProfileVisibility;
 import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.RedBlueType;
+import com.dontgoback.dontgo.global.jpa.EmbeddedTypes.UserRole;
 import lombok.*;
 
 @Getter
@@ -15,4 +16,5 @@ public class UserResponse {
     private ProfileVisibility profileVisibility;
     private String userName;
     private RedBlueType userType;
+    private UserRole userRole;
 }

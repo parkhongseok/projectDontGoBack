@@ -8,6 +8,8 @@ import { useFeed } from "../../contexts/FeedContext";
 import { useEffect, useRef, useState } from "react";
 import { httpRequest } from "../../utils/httpRequest";
 import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/globalValues";
+import Badge from "../Badge";
+import BadgeMe from "../BadgeMe";
 
 type propsType = {
   setIsCommentEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -78,7 +80,6 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
       if (result.data.commentId == commentContext.commentId)
         setContentContext(result.data.content, result.data.updatedAt);
       else console.error("EditPopUp : 즉시 갱신 실패");
-      // 경로 검사 ㄱㅊ?
       setIsCommentEditOpen(false);
       setCrudMyComment({ C: false, R: false, U: true, D: false });
     };
@@ -86,6 +87,20 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
       alert("게시물을 수정할 수 없습니다.");
     };
     httpRequest(method, url, body, success, fail);
+  };
+
+  // 뱃지를 렌더링하는 헬퍼 함수
+  const renderBadge = () => {
+    return (
+      <>
+        {/* 역할(Role) 기반 뱃지 */}
+        {commentContext.userRole === "ADMIN" && <Badge role="admin">관리자</Badge>}
+        {commentContext.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
+
+        {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
+        {commentContext.userId === commentContext.userId && <BadgeMe role="me">나</BadgeMe>}
+      </>
+    );
   };
 
   const commentTypeClass = styles[commentContext.commentType] || "";
@@ -114,9 +129,13 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
-              <p className={`${commentTypeClass} ${styles.userName} fontRedLight init mt-2`}>
-                {commentContext.author}
-              </p>
+              <div className="d-flex align-items-center mt-2">
+                {/* 이름과 뱃지를 정렬하기 위한 div */}
+                <p className={`${commentTypeClass} ${styles.userName} fontRedLight init mt-2`}>
+                  {commentContext.author}
+                </p>
+                {renderBadge()} {/* 헬퍼 함수 호출 */}
+              </div>
               <textarea
                 ref={textareaRef}
                 onInput={(e) => autoResize(e)}

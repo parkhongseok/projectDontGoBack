@@ -24,8 +24,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     };
     const fail = () => {
       console.warn("[fetchUserContext] 유저 로딩 실패 함수 호출");
-      // localStorage.setItem(`${ACCESS_TOKEN_NAME}`, "");
-      // console.error("토큰 초기화 및 재로그인");
       router.replace("/login"); // 뒤로가기 방지 이동
     };
     httpRequest("GET", url, body, success, fail);

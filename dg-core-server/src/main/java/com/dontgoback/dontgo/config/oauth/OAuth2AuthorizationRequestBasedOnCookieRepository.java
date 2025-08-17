@@ -5,6 +5,7 @@ import com.dontgoback.dontgo.global.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.web.util.WebUtils;
@@ -26,6 +27,9 @@ public class OAuth2AuthorizationRequestBasedOnCookieRepository
     // OAuth2 인증 요청 정보를 쿠키에 저장하고 불러오는 역할을 하는 클래스
     public final static String OAUTH2_AUTHENTICATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     private final static int COOKIE_EXPIRE_SECONDS = 18000;
+
+    @Value("${cookie.secure}")
+    private boolean secureCookie;
 
     // OAuth2 인증 요청을 읽어오면서 제거하는 역할
     // 하지만 쿠키를 직접 삭제하지는 않음
@@ -55,11 +59,11 @@ public class OAuth2AuthorizationRequestBasedOnCookieRepository
         CookieUtil.addCookie(response,
                 OAUTH2_AUTHENTICATION_REQUEST_COOKIE_NAME,
                 CookieUtil.serialize(authorizationRequest),
-                COOKIE_EXPIRE_SECONDS, true, true);
+                COOKIE_EXPIRE_SECONDS, true, secureCookie);
     }
 
     // OAuth2 인증이 완료되면 해당 요청 정보를 더 이상 유지할 필요가 없으므로 쿠키를 삭제 (더이상 쿠키가 필요없으니까)
     public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response){
-        CookieUtil.deleteCookie(request, response, OAUTH2_AUTHENTICATION_REQUEST_COOKIE_NAME);
+        CookieUtil.deleteCookie(request, response, OAUTH2_AUTHENTICATION_REQUEST_COOKIE_NAME, secureCookie);
     }
 }
