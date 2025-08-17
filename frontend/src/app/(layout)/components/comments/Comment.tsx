@@ -17,6 +17,7 @@ import { useFeed } from "../../contexts/FeedContext";
 import { usePathname } from "next/navigation";
 import { BACKEND_API_URL } from "../../utils/globalValues";
 import Badge from "../Badge";
+import BadgeMe from "../BadgeMe";
 
 type CommentProps = {
   comment: Types.Comment;
@@ -87,20 +88,16 @@ export default function Comment({ comment }: CommentProps) {
 
   // 뱃지를 렌더링하는 헬퍼 함수
   const renderBadge = () => {
-    // 최우선 순위: 내가 쓴 글인지 확인
-    if (comment.userId === userContext.userId) {
-      return <Badge role="me">나</Badge>;
-    }
-    // 관리자가 쓴 글인지 확인
-    if (comment.userRole === "ADMIN") {
-      return <Badge role="admin">관리자</Badge>;
-    }
-    // 방문자가 쓴 글인지 확인
-    if (comment.userRole === "GUEST") {
-      return <Badge role="guest">방문자</Badge>;
-    }
-    // 그 외 일반 유저는 뱃지를 표시하지 않음
-    return null;
+    return (
+      <>
+        {/* 역할(Role) 기반 뱃지 */}
+        {comment.userRole === "ADMIN" && <Badge role="admin">관리자</Badge>}
+        {comment.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
+
+        {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
+        {comment.userId === userContext.userId && <BadgeMe role="me">나</BadgeMe>}
+      </>
+    );
   };
 
   const feedTypeClass = styles[comment.commentType] || "";
@@ -117,11 +114,7 @@ export default function Comment({ comment }: CommentProps) {
         <div className="d-flex align-items-center">
           {" "}
           {/* 이름과 뱃지를 정렬하기 위한 div */}
-          <Link className="px-5" href={`/profile/${comment.userId}`} legacyBehavior>
-            <p className={`${styles.userName} ${feedTypeClass} cusorPointer mb-0`}>
-              {comment.author}
-            </p>
-          </Link>
+          <p className={`${styles.userName} ${feedTypeClass} mb-0`}>{comment.author}</p>
           {renderBadge()} {/* 헬퍼 함수 호출 */}
         </div>
         <div className="vr" />

@@ -10,6 +10,8 @@ import { usePathname } from "next/navigation";
 import { httpRequest } from "../utils/httpRequest";
 import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../utils/globalValues";
 import * as Types from "../utils/types";
+import Badge from "./Badge";
+import BadgeMe from "./BadgeMe";
 
 type propsType = {
   setIsFeedCreaterOpen: Dispatch<SetStateAction<boolean>>;
@@ -89,6 +91,20 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
     target.style.height = `${target.scrollHeight}px`; // 텍스트의 높이에 맞게 설정
   };
 
+  // 뱃지를 렌더링하는 헬퍼 함수
+  const renderBadge = () => {
+    return (
+      <>
+        {/* 역할(Role) 기반 뱃지 */}
+        {userContext.userRole === "ADMIN" && <Badge role="admin">관리자</Badge>}
+        {userContext.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
+
+        {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
+        {userContext.userId === userContext.userId && <BadgeMe role="me">나</BadgeMe>}
+      </>
+    );
+  };
+
   const feedTypeClass = styles[userContext.userType] || "";
   return (
     <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
@@ -118,9 +134,13 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
-              <p className={`${feedTypeClass} ${styles.userName} fontRedLight init mt-2`}>
-                {userContext.userName}
-              </p>
+              <div className="d-flex align-items-center  mt-2">
+                {/* 이름과 뱃지를 정렬하기 위한 div */}
+                <p className={`${feedTypeClass} ${styles.userName} fontRedLight init`}>
+                  {userContext.userName}
+                </p>
+                {renderBadge()} {/* 헬퍼 함수 호출 */}
+              </div>
               <textarea
                 maxLength={MAX_TEXT_LENGTH}
                 onInput={(e) => autoResize(e)}

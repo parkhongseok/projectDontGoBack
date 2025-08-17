@@ -17,8 +17,6 @@ export default function Home() {
   const router = useRouter();
   // url 바꿔치기
   useEffect(() => {
-    router.replace("/");
-    // window.history.replaceState(null, "", "/"); // 빈틈이 사실 존재함 하지만 둘러보기를 위해서, 우선 해당 방식/ url변경
     document.title = "DONT GO BACK"; // 크롬의 경우, 탭 이름까지 변경
   }, []);
 
@@ -36,6 +34,7 @@ export default function Home() {
   }, [lastFeedId]);
   // 피드 페이징
   const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
+
 
   const fetchFeeds = async () => {
     if (feedsLoading) return <Loading />;

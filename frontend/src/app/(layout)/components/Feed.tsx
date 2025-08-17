@@ -17,6 +17,7 @@ import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { httpRequest } from "../utils/httpRequest";
 import { BACKEND_API_URL } from "../utils/globalValues";
 import Badge from "./Badge";
+import BadgeMe from "./BadgeMe";
 
 type PropsType = {
   feed: Types.Feed | null; // Props의 타입 정의
@@ -40,7 +41,10 @@ export default function Feed({ feed }: PropsType) {
 
   if (!feed || !userContext) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "200px" }}
+      >
         <Spinner animation="border" role="status">
           <span className="visually-hidden">Loading...</span>
         </Spinner>
@@ -76,8 +80,7 @@ export default function Feed({ feed }: PropsType) {
     setFeedContext(feed.feedId == feedContext?.feedId ? feedContext : feed);
   };
   const handleFeedClick = () => {
-    if (feed.feedId == feedContext?.feedId)
-      setFeedContext(feed.feedId == feedContext?.feedId ? feedContext : feed);
+    if (feed.feedId == feedContext?.feedId) setFeedContext(feed);
   };
   const handleFeedLike = () => {
     if (feedState) {
@@ -94,23 +97,18 @@ export default function Feed({ feed }: PropsType) {
       setCrudMyFeed({ C: false, R: false, U: true, D: false });
   };
 
-
   // 뱃지를 렌더링하는 헬퍼 함수
   const renderBadge = () => {
-    // 최우선 순위: 내가 쓴 글인지 확인
-    if (feed.userId === userContext.userId) {
-      return <Badge role="me">나</Badge>;
-    }
-    // 관리자가 쓴 글인지 확인
-    if (feed.userRole === 'ADMIN') {
-      return <Badge role="admin">관리자</Badge>;
-    }
-    // 방문자가 쓴 글인지 확인
-    if (feed.userRole === 'GUEST') {
-      return <Badge role="guest">방문자</Badge>;
-    }
-    // 그 외 일반 유저는 뱃지를 표시하지 않음
-    return null;
+    return (
+      <>
+        {/* 역할(Role) 기반 뱃지 */}
+        {feed.userRole === "ADMIN" && <Badge role="admin">관리자</Badge>}
+        {feed.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
+
+        {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
+        {feed.userId === userContext.userId && <BadgeMe role="me">나</BadgeMe>}
+      </>
+    );
   };
 
   // post.module.css에서 []로 검색한 class의 주소를 반환, 없다면 ""
@@ -123,7 +121,8 @@ export default function Feed({ feed }: PropsType) {
         <DeletePopUp feedId={feed.feedId} setIsFeedDeleteOpen={setIsFeedDeleteOpen} />
       )}
       <Stack direction="horizontal" gap={3}>
-        <div className="d-flex align-items-center"> {/* 이름과 뱃지를 정렬하기 위한 div */}
+        <div className="d-flex align-items-center">
+          {/* 이름과 뱃지를 정렬하기 위한 div */}
           <Link className="px-5" href={`/profile/${feed.userId}`} legacyBehavior>
             <p className={`${styles.userName} ${feedTypeClass} cusorPointer mb-0`}>{feed.author}</p>
           </Link>
