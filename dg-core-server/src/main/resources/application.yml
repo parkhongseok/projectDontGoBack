@@ -1,7 +1,7 @@
 spring:
   profiles:
-    active: dev, seed
-    include: secret
+#    active: dev, seed
+#    include: secret
   jackson: # JSON 직렬화/역직렬화 시점의 시간대 설정
     time-zone: Asia/Seoul
 

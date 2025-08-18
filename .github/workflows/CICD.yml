@@ -11,7 +11,7 @@ on:
         required: false
         default: "false"
 
-  # 아래 옵션 사용 시 빈 커밋 가능 
+  # 아래 옵션 사용 시 빈 커밋 가능
   # git commit --allow-empty -m "trigger deploy [deploy]"
 
 env:
@@ -23,7 +23,7 @@ env:
 jobs:
   build-push:
     # ex: git commit -m "fix: typo on login page [deploy]" 등 [deploy] 포함 시에만 자동 배포
-    if: github.event_name != 'workflow_dispatch' && contains(github.event.head_commit.message, '[deploy]') || github.event_name == 'workflow_dispatch'
+    if: github.event_name != 'workflow_dispatch' && contains(github.event.head_commit.message, 'deploy') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -78,9 +78,9 @@ jobs:
               docker pull $ECR_REGISTRY/$ECR_REPO:frontend-$TAG && \
               docker-compose -f /home/ubuntu/docker-compose.yml up -d"
 
-# run_seed=true로 수동 실행했을 때만 seeder가 돌고,
-# 락이 있으면 즉시 종료 → 재실행 안전.
-# 일반 자동 배포(push with [deploy])에선 seeder 스텝이 건너뜀.
+      # run_seed=true로 수동 실행했을 때만 seeder가 돌고,
+      # 락이 있으면 즉시 종료 → 재실행 안전.
+      # 일반 자동 배포(push with [deploy])에선 seeder 스텝이 건너뜀.
       - name: Run one-time Seeder (optional)
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_seed == 'true' }}
         run: |
