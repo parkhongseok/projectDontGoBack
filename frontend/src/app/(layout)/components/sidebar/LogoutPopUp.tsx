@@ -63,7 +63,7 @@ export default function LogoutPopUp({ setIsLogoutPopUpOpen }: propsType) {
             </div>
             <div className={`${styles.deleteBtn} ${styles.deleteBtnLine} ms-auto `}>
               <button className={` fontRed `} onClick={handleLogout}>
-                네
+                확인
               </button>
             </div>
           </Stack>

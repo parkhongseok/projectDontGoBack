@@ -1,4 +1,3 @@
-
 import "../../globals.css";
 import styles from "./Feed.module.css";
 import { Dropdown, Spinner, Stack } from "react-bootstrap";

@@ -5,7 +5,8 @@
   /* 기존 사이드바 너비만큼 왼쪽에서 띄웁니다. (예: 80px) */
   left: var(--sidebar-width);
   width: 23vw; /* 패널 너비 */
-  max-width: 80vw;
+  min-width: 23vw;
+  max-width: 40vw;
   height: 100vh;
   background-color: #f0f0f0;
   border-right: 2px solid var(--gray4);

@@ -35,7 +35,6 @@ export const Dummys = {
     commentCount: 0,
   } as Types.Feed, // 단일 피드 예제
 
-
   Comment: {
     commentId: 0,
     feedId: 0,
@@ -50,29 +49,38 @@ export const Dummys = {
   } as Types.Comment, // 단일 댓글 예제
 
   // 가상 알림 데이터
-  Notifications : [
-  {
-    id: 1,
-    userImage: "https://placehold.co/40x40/EFEFEF/333?text=U1",
-    userName: "카피바라",
-    action: "님이 회원님의 게시물을 좋아합니다.",
-    createdAt: "5분 전",
-  },
-  {
-    id: 2,
-    userImage: "https://placehold.co/40x40/E1E1E1/555?text=U2",
-    userName: "아기바라",
-    action: "님이 회원님을 팔로우하기 시작했습니다.",
-    createdAt: "1시간 전",
-  },
-  {
-    id: 3,
-    userImage: "https://placehold.co/40x40/DEDEDE/777?text=U3",
-    userName: "왕바라",
-    action: '님이 댓글을 남겼습니다: "정말 멋져요!"',
-    createdAt: "3시간 전",
-  },
-] as Types.Notification[],
+  Notifications: [
+    {
+      id: 1,
+      userId: 2,
+      userImage: "https://placehold.co/40x40/EFEFEF/333?text=U1",
+      userName: "814만",
+      userType: "BLUE",
+      userRole: "USER",
+      action: "님이 회원님의 게시물을 좋아합니다.",
+      createdAt: "5분 전",
+    },
+    {
+      id: 2,
+      userId: 4,
+      userImage: "https://placehold.co/40x40/E1E1E1/555?text=U2",
+      userName: "1201만",
+      userType: "BLUE",
+      userRole: "USER",
+      action: "님이 회원님을 팔로우하기 시작했습니다.",
+      createdAt: "1시간 전",
+    },
+    {
+      id: 3,
+      userId: 1,
+      userImage: "https://placehold.co/40x40/DEDEDE/777?text=U3",
+      userName: "961만",
+      userType: "RED",
+      userRole: "GUEST",
+      action: '님이 댓글을 남겼습니다: "정말 멋져요!"',
+      createdAt: "3시간 전",
+    },
+  ] as Types.Notification[],
 
   // Comments: [
   //   {

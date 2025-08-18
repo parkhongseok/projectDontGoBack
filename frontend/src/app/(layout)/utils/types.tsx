@@ -69,8 +69,11 @@ export type AssetHistorySeries = {
 
 export type Notification = {
   id: number;
+  userId: number;
   userImage: string;
   userName: string;
+  userType: string;
+  userRole: string;
   action: string;
   createdAt: string;
 };

@@ -125,7 +125,7 @@ export default function SidebarSettingPanel({ isOpen, onClose }: SidebarSettingP
               <FontAwesomeIcon icon={faArrowRightFromBracket} className={styles.icon} />
             </div>
             <div>
-              <p className={`${itemStyles.content} ${styles.footerText} px-4`}>로그 아웃</p>
+              <p className={`${itemStyles.content} ${styles.footerText} px-4`}>로그아웃</p>
             </div>
           </div>
 

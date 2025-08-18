@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styles from "./NotificationPanel.module.css";
 import Dummys from "../../utils/dummyData";
-import NotificationItem from "./NotificationItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import NotificationItem from "./NotificationItem";
 
 type NotificationPanelProps = {
   isOpen: boolean;
@@ -38,10 +39,7 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
 
   return (
     <>
-      <div
-        className={`${styles.overlay} ${isAnimating ? styles.open : ""}`}
-        onClick={onClose}
-      />
+      <div className={`${styles.overlay} ${isAnimating ? styles.open : ""}`} onClick={onClose} />
       <div
         className={`${styles.panel} ${isAnimating ? styles.open : ""}`}
         onTransitionEnd={handleTransitionEnd}
@@ -54,8 +52,9 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
         </div>
         <div className={styles.notificationList}>
           {Dummys.Notifications.map((notification) => (
-            <NotificationItem key={notification.id} notification={notification} />
+              <NotificationItem key={notification.id} notification={notification} />
           ))}
+
         </div>
       </div>
     </>

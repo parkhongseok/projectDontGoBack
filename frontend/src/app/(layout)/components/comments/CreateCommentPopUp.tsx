@@ -21,7 +21,7 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
   const { setCrudMyComment, setCommentContext } = useFeed();
   const { userContext } = useUser();
 
-  const closeBox = () => {
+  const handlerClose = () => {
     setShowWriteBox(false);
   };
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -55,7 +55,7 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
     const body = CreateCommentRequest;
     const success = (result: Types.ResData<Types.Comment>) => {
       setUserInput("");
-      closeBox();
+      handlerClose();
       // 경로 검사 필요하지 않나?
       setCommentContext(result.data);
       setCrudMyComment({ C: true, R: false, U: false, D: false });
@@ -113,18 +113,27 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
           {/* 본격 사용 가능 공간 */}
           <Stack gap={1} direction="vertical" className="pb-4 pt-2">
             {/* 상단  취소 / 게시글 작성 / ... */}
-            <Stack direction="horizontal" className="mx-5">
-              <>
-                <button
-                  className={`${styles.write} ${styles.exitBtn} custom-button`}
-                  onClick={closeBox}
-                >
-                  취소
-                </button>
-              </>
-              <h6 className={`ms-auto ${styles.createBoxTop}`}>답글 작성하기</h6>
-              <h6 className={`ms-auto more ${styles.createBoxTop} pb-2`}>. . .</h6>
-            </Stack>
+            <div className="d-flex justify-content-between align-items-center mx-5">
+              {/* 왼쪽: 취소 버튼 */}
+              <button
+                className={`${styles.write} ${styles.exitBtn} custom-button`}
+                onClick={handlerClose}
+              >
+                취소
+              </button>
+
+              {/* 중앙: 제목 */}
+              <h6 className={`${styles.createBoxTop} m-0`}>답글 작성</h6>
+
+              {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
+              <button
+                className={`${styles.write} ${styles.exitBtn} custom-button`}
+                style={{ visibility: "hidden" }}
+                aria-hidden="true"
+              >
+                취소
+              </button>
+            </div>
             <hr className="feed-underline fontGray4  mt-4" />
 
             {/* 글쓰기 영역*/}
