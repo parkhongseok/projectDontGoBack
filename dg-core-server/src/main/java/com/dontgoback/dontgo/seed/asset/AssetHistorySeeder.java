@@ -55,5 +55,6 @@ public class AssetHistorySeeder implements CommandLineRunner {
         seedHelper.runOnce(LOCK_KEY, () ->
                 seedTx.seedOverwrite(startAmount, days, sigma, minPct, maxPct, salt)
         );
+        System.exit(0); // ✅ 작업 완료 후 정상 종료 코드 필수
     }
 }
