@@ -1,14 +1,15 @@
 "use client";
 
 import { Stack } from "react-bootstrap";
-import "../globals.css";
+
+import "../../globals.css";
 import styles from "./Feed.module.css";
 import { usePathname } from "next/navigation";
-import { useFeed } from "../contexts/FeedContext";
-import { httpRequest } from "../utils/httpRequest";
-import * as Types from "../utils/types";
-import Dummys from "../utils/dummyData";
-import { BACKEND_API_URL } from "../utils/globalValues";
+import { useFeed } from "../../contexts/FeedContext";
+import { httpRequest } from "../../utils/httpRequest";
+import * as Types from "../../utils/types";
+import Dummys from "../../utils/dummyData";
+import { BACKEND_API_URL } from "../../utils/globalValues";
 
 type propsType = {
   feedId: number;
@@ -32,7 +33,7 @@ export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) 
     const success = (result: Types.ResData<{ feedId: number }>) => {
       handleClosePopUp();
       if (pathname === "/" || /\/profile\/\d+$/.test(pathname)) {
-        setFeedContext({ ...Dummys.DeletedFeed, feedId: result.data.feedId });
+        setFeedContext({ ...Dummys.Feed, feedId: result.data.feedId });
         setCrudMyFeed({ C: false, R: false, U: false, D: true });
       }
       // 삭제 후 페이지 이동

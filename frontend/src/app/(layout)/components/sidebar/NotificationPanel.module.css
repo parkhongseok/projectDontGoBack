@@ -1,0 +1,83 @@
+/* components/NotificationPanel.module.css */
+.panel {
+  position: fixed;
+  top: 0;
+  /* 기존 사이드바 너비만큼 왼쪽에서 띄웁니다. (예: 80px) */
+  left: var(--sidebar-width);
+  width: 23vw; /* 패널 너비 */
+  max-width: 80vw;
+  height: 100vh;
+  background-color: #f0f0f0;
+  border-right: 2px solid var(--gray4);
+  box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.05);
+
+  /* 초기 상태: 화면 왼쪽 바깥에 위치 */
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 999; /* 사이드바보다 위에 오도록 설정 */
+
+  display: flex;
+  flex-direction: column;
+}
+
+.panel.open {
+  /* 열렸을 때: 원래 위치로 이동 */
+  transform: translateX(0);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 2px solid var(--white);
+}
+
+.header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.notificationList {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+/* 스크롤바 스타일 (선택 사항) */
+.notificationList::-webkit-scrollbar {
+  width: 6px;
+}
+.notificationList::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+.notificationList::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}

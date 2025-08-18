@@ -1,7 +1,7 @@
 "use client";
 
 import "../../globals.css";
-import styles from "./../Feed.module.css";
+import styles from "../feeds/Feed.module.css";
 import { Stack } from "react-bootstrap";
 import * as Types from "../../utils/types";
 import { useState } from "react";

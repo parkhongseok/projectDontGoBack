@@ -3,8 +3,8 @@
 import "./globals.css";
 import { Stack } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
-import CreateFeed from "./components/CreateFeed";
-import Feed from "./components/Feed";
+import CreateFeed from "./components/feeds/CreateFeed";
+import Feed from "./components/feeds/Feed";
 import * as Types from "./utils/types";
 import { useFeed } from "./contexts/FeedContext";
 import { httpRequest } from "./utils/httpRequest";
@@ -34,7 +34,6 @@ export default function Home() {
   }, [lastFeedId]);
   // 피드 페이징
   const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
-
 
   const fetchFeeds = async () => {
     if (feedsLoading) return <Loading />;

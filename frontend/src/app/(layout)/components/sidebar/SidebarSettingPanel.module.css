@@ -1,0 +1,99 @@
+/* components/SidebarSettingPanel.module.css */
+.panel {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-width);
+  width: 23vw;
+  max-width: 80vw;
+  height: 100vh;
+  background-color: #f0f0f0;
+  border-right: 2px solid var(--gray4);
+  box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.05);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel.open {
+  transform: translateX(0);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 2px solid var(--white);
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* New styles for the settings panel content */
+.content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.footer {
+  margin-top: auto; /* Pushes footer to the bottom */
+  padding: 8px 24px 16px;
+}
+
+.footerText {
+  color: var(--text-color-red);
+  font-weight: bolder;
+}
+
+.logout {
+  color: var(--red);
+  font-size: 18px; /* Increased font size */
+  font-weight: 600;
+  width: 100%;
+  text-align: center;
+}
+
+.navLink {
+  color: var(--gray4);
+}
+
+.navUnLink {
+  color: var(--gray1);
+}
+
+.navItem {
+  padding: 30px;
+}

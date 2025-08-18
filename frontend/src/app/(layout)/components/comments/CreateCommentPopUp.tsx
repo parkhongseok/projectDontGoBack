@@ -6,13 +6,13 @@ import "../../globals.css";
 
 import { Stack } from "react-bootstrap";
 import * as Types from "../../utils/types";
-import styles from "../Feed.module.css";
+import styles from "../feeds/Feed.module.css";
 import { useFeed } from "../../contexts/FeedContext";
 import { useUser } from "../../contexts/UserContext";
 import { httpRequest } from "../../utils/httpRequest";
 import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/globalValues";
-import BadgeMe from "../BadgeMe";
-import Badge from "../Badge";
+import BadgeMe from "../badge/BadgeMe";
+import Badge from "../badge/Badge";
 
 type propsType = { setShowWriteBox: Dispatch<SetStateAction<boolean>>; feed: Types.Feed };
 

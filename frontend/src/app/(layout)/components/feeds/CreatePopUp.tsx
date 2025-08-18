@@ -1,17 +1,17 @@
 "use client";
 
-import "../globals.css";
+import "../../globals.css";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "./Feed.module.css";
 import { Stack } from "react-bootstrap";
-import { useFeed } from "../contexts/FeedContext";
-import { useUser } from "../contexts/UserContext";
+import { useFeed } from "../../contexts/FeedContext";
+import { useUser } from "../../contexts/UserContext";
 import { usePathname } from "next/navigation";
-import { httpRequest } from "../utils/httpRequest";
-import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../utils/globalValues";
-import * as Types from "../utils/types";
-import Badge from "./Badge";
-import BadgeMe from "./BadgeMe";
+import { httpRequest } from "../../utils/httpRequest";
+import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/globalValues";
+import * as Types from "../../utils/types";
+import Badge from "../badge/Badge";
+import BadgeMe from "../badge/BadgeMe";
 
 type propsType = {
   setIsFeedCreaterOpen: Dispatch<SetStateAction<boolean>>;

@@ -2,7 +2,7 @@
 
 import "./globals.css";
 
-import SideBar from "../(layout)/components/Sidebar";
+import SideBar from "./components/sidebar/Sidebar";
 import { FeedProvider } from "./contexts/FeedContext";
 import { UserProvider } from "./contexts/UserContext";
 

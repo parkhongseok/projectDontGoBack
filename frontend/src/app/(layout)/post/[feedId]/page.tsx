@@ -2,7 +2,7 @@
 
 import "../../globals.css";
 import * as Types from "../../utils/types";
-import Feed from "../../components/Feed";
+import Feed from "../../components/feeds/Feed";
 import Comment from "../../components/comments/Comment";
 import CreateComment from "../../components/comments/CreateComment";
 import { Stack } from "react-bootstrap";
@@ -13,7 +13,7 @@ import { httpRequest } from "../../utils/httpRequest";
 import { useUser } from "../../contexts/UserContext";
 import Loading from "../../components/Loading";
 import { BACKEND_API_URL } from "../../utils/globalValues";
-import GoBackButton from "../../components/GoBackButton";
+import GoBackButton from "../../components/buttons/GoBackButton";
 import { useRouter } from "next/navigation";
 
 export default function FeedDetile() {

@@ -1,16 +1,16 @@
 "use client";
 
-import "../globals.css";
+import "../../globals.css";
 import styles from "./Feed.module.css";
-import * as Types from "../utils/types";
+import * as Types from "../../utils/types";
 import { Stack } from "react-bootstrap";
-import { useFeed } from "../contexts/FeedContext";
+import { useFeed } from "../../contexts/FeedContext";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { httpRequest } from "../utils/httpRequest";
-import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../utils/globalValues";
-import Badge from "./Badge";
-import BadgeMe from "./BadgeMe";
+import { httpRequest } from "../../utils/httpRequest";
+import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/globalValues";
+import Badge from "../badge/Badge";
+import BadgeMe from "../badge/BadgeMe";
 
 type propsType = {
   setIsFeedEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -122,15 +122,27 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
           {/* 본격 사용 가능 공간 */}
           <Stack gap={1} direction="vertical" className="pb-4 pt-2">
             {/* 상단  취소 / 게시글 작성 / ... */}
-            <Stack direction="horizontal" className="mx-5">
-              <>
-                <button className={`${styles.write} custom-button`} onClick={handleClosePopUp}>
-                  취소
-                </button>
-              </>
-              <h6 className={`ms-auto ${styles.createBoxTop}`}>게시글 수정하기</h6>
-              <h6 className={`ms-auto ${styles.createBoxTop} pb-2`}>. . .</h6>
-            </Stack>
+            <div className="d-flex justify-content-between align-items-center mx-5">
+              {/* 왼쪽: 취소 버튼 */}
+              <button
+                className={`${styles.write} ${styles.exitBtn} custom-button`}
+                onClick={handleClosePopUp}
+              >
+                취소
+              </button>
+
+              {/* 중앙: 제목 */}
+              <h6 className={`${styles.createBoxTop} m-0`}>답글 수정</h6>
+
+              {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
+              <button
+                className={`${styles.write} ${styles.exitBtn} custom-button`}
+                style={{ visibility: "hidden" }}
+                aria-hidden="true"
+              >
+                취소
+              </button>
+            </div>
             <hr className="feed-underline fontGray4 mt-4" />
 
             {/* 글쓰기 영역*/}

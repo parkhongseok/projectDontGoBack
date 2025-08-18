@@ -38,3 +38,4 @@ seed:
       minPercent: -5.0
       maxPercent: 5.0
     secretSalt: ${SEED_SECRET_SALT}
+
