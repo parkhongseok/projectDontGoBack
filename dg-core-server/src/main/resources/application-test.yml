@@ -14,7 +14,7 @@ spring:
     initialization-fail-timeout: -1  # 무한 재시도 # [마리아 DB 떄매]
   jpa:
     hibernate:
-      ddl-auto: update  # 또는 create, validate 등을 설정 가능
+      ddl-auto: validate  # 또는 create, validate 등을 설정 가능
     show-sql: true
     properties:
       hibernate:
