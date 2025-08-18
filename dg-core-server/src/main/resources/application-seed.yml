@@ -1,31 +1,31 @@
 # 배포 시 H2는 비활성화
-#spring:
-#  config:
-#    activate:
-#      on-profile: seed
-#
-#  datasource:
-#    url: jdbc:h2:mem:db_dev;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
-#    driver-class-name: org.h2.Driver
-#    username: sa
-#    password:
-#
-#  # SQL 초기화 항상 수행 + 위치 지정
-#  sql:
-#    init:
-#      mode: always
-#      schema-locations: classpath:schema-h2.sql
-#
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    # JPA 테이블 생성(엔티티) 이후에 data.sql을 실행하고 싶을 때 쓰지만,
-#    # 이번엔 schema만 쓰니 없어도 됨. 그래도 안전하게 켜두면 충돌 없음.
-#    defer-datasource-initialization: true
-#
-#  h2:
-#    console:
-#      enabled: true
+spring:
+  config:
+    activate:
+      on-profile: seed
+
+  datasource:
+    url: jdbc:h2:mem:db_dev;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # SQL 초기화 항상 수행 + 위치 지정
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-h2.sql
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    # JPA 테이블 생성(엔티티) 이후에 data.sql을 실행하고 싶을 때 쓰지만,
+    # 이번엔 schema만 쓰니 없어도 됨. 그래도 안전하게 켜두면 충돌 없음.
+    defer-datasource-initialization: true
+
+  h2:
+    console:
+      enabled: true
 
 # 시더 토글/설정
 seed:
@@ -37,4 +37,5 @@ seed:
     clamp:
       minPercent: -5.0
       maxPercent: 5.0
-    secretSalt: ${SEED_SECRET_SALT}
+    secretSalt: secretSalt
+#    secretSalt: ${SEED_SECRET_SALT}

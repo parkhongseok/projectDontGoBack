@@ -3,8 +3,8 @@
 import "./globals.css";
 import { Stack } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
-import CreateFeed from "./components/CreateFeed";
-import Feed from "./components/Feed";
+import CreateFeed from "./components/feeds/CreateFeed";
+import Feed from "./components/feeds/Feed";
 import * as Types from "./utils/types";
 import { useFeed } from "./contexts/FeedContext";
 import { httpRequest } from "./utils/httpRequest";
@@ -34,7 +34,6 @@ export default function Home() {
   }, [lastFeedId]);
   // 피드 페이징
   const { feedContext, crudMyFeed, setCrudMyFeed } = useFeed();
-
 
   const fetchFeeds = async () => {
     if (feedsLoading) return <Loading />;
@@ -134,7 +133,7 @@ export default function Home() {
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <h5 className="text-center mb-4 pt-4 topTitleText">Hello World</h5>
+      <h5 className="text-center mb-4 pt-4 topTitleText">Dont Go Back</h5>
 
       <div className="pt-4 feeds-container">
         {/* 사이드바가 차지하지 않는 나머지 공간 */}

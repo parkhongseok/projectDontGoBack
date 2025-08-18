@@ -1,12 +1,14 @@
 "use client";
-import { Badge, Col, Container, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
-import styles from "../Feed.module.css";
+import { Col, Container, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import styles from "../feeds/Feed.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import * as Types from "../../utils/types";
 import { useState } from "react";
 import ProfileSetting from "./ProfileSetting";
 import { useUser } from "../../contexts/UserContext";
+import BadgeMe from "../badge/BadgeMe";
+import Badge from "../badge/Badge";
 
 type PropsType = {
   userProps: Types.User | null;
@@ -18,10 +20,22 @@ export default function CreateFeed({ userProps }: PropsType) {
     setIsSettingOpen(true);
   };
 
-  const badgeType = userProps?.userType == "RED" ? "danger" : "primary";
-  const badgeName = userProps?.userType == "RED" ? "RED" : "BLUE";
-
   if (!userProps) return <div className="loading mt-4"></div>;
+
+  // 뱃지를 렌더링하는 헬퍼 함수
+  const renderBadge = () => {
+    return (
+      <>
+        {/* 역할(Role) 기반 뱃지 */}
+        {userProps.userRole === "ADMIN" && <Badge role="admin">관리자</Badge>}
+        {userProps.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
+
+        {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
+        {userProps.userId === userProps.userId && <BadgeMe role="me">나</BadgeMe>}
+      </>
+    );
+  };
+
   const typeClass = styles[userProps?.userType] || "";
   return (
     <>
@@ -34,17 +48,26 @@ export default function CreateFeed({ userProps }: PropsType) {
               placement={"left"}
               overlay={
                 <Tooltip id={`button-tooltip`}>
-                  <strong>{"임의"}</strong>로 지정된 값입니다!
+                  <strong>{"매일"}</strong> 값이 변합니다.
                 </Tooltip>
               }
             >
               <Col className="d-flex align-items-center">
-                <Badge pill bg={`${badgeType}`} className={`${styles.smallBadge} `} as={"span"}>
+                {/* <Badge pill bg={`${badgeType}`} className={`${styles.smallBadge} `} as={"span"}>
                   {badgeName}
-                </Badge>
-                <p className={`${styles.ProfileuserName} ${typeClass} mx-2`}>
+                </Badge> */}
+                <div className="d-flex align-items-center">
+                  {/* 이름과 뱃지를 정렬하기 위한 div */}
+                  <p
+                    className={`${styles.ProfileuserName} ${styles.userName} ${typeClass} cusorPointer mb-0`}
+                  >
+                    {userProps.userName}
+                  </p>
+                  {renderBadge()} {/* 헬퍼 함수 호출 */}
+                </div>
+                {/* <p className={`${styles.ProfileuserName} ${typeClass} mx-2`}>
                   {userProps.userName}
-                </p>
+                </p> */}
               </Col>
             </OverlayTrigger>
             <Col className={`${styles.profileSettingContainer} me-4`}>

@@ -1,0 +1,46 @@
+.item {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.item:hover {
+  background-color: #f9f9f9;
+}
+
+.userImage {
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--gray4);
+  line-height: 1.4;
+}
+
+.text strong {
+  font-weight: 600;
+}
+
+.time {
+  font-size: 12px;
+  color: #8e8e8e;
+}
+
+.RED {
+  color: var(--text-color-red);
+}
+
+.BLUE {
+  color: var(--text-color-blue);
+}

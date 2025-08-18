@@ -2,7 +2,7 @@
 
 import "../../globals.css";
 import { Stack } from "react-bootstrap";
-import styles from "../Feed.module.css";
+import styles from "../feeds/Feed.module.css";
 import { useFeed } from "../../contexts/FeedContext";
 import { httpRequest } from "../../utils/httpRequest";
 import * as Types from "../../utils/types";

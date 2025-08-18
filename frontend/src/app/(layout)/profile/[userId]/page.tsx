@@ -2,12 +2,12 @@
 
 import { Stack, Tab, Tabs } from "react-bootstrap";
 import "../../globals.css";
-import CreateFeed from "../../components/CreateFeed";
-import Feed from "../../components/Feed";
+import CreateFeed from "../../components/feeds/CreateFeed";
+import Feed from "../../components/feeds/Feed";
 import * as Types from "../../utils/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Profile from "../../components/profiles/Profile";
-import styles from "../../components/Feed.module.css";
+import styles from "../../components/feeds/Feed.module.css";
 import Footer from "../../components/Footer";
 import { httpRequest } from "../../utils/httpRequest";
 import { useParams } from "next/navigation";
@@ -16,7 +16,7 @@ import { useUser } from "../../contexts/UserContext";
 import { useFeed } from "../../contexts/FeedContext";
 import { BACKEND_API_URL } from "../../utils/globalValues";
 import Chart from "../../components/profiles/Chart";
-import GoBackButton from "../../components/GoBackButton";
+import GoBackButton from "../../components/buttons/GoBackButton";
 
 export default function ProfileMain() {
   const { userId } = useParams<{ userId: string }>();

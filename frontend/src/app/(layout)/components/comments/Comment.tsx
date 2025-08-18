@@ -1,5 +1,5 @@
 import "../../globals.css";
-import styles from "./../Feed.module.css";
+import styles from "../feeds/Feed.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Dropdown, Stack } from "react-bootstrap";
 import * as Types from "../../utils/types";
@@ -16,8 +16,8 @@ import { httpRequest } from "../../utils/httpRequest";
 import { useFeed } from "../../contexts/FeedContext";
 import { usePathname } from "next/navigation";
 import { BACKEND_API_URL } from "../../utils/globalValues";
-import Badge from "../Badge";
-import BadgeMe from "../BadgeMe";
+import Badge from "../badge/Badge";
+import BadgeMe from "../badge/BadgeMe";
 
 type CommentProps = {
   comment: Types.Comment;

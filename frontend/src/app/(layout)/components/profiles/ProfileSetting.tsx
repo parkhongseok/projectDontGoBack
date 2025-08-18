@@ -3,7 +3,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import "../../globals.css";
 import { useUser } from "../../contexts/UserContext";
-import styles from "../Feed.module.css";
+import styles from "../feeds/Feed.module.css";
 import { Col, Container, Form, OverlayTrigger, Row, Stack, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink } from "@fortawesome/free-solid-svg-icons/faLink";
@@ -21,23 +21,8 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
     setProfileSettingState((prev) => !prev);
   };
 
-  const handleAccountEdit = () => {};
-
   const handlerClose = () => {
     setIsSettingOpen(false);
-  };
-
-  const handleSubmit = async () => {
-    // 요청 객체
-    // const profileSettingRequest = {};
-    // const method = "POST";
-    // const url = "http://localhost:8090/api/v1/feeds";
-    // const body = profileSettingRequest;
-    // const success = (result: {}) => {};
-    // const fail = () => {
-    // alert("서버 오류가 발생했습니다.");
-    // };
-    // httpRequest(method, url, body, success, fail);
   };
 
   return (
@@ -112,17 +97,11 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
             <Container className="d-flex align-items-center">
               <Row className="ms-4 me-4 w-100 align-items-center">
                 <Col className="">
-                  <p className={`${styles.settingName} ms-5`} onClick={handleAccountEdit}>
-                    계정 비활성화 또는 삭제
-                  </p>
+                  <p className={`${styles.settingName} ms-5`}>계정 비활성화 또는 삭제</p>
                 </Col>
                 <Col className="d-flex align-items-center justify-content-end ">
                   <Link href={"/settings"} className={` d-flex align-items-center p-2`}>
-                    <FontAwesomeIcon
-                      icon={faLink}
-                      className={`fontGray3 cusorPointer`}
-                      onClick={handleAccountEdit}
-                    />
+                    <FontAwesomeIcon icon={faLink} className={`fontGray3 cusorPointer`} />
                   </Link>
                 </Col>
               </Row>
@@ -137,13 +116,13 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
                   placement={"bottom"}
                   overlay={
                     <Tooltip id={`tooltip-${"bottom"}`}>
-                      <strong>{"아직"}</strong> 지원하지 않는 기능입니다.
+                      <strong>{"프로필 비공개"}</strong> 기능은 곧 지원 예정입니다.
                     </Tooltip>
                   }
                 >
                   <button
                     className={`ms-auto mb-1 ${styles.write} custom-button`}
-                    onClick={handleSubmit}
+                    onClick={handlerClose}
                   >
                     저장
                   </button>

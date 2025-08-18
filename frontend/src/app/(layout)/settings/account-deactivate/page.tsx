@@ -1,7 +1,7 @@
 "use client";
 
 import "../../globals.css";
-import styles from "../../components/Feed.module.css";
+import styles from "../../components/feeds/Feed.module.css";
 import { useUser } from "../../contexts/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
@@ -11,7 +11,7 @@ import { BACKEND_API_URL } from "../../utils/globalValues";
 import { httpRequest } from "../../utils/httpRequest";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import GoBackButton from "../../components/GoBackButton";
+import GoBackButton from "../../components/buttons/GoBackButton";
 
 export default function DeactivateAccount() {
   const { userContext } = useUser();
@@ -42,18 +42,18 @@ export default function DeactivateAccount() {
 
   return (
     <>
-        {/* dropdown 버튼이 들어올 자리 */}
-        <div className="d-flex justify-content-between align-items-center pt-4 mb-4">
-          {/* 왼쪽: 뒤로가기 버튼 */}
-          <GoBackButton size={30} />
-  
-          {/* 중앙: 제목 (m-0으로 기본 마진 제거) */}
-          <h5 className="topTitleText m-0">Settings</h5>
-  
-          {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
-          <div style={{ width: `${30}px` }} />
-        </div>
-        
+      {/* dropdown 버튼이 들어올 자리 */}
+      <div className="d-flex justify-content-between align-items-center pt-4 mb-4">
+        {/* 왼쪽: 뒤로가기 버튼 */}
+        <GoBackButton size={30} />
+
+        {/* 중앙: 제목 (m-0으로 기본 마진 제거) */}
+        <h5 className="topTitleText m-0">Settings</h5>
+
+        {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
+        <div style={{ width: `${30}px` }} />
+      </div>
+
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
       <div className={`feed-detail-container`}>
         {/* 본격 사용 가능 공간 */}

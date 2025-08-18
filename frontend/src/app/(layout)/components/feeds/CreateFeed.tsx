@@ -1,11 +1,11 @@
 "use client";
 
-import "../globals.css";
+import "../../globals.css";
 import styles from "./Feed.module.css";
 import { Stack } from "react-bootstrap";
 import { useState } from "react";
 import CreatePopUp from "./CreatePopUp";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../../contexts/UserContext";
 import Link from "next/link";
 
 export default function CreateFeed() {

@@ -66,3 +66,14 @@ export type AssetHistorySeries = {
   latestChangedAt: string; // ISO 8601 형식의 날짜-시간 문자열
   count: number;
 };
+
+export type Notification = {
+  id: number;
+  userId: number;
+  userImage: string;
+  userName: string;
+  userType: string;
+  userRole: string;
+  action: string;
+  createdAt: string;
+};

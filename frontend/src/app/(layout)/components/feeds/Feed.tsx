@@ -1,23 +1,22 @@
-import "../globals.css";
-
+import "../../globals.css";
 import styles from "./Feed.module.css";
 import { Dropdown, Spinner, Stack } from "react-bootstrap";
-import * as Types from "../utils/types";
+import * as Types from "../../utils/types";
 import Link from "next/link";
-import { useFeed } from "../contexts/FeedContext";
+import { useFeed } from "../../contexts/FeedContext";
 import { useParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import EditPopUp from "./EditPopUp";
 import DeletePopUp from "./DeletePopUp";
-import { useUser } from "../contexts/UserContext";
-import { timeAgo } from "../utils/timeUtils";
+import { useUser } from "../../contexts/UserContext";
+import { timeAgo } from "../../utils/timeUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
-import { httpRequest } from "../utils/httpRequest";
-import { BACKEND_API_URL } from "../utils/globalValues";
-import Badge from "./Badge";
-import BadgeMe from "./BadgeMe";
+import { httpRequest } from "../../utils/httpRequest";
+import { BACKEND_API_URL } from "../../utils/globalValues";
+import Badge from "../badge/Badge";
+import BadgeMe from "../badge/BadgeMe";
 
 type PropsType = {
   feed: Types.Feed | null; // Props의 타입 정의
