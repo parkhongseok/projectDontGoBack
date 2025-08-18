@@ -78,12 +78,8 @@ services:
     environment:
       - TZ=Asia/Seoul
       # ▶ 운영 DB에 붙고 시더만 돌도록
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_SEED:-test,seed}
+      - SPRING_PROFILES_ACTIVE=test, seed
       - SPRING_MAIN_WEB_APPLICATION_TYPE=none
-      - SERVER_PORT=8090
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/${DB_NAME}
-      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DB_USER_PASSWORD}
     # 이미지 ENTRYPOINT가 java -jar app.jar 이므로 command 불필요
     restart: "no"
     # 시드만 구동 시, docker compose run --rm seeder

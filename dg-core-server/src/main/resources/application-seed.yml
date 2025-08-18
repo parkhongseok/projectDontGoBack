@@ -2,7 +2,9 @@ spring:
   config:
     activate:
       on-profile: seed
+
   # DB 설정 없음! (상위 test/prod 프로필 DB를 사용)
+
 seed:
   enabled: true
   days: 180

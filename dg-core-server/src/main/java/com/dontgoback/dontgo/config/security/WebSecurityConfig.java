@@ -10,6 +10,7 @@ import com.dontgoback.dontgo.domain.refreshToken.TokenCookieService;
 import com.dontgoback.dontgo.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -34,6 +35,8 @@ import java.util.List;
 import static com.dontgoback.dontgo.global.util.GlobalValues.REFRESH_TOKEN_API_PATH;
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET) // ✅ 서블릿 웹일 때만
+@Profile("!seed") // 선택: seed에선 아예 제외
 @RequiredArgsConstructor
 @Configuration
 public class WebSecurityConfig {
