@@ -78,3 +78,8 @@ tasks.named('test') {
 tasks.withType(JavaCompile) {
 	options.compilerArgs << "-Xlint:deprecation"
 }
+
+// 최종 산출물명을 app.jar로 고정
+tasks.named("bootJar") {
+	archiveFileName.set("app.jar")
+}

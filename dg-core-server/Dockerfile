@@ -28,10 +28,10 @@ RUN apt-get update && apt-get install -y tzdata && \
 WORKDIR /app
 
 # 빌드한 JAR 파일 복사
-COPY --from=build /app/build/libs/dontgo-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/build/libs/app.jar app.jar
 
 # 포트 노출
 EXPOSE 8090
 # JVM/타임존/메모리 기본값 예시 (선택)
 ENV JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8 -Duser.timezone=Asia/Seoul -XX:+UseContainerSupport"
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
