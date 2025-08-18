@@ -1,0 +1,31 @@
+spring:
+  config:
+    activate:
+      on-profile: seed-h2
+  datasource:
+    url: jdbc:h2:mem:db_dev;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-h2.sql
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+
+seed:
+  enabled: true
+  days: 30
+  startAmount: 10000000
+  asset:
+    volatility:
+      sigma: 0.03
+    clamp:
+      minPercent: -5.0
+      maxPercent: 5.0
+    secretSalt: local-secret

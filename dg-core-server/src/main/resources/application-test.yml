@@ -1,0 +1,70 @@
+# 라즈베리파이에서 테스트를 위한 환경 설정
+server:
+  port: 8090
+spring:
+  datasource:
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
+    # 컨테이너 내부에서 `localhost`는 해당 컨테이너 자신을 가리키기 때문에, MariaDB 서비스의 이름인 `mariadb`를 사용
+    # jdbc:mariadb://localhost:3306/${DB_NAME} ㄴㄴ
+    username: ${DB_USERNAME}
+    password: ${DB_USER_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  hikari: # [마리아 DB 떄매]
+    connection-timeout: 60000 # [마리아 DB 떄매]
+    initialization-fail-timeout: -1  # 무한 재시도 # [마리아 DB 떄매]
+  jpa:
+    hibernate:
+      ddl-auto: update  # 또는 create, validate 등을 설정 가능
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true  # 데이터소스 초기화 지연 # [마리아 DB 떄매]
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
+            client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+            redirect-uri: https://dontgoback.kro.kr/api/login/oauth2/code/google
+  mail:
+    host: ${SMTP_EMAIL_HOST}
+    port: 587                             # 587은 STARTTLS용, 포트 465는 SSL용
+    username: ${SMTP_USER_NAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail.smtp.auth: true                # 메일 서버에 로그인(인증)하도록 요구
+      mail.smtp.starttls.enable: true     # 평문 SMTP 연결을 보안 연결(SSL)로 업그레이드 (필수)
+      mail.smtp.debug: true
+      mail.smtp.connectiontimeout: 5000   # 서버 연결을 5초간 기다림
+      mail.smtp.timeout: 5000             # 서버 응답을 5초간 기다림
+      mail.smtp.writetimeout: 5000        # 메일 데이터 전송을 5초간 기다림
+logging:
+  level:
+    org.springframework.jdbc: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
+
+jwt:
+  issuer: ${JWT_ISSUER}
+  secretKey: ${JWT_SECRET_KEY}
+
+cookie:
+  secure: true # https Only 설정 [OAuth2SuccessHandler]
+
+app:
+  FRONTEND_URL: https://dontgoback.kro.kr
+  BACKEND_API_URL: https://dontgoback.kro.kr/api
+
+inter-server:
+  auth:
+    host: ${AUTH_SERVER_HOST}
+    client:
+      id: ${INTERSERVER_AUTH_CLIENT_ID}
+      secret: ${INTERSERVER_AUTH_CLIENT_SECRET}
+
+    extension:
+      host: ${EXTENSION_SERVER_HOST}

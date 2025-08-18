@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: seed
+  # DB 설정 없음! (상위 test/prod 프로필 DB를 사용)
+seed:
+  enabled: true
+  days: 180
+  startAmount: 10000000
+  asset:
+    volatility:
+      sigma: 0.02
+    clamp:
+      minPercent: -5.0
+      maxPercent: 5.0
+    secretSalt: ${SEED_SECRET_SALT:secretSalt}

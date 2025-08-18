@@ -1,0 +1,15 @@
+spring:
+  profiles:
+#    active: dev, seed
+#    include: secret
+  jackson: # JSON 직렬화/역직렬화 시점의 시간대 설정
+    time-zone: Asia/Seoul
+
+# application.yml
+batch:
+  asset-refresh:
+    enabled: true
+    cron: "0 0 3 * * *"     # 매일 03:00
+    timezone: "Asia/Seoul"
+  scheduling:
+    pool-size: 2            # (옵션) 스케줄러 쓰레드 풀

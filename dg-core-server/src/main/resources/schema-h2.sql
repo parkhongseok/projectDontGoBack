@@ -1,0 +1,9 @@
+--배포 시 비활성화
+create table if not exists data_seed_lock (
+  lock_key varchar(128) primary key,
+  created_at timestamp default CURRENT_TIMESTAMP
+);
+
+alter table asset_history
+  add constraint if not exists uk_asset_history_user_snapshot_day
+  unique (user_id, snapshot_day);

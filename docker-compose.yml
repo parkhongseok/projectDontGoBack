@@ -65,6 +65,29 @@ services:
     ports:
       - "3000:3000" # Next.js의 기본 포트인 3000을 외부에 노출
 
+  # ▶ 필요시에만 실행하는 시더
+  seeder:
+    image: 651706767183.dkr.ecr.ap-northeast-2.amazonaws.com/dontgoback:backend-${TAG}
+    container_name: seeder_container
+    networks: [app_network]
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Seoul
+      # ▶ 운영 DB에 붙고 시더만 돌도록
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_SEED:-test,seed}
+      - SPRING_MAIN_WEB_APPLICATION_TYPE=none
+      - SERVER_PORT=8090
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_USER_PASSWORD}
+    # 이미지 ENTRYPOINT가 java -jar app.jar 이므로 command 불필요
+    restart: "no"
+    # 시드만 구동 시, docker compose run --rm seeder
+
 volumes:
   mariadb_data: # MariaDB 데이터를 영속적으로 저장할 볼륨
     driver: local
