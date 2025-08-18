@@ -23,7 +23,7 @@ env:
 jobs:
   build-push:
     # ex: git commit -m "fix: typo on login page [deploy]" 등 [deploy] 포함 시에만 자동 배포
-    if: github.event_name != 'workflow_dispatch' && contains(github.event.head_commit.message, 'deploy') || github.event_name == 'workflow_dispatch'
+    if: github.event_name != 'workflow_dispatch' && contains(github.event.head_commit.message, '[deploy]') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -82,7 +82,8 @@ jobs:
       # 락이 있으면 즉시 종료 → 재실행 안전.
       # 일반 자동 배포(push with [deploy])에선 seeder 스텝이 건너뜀.
       - name: Run one-time Seeder (optional)
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_seed == 'true' }}
+      # [seed] 있는 경우에만 실행
+        if: (github.event_name == 'workflow_dispatch' && inputs.run_seed == 'true') || contains(github.event.head_commit.message, '[seed]')
         run: |
           ssh -o StrictHostKeyChecking=no \
             -i ~/.ssh/ec2_key.pem \
