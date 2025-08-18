@@ -79,6 +79,7 @@ services:
       - TZ=Asia/Seoul
       # ▶ 운영 DB에 붙고 시더만 돌도록
       - SPRING_PROFILES_ACTIVE=test, seed
+      - SPRING_MAIN_WEB_APPLICATION_TYPE=none
     # 이미지 ENTRYPOINT가 java -jar app.jar 이므로 command 불필요
     restart: "no"
     # 시드만 구동 시, docker compose run --rm seeder
