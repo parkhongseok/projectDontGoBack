@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
 /*
@@ -21,6 +22,7 @@ import org.springframework.web.util.WebUtils;
         loadAuthorizationRequest() → 쿠키에서 요청 정보 가져오기
         removeAuthorizationRequest() → 사용 완료 후 삭제
 */
+@Component
 public class OAuth2AuthorizationRequestBasedOnCookieRepository
         implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
     // AuthorizationRequestRepository : 권한 인증 흐름에서 클라이언트 요청을 유지하는 데 필요한 인터페이스
