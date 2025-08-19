@@ -21,6 +21,14 @@ export default function CreateCommentPopUp({ setShowWriteBox, feed }: propsType)
   const { setCrudMyComment, setCommentContext } = useFeed();
   const { userContext } = useUser();
 
+  // 배경 스크롤 잠금
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   const handlerClose = () => {
     setShowWriteBox(false);
   };

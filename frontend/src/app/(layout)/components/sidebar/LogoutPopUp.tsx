@@ -4,16 +4,22 @@ import { Stack } from "react-bootstrap";
 
 import "../../globals.css";
 import styles from "../feeds/Feed.module.css";
-import { usePathname } from "next/navigation";
-import { httpRequest } from "../../utils/httpRequest";
-import * as Types from "../../utils/types";
 import { BACKEND_API_URL } from "../../utils/globalValues";
+import { useEffect } from "react";
 
 type propsType = {
   setIsLogoutPopUpOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function LogoutPopUp({ setIsLogoutPopUpOpen }: propsType) {
+  // 배경 스크롤 잠금
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   const handleClosePopUp = () => {
     setIsLogoutPopUpOpen(false);
   };

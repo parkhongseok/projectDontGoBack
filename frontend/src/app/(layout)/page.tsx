@@ -10,12 +10,9 @@ import { useFeed } from "./contexts/FeedContext";
 import { httpRequest } from "./utils/httpRequest";
 import Loading from "./components/Loading";
 import { useUser } from "./contexts/UserContext";
-import { useRouter } from "next/navigation";
 import { BACKEND_API_URL } from "./utils/globalValues";
 
 export default function Home() {
-  const router = useRouter();
-  // url 바꿔치기
   useEffect(() => {
     document.title = "DONT GO BACK"; // 크롬의 경우, 탭 이름까지 변경
   }, []);

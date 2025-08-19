@@ -17,6 +17,7 @@ import { httpRequest } from "../../utils/httpRequest";
 import { BACKEND_API_URL } from "../../utils/globalValues";
 import Badge from "../badge/Badge";
 import BadgeMe from "../badge/BadgeMe";
+import ReportProblemPopup from "../report/ReportProblemPopup";
 
 type PropsType = {
   feed: Types.Feed | null; // Props의 타입 정의
@@ -30,6 +31,7 @@ export default function Feed({ feed }: PropsType) {
 
   const [isFeedEditOpen, setIsFeedEditOpen] = useState(false);
   const [isFeedDeleteOpen, setIsFeedDeleteOpen] = useState(false);
+  const [isReportProblemPopupOpen, setIsReportProblemPopupOpen] = useState(false);
 
   const [feedState, setFeedState] = useState(feed);
 
@@ -96,6 +98,11 @@ export default function Feed({ feed }: PropsType) {
       setCrudMyFeed({ C: false, R: false, U: true, D: false });
   };
 
+  // === 문제 신고 ===
+  const handleReportProblemPopup = () => {
+    setIsReportProblemPopupOpen(true);
+  };
+
   // 뱃지를 렌더링하는 헬퍼 함수
   const renderBadge = () => {
     return (
@@ -114,103 +121,112 @@ export default function Feed({ feed }: PropsType) {
   const feedTypeClass = styles[feed.feedType] || "";
 
   return (
-    <Stack className="px-5" gap={3}>
-      {isFeedEditOpen && <EditPopUp setIsFeedEditOpen={setIsFeedEditOpen} />}
-      {isFeedDeleteOpen && (
-        <DeletePopUp feedId={feed.feedId} setIsFeedDeleteOpen={setIsFeedDeleteOpen} />
+    <>
+      {isReportProblemPopupOpen && (
+        <ReportProblemPopup onClose={() => setIsReportProblemPopupOpen(false)} />
       )}
-      <Stack direction="horizontal" gap={3}>
-        <div className="d-flex align-items-center">
-          {/* 이름과 뱃지를 정렬하기 위한 div */}
-          <Link className="px-5" href={`/profile/${feed.userId}`} legacyBehavior>
-            <p className={`${styles.userName} ${feedTypeClass} cusorPointer mb-0`}>{feed.author}</p>
-          </Link>
-          {renderBadge()} {/* 헬퍼 함수 호출 */}
-        </div>
-        <div className="vr" />
-        <div className="">
-          <p className={styles.time}>{timeAgo(feed.createdAt, feed.updatedAt)}</p>
-        </div>
-        <div className="ms-auto">
-          <Dropdown>
-            <Dropdown.Toggle
-              className={styles.more}
-              as="div"
-              id="dropdown-basic"
-              bsPrefix="custom-toggle"
-            >
-              . . .
-            </Dropdown.Toggle>
+      <Stack className="px-5" gap={3}>
+        {isFeedEditOpen && <EditPopUp setIsFeedEditOpen={setIsFeedEditOpen} />}
+        {isFeedDeleteOpen && (
+          <DeletePopUp feedId={feed.feedId} setIsFeedDeleteOpen={setIsFeedDeleteOpen} />
+        )}
+        <Stack direction="horizontal" gap={3}>
+          <div className="d-flex align-items-center">
+            {/* 이름과 뱃지를 정렬하기 위한 div */}
+            <Link className="px-5" href={`/profile/${feed.userId}`} legacyBehavior>
+              <p className={`${styles.userName} ${feedTypeClass} cusorPointer mb-0`}>
+                {feed.author}
+              </p>
+            </Link>
+            {renderBadge()} {/* 헬퍼 함수 호출 */}
+          </div>
+          <div className="vr" />
+          <div className="">
+            <p className={styles.time}>{timeAgo(feed.createdAt, feed.updatedAt)}</p>
+          </div>
+          <div className="ms-auto">
+            <Dropdown>
+              <Dropdown.Toggle
+                className={styles.more}
+                as="div"
+                id="dropdown-basic"
+                bsPrefix="custom-toggle"
+              >
+                . . .
+              </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-              {feed.userId == userContext.userId ? (
-                <>
-                  <Dropdown.ItemText className="fontGray1">보관하기</Dropdown.ItemText>
-                  <Dropdown.Item onClick={handleFeedEditClick}>수정하기</Dropdown.Item>
-                  <Dropdown.Item onClick={handleFeedDeleteClick}>삭제하기</Dropdown.Item>
-                </>
-              ) : (
-                <>
-                  <Dropdown.ItemText className="fontGray1">저장하기</Dropdown.ItemText>
-                  <Dropdown.ItemText className="fontGray1">관심없음</Dropdown.ItemText>
-                  <Dropdown.ItemText className="fontGray1">혼인신고하기</Dropdown.ItemText>
-                </>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      </Stack>
-      {feedId ? (
-        <div>
-          <p className={`px-5 ${styles.content}`}>{feed.content}</p>
-        </div>
-      ) : (
-        <div className={`${styles.contentContainer}`}>
-          <Link className={`px-5 `} href={`/post/${feed.feedId}`} legacyBehavior>
-            <p onClick={handleFeedClick} className={`${styles.content} cusorPointer`}>
-              {feed.content}
-            </p>
-          </Link>
-        </div>
-      )}
-      <Stack className="px-5" direction="horizontal" gap={3}>
-        <div className={`flex items-center gap-2 text-xl leading-none`}>
-          <FontAwesomeIcon
-            icon={faHeart}
-            className={`${styles.like} ${styles.likeBtn} ${
-              feedState?.isLiked && styles.likeActive
-            } `}
-            onClick={handleFeedLike}
-          />
-          <span className={`${styles.like} ms-1`}>{feedState?.likeCount}</span>
-        </div>
+              <Dropdown.Menu>
+                {feed.userId == userContext.userId ? (
+                  <>
+                    <Dropdown.ItemText className="fontGray1">보관하기</Dropdown.ItemText>
+                    <Dropdown.Item onClick={handleFeedEditClick}>수정하기</Dropdown.Item>
+                    <Dropdown.Item onClick={handleFeedDeleteClick}>삭제하기</Dropdown.Item>
+                  </>
+                ) : (
+                  <>
+                    <Dropdown.ItemText className="fontGray1">저장하기</Dropdown.ItemText>
+                    <Dropdown.ItemText className="fontGray1">관심없음</Dropdown.ItemText>
+                    <Dropdown.Item onClick={handleReportProblemPopup} className="fontGray4">
+                      신고하기
+                    </Dropdown.Item>
+                  </>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+        </Stack>
+        {feedId ? (
+          <div>
+            <p className={`px-5 ${styles.content}`}>{feed.content}</p>
+          </div>
+        ) : (
+          <div className={`${styles.contentContainer}`}>
+            <Link className={`px-5 `} href={`/post/${feed.feedId}`} legacyBehavior>
+              <p onClick={handleFeedClick} className={`${styles.content} cusorPointer`}>
+                {feed.content}
+              </p>
+            </Link>
+          </div>
+        )}
+        <Stack className="px-5" direction="horizontal" gap={3}>
+          <div className={`flex items-center gap-2 text-xl leading-none`}>
+            <FontAwesomeIcon
+              icon={faHeart}
+              className={`${styles.like} ${styles.likeBtn} ${
+                feedState?.isLiked && styles.likeActive
+              } `}
+              onClick={handleFeedLike}
+            />
+            <span className={`${styles.like} ms-1`}>{feedState?.likeCount}</span>
+          </div>
 
-        <div className="vr" />
+          <div className="vr" />
 
-        <div className={`flex items-center gap-2 text-xl leading-none`}>
-          {feedId ? (
-            <>
-              <FontAwesomeIcon
-                icon={faComment}
-                // size="2x"
-                className={` ${styles.comment} ${styles.likeBtn} `}
-              />
-              <span className={`${styles.comment} ms-1`}>{feed.commentCount}</span>
-            </>
-          ) : (
-            <>
-              <Link href={`/post/${feed.feedId}`}>
+          <div className={`flex items-center gap-2 text-xl leading-none`}>
+            {feedId ? (
+              <>
                 <FontAwesomeIcon
                   icon={faComment}
                   // size="2x"
-                  className={` ${styles.comment} ${styles.likeBtn} cusorPointer`}
+                  className={` ${styles.comment} ${styles.likeBtn} `}
                 />
-                <span className={`${styles.comment} ms-1 cusorPointer`}>{feed.commentCount}</span>
-              </Link>
-            </>
-          )}
-        </div>
+                <span className={`${styles.comment} ms-1`}>{feed.commentCount}</span>
+              </>
+            ) : (
+              <>
+                <Link href={`/post/${feed.feedId}`}>
+                  <FontAwesomeIcon
+                    icon={faComment}
+                    // size="2x"
+                    className={` ${styles.comment} ${styles.likeBtn} cusorPointer`}
+                  />
+                  <span className={`${styles.comment} ms-1 cusorPointer`}>{feed.commentCount}</span>
+                </Link>
+              </>
+            )}
+          </div>
+        </Stack>
       </Stack>
-    </Stack>
+    </>
   );
 }

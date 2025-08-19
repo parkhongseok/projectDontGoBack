@@ -3,7 +3,6 @@ import styles from "./NotificationPanel.module.css";
 import Dummys from "../../utils/dummyData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import NotificationItem from "./NotificationItem";
 
 type NotificationPanelProps = {

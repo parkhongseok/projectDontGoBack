@@ -9,7 +9,7 @@ type NotificationItemProps = {
 };
 
 export default function NotificationItem({ notification }: NotificationItemProps) {
-  const { userId, userImage, userName, userRole, userType, action, createdAt } = notification;
+  const { userId, userImage, userName, userType, action, createdAt } = notification;
 
   const typeClass = styles[userType] || "";
 

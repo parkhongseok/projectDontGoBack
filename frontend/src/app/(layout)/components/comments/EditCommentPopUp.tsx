@@ -27,6 +27,14 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
     target.style.height = `${target.scrollHeight}px`;
   };
 
+  // 배경 스크롤 잠금
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   useEffect(() => {
     if (textareaRef.current) {
       autoResize(textareaRef.current);
@@ -133,7 +141,9 @@ export default function EditCommentPopUp({ setIsCommentEditOpen }: propsType) {
                 className={`${styles.write} ${styles.exitBtn} custom-button`}
                 style={{ visibility: "hidden" }}
                 aria-hidden="true"
-              >취소</button>
+              >
+                취소
+              </button>
             </div>
             <hr className="feed-underline fontGray4 mt-4" />
 

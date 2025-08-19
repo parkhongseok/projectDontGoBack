@@ -66,5 +66,5 @@ inter-server:
       id: ${INTERSERVER_AUTH_CLIENT_ID}
       secret: ${INTERSERVER_AUTH_CLIENT_SECRET}
 
-    extension:
-      host: ${EXTENSION_SERVER_HOST}
+  extension:
+    host: ${EXTENSION_SERVER_HOST}

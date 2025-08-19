@@ -18,6 +18,7 @@ import { usePathname } from "next/navigation";
 import { BACKEND_API_URL } from "../../utils/globalValues";
 import Badge from "../badge/Badge";
 import BadgeMe from "../badge/BadgeMe";
+import ReportProblemPopup from "../report/ReportProblemPopup";
 
 type CommentProps = {
   comment: Types.Comment;
@@ -31,6 +32,7 @@ export default function Comment({ comment }: CommentProps) {
 
   const [isCommentEditOpen, setIsCommentEditOpen] = useState(false);
   const [isCommentDeleteOpen, setIsCommentDeleteOpen] = useState(false);
+  const [isReportProblemPopupOpen, setIsReportProblemPopupOpen] = useState(false);
 
   // 댓글 좋아요
   // const [likeCountState, setFeedLikeState] = useState(comment?.likeCount || 0);
@@ -86,6 +88,11 @@ export default function Comment({ comment }: CommentProps) {
     if (/\/post\/\d+$/.test(pathname)) setCrudMyComment({ C: false, R: false, U: true, D: false });
   };
 
+  // === 문제 신고 ===
+  const handleReportProblemPopup = () => {
+    setIsReportProblemPopupOpen(true);
+  };
+
   // 뱃지를 렌더링하는 헬퍼 함수
   const renderBadge = () => {
     return (
@@ -102,81 +109,92 @@ export default function Comment({ comment }: CommentProps) {
 
   const feedTypeClass = styles[comment.commentType] || "";
   return (
-    <Stack className="px-5" gap={3}>
-      {isCommentEditOpen && <EditCommentPopUp setIsCommentEditOpen={setIsCommentEditOpen} />}
-      {isCommentDeleteOpen && (
-        <DeleteCommentPopUp
-          commentId={comment.commentId}
-          setIsCommentDeleteOpen={setIsCommentDeleteOpen}
-        />
+    <>
+      {isReportProblemPopupOpen && (
+        <ReportProblemPopup onClose={() => setIsReportProblemPopupOpen(false)} />
       )}
-      <Stack direction="horizontal" gap={3}>
-        <div className="d-flex align-items-center">
-          {" "}
-          {/* 이름과 뱃지를 정렬하기 위한 div */}
-          <p className={`${styles.userName} ${feedTypeClass} mb-0`}>{comment.author}</p>
-          {renderBadge()} {/* 헬퍼 함수 호출 */}
-        </div>
-        <div className="vr" />
-        <div className="">
-          <p className={styles.time}>{timeAgo(comment.createdAt, comment.updatedAt)}</p>
-        </div>
-        <div className="ms-auto">
-          <Dropdown>
-            <Dropdown.Toggle
-              className={styles.more}
-              as="div"
-              id="dropdown-basic"
-              bsPrefix="custom-toggle"
-            >
-              . . .
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              {comment.userId == userContext.userId ? (
-                <>
-                  <Dropdown.Item onClick={handleCommentEditClick}>수정하기</Dropdown.Item>
-                  <Dropdown.Item onClick={handleCommentDeleteClick}>삭제하기</Dropdown.Item>
-                </>
-              ) : (
-                <>
-                  <Dropdown.ItemText className="fontGray1">저장하기</Dropdown.ItemText>
-                  <Dropdown.ItemText className="fontGray1">관심없음</Dropdown.ItemText>
-                  <Dropdown.ItemText className="fontGray1">혼인신고하기</Dropdown.ItemText>
-                </>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      </Stack>
-      <div className="px-5">
-        <p className={styles.content}>{comment.content}</p>
-      </div>
-      <Stack className="px-5" direction="horizontal" gap={3}>
-        <div className={`flex items-center gap-2 text-xl leading-none`}>
-          <FontAwesomeIcon
-            icon={faHeart}
-            className={`${styles.like} ${styles.likeBtn} ${
-              commentState.isLiked && styles.likeActive
-            } `}
-            onClick={handleCommentLike}
+      <Stack className="px-5" gap={3}>
+        {isCommentEditOpen && <EditCommentPopUp setIsCommentEditOpen={setIsCommentEditOpen} />}
+        {isCommentDeleteOpen && (
+          <DeleteCommentPopUp
+            commentId={comment.commentId}
+            setIsCommentDeleteOpen={setIsCommentDeleteOpen}
           />
-          <span className={`${styles.like} ms-1`}>{commentState.likeCount}</span>
-        </div>
+        )}
+        <Stack direction="horizontal" gap={3}>
+          <div className="d-flex align-items-center">
+            {" "}
+            {/* 이름과 뱃지를 정렬하기 위한 div */}
+            <Link className="px-5" href={`/profile/${comment.userId}`} legacyBehavior>
+              <p className={`${styles.userName} ${feedTypeClass} cusorPointer mb-0`}>
+                {comment.author}
+              </p>
+            </Link>
+            {renderBadge()} {/* 헬퍼 함수 호출 */}
+          </div>
+          <div className="vr" />
+          <div className="">
+            <p className={styles.time}>{timeAgo(comment.createdAt, comment.updatedAt)}</p>
+          </div>
+          <div className="ms-auto">
+            <Dropdown>
+              <Dropdown.Toggle
+                className={styles.more}
+                as="div"
+                id="dropdown-basic"
+                bsPrefix="custom-toggle"
+              >
+                . . .
+              </Dropdown.Toggle>
 
-        <div className="vr" />
-
-        <div className={`flex items-center gap-2 text-xl leading-none`}>
-          <FontAwesomeIcon
-            icon={faComment}
-            // size="2x"
-            className={` ${styles.comment} ${styles.likeBtn} `}
-          />
-          <Link href={`#/post/${comment.feedId}/${comment.commentId}`} legacyBehavior>
-            <span className={`${styles.comment} ms-1`}>{comment.subCommentCount}</span>
-          </Link>
+              <Dropdown.Menu>
+                {comment.userId == userContext.userId ? (
+                  <>
+                    <Dropdown.Item onClick={handleCommentEditClick}>수정하기</Dropdown.Item>
+                    <Dropdown.Item onClick={handleCommentDeleteClick}>삭제하기</Dropdown.Item>
+                  </>
+                ) : (
+                  <>
+                    <Dropdown.ItemText className="fontGray1">저장하기</Dropdown.ItemText>
+                    <Dropdown.ItemText className="fontGray1">관심없음</Dropdown.ItemText>
+                    <Dropdown.Item onClick={handleReportProblemPopup} className="fontGray4">
+                      신고하기
+                    </Dropdown.Item>
+                  </>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+        </Stack>
+        <div className="px-5">
+          <p className={styles.content}>{comment.content}</p>
         </div>
+        <Stack className="px-5" direction="horizontal" gap={3}>
+          <div className={`flex items-center gap-2 text-xl leading-none`}>
+            <FontAwesomeIcon
+              icon={faHeart}
+              className={`${styles.like} ${styles.likeBtn} ${
+                commentState.isLiked && styles.likeActive
+              } `}
+              onClick={handleCommentLike}
+            />
+            <span className={`${styles.like} ms-1`}>{commentState.likeCount}</span>
+          </div>
+
+          <div className="vr" />
+
+          <div className={`flex items-center gap-2 text-xl leading-none`}>
+            <FontAwesomeIcon
+              icon={faComment}
+              // size="2x"
+              className={` ${styles.comment} ${styles.likeBtn} `}
+            />
+            <Link href={`#/post/${comment.feedId}/${comment.commentId}`} legacyBehavior>
+              <span className={`${styles.comment} ms-1`}>{comment.subCommentCount}</span>
+            </Link>
+          </div>
+        </Stack>
       </Stack>
-    </Stack>
+    </>
   );
 }
