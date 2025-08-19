@@ -1,4 +1,4 @@
-package com.dontgoback.dontgo.interserver;
+package com.dontgoback.dontgo.batch;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,8 +20,9 @@ public class InternalApiIpFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
         String remoteAddr = request.getRemoteAddr();
-
-        if (uri.startsWith("/test/internal/") && !remoteAddr.equals("127.0.0.1")) {
+        
+        // 내부 통신만 허용
+        if (uri.startsWith("/test/internal/") && !request.getLocalAddr().equals(request.getRemoteAddr())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden IP: " + remoteAddr);
             return;
         }
