@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -19,6 +21,7 @@ public class AssetRefreshUseCaseTest {
     InterServerAssetUpdateService updateService;
 
     AssetRefreshUseCase useCase;
+    LocalDate today = LocalDate.now();
 
     @BeforeEach
     void setUp() {
@@ -29,11 +32,11 @@ public class AssetRefreshUseCaseTest {
     void refreshAllActiveUsers_should_return_service_result() {
         BatchResult expected = BatchResult.builder()
                 .total(3).success(2).failed(1).elapsedMs(100).build();
-        when(updateService.updateAllActiveUsersAsset()).thenReturn(expected);
+        when(updateService.updateAllActiveUsersAsset(today)).thenReturn(expected);
 
-        BatchResult actual = useCase.refreshAllActiveUsers();
+        BatchResult actual = useCase.refreshAllActiveUsers(today);
 
         assertThat(actual).isEqualTo(expected);
-        verify(updateService, times(1)).updateAllActiveUsersAsset();
+        verify(updateService, times(1)).updateAllActiveUsersAsset(today);
     }
 }

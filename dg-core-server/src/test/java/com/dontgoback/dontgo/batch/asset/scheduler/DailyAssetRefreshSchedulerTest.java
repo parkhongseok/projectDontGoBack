@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
@@ -21,6 +23,8 @@ public class DailyAssetRefreshSchedulerTest {
     AssetRefreshJob job;
 
     DailyAssetRefreshScheduler scheduler;
+
+    LocalDate today = LocalDate.now();
 
     @BeforeEach
     void setUp() {
@@ -37,19 +41,19 @@ public class DailyAssetRefreshSchedulerTest {
     @Test
     void run_should_delegate_to_job_and_log() {
         when(props.getAssetRefresh()).thenReturn(assetProps(true));
-        when(job.run()).thenReturn(BatchResult.builder()
+        when(job.run(today)).thenReturn(BatchResult.builder()
                 .total(10).success(9).failed(1).elapsedMs(1234).build());
 
         scheduler.run();
 
-        verify(job, times(1)).run();
+        verify(job, times(1)).run(today);
         // 로그 검증이 필요하면 OutputCaptureExtension 사용 (SpringBootTest에서)
     }
 
     @Test
     void run_should_catch_any_exception_from_job() {
         when(props.getAssetRefresh()).thenReturn(assetProps(true));
-        when(job.run()).thenThrow(new RuntimeException("boom"));
+        when(job.run(today)).thenThrow(new RuntimeException("boom"));
 
         // 예외가 퍼지면 안됨(스케줄러 생명주기 보호)
         assertDoesNotThrow(() -> scheduler.run());

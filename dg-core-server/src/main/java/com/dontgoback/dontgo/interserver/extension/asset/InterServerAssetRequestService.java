@@ -13,6 +13,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+
 @Slf4j
 @Component
 public class InterServerAssetRequestService {
@@ -37,7 +39,7 @@ public class InterServerAssetRequestService {
      * @param request 갱신 요청 데이터 (자산)
      * @return UpdateAssetResponse (새로운 자산 값)
      */
-    public UpdateAssetResponse updateAsset(long userId, String jwt, UpdateAssetRequest request) {
+    public UpdateAssetResponse updateAsset(long userId, String jwt, UpdateAssetRequest request, LocalDate snapshotDay) {
         String url = String.format("%s/msa/ext/api/update-asset/%d", extServerProps.getHost(), userId);
         log.debug("자산 갱신 요청 → URL: {}, asset: {}", url, request.getAsset());
 
