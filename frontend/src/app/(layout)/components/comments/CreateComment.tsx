@@ -4,7 +4,7 @@ import "../../globals.css";
 import styles from "../feeds/Feed.module.css";
 import { Stack } from "react-bootstrap";
 import * as Types from "../../utils/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../../contexts/UserContext";
 import CreateCommentPopUp from "./CreateCommentPopUp";
 
@@ -15,7 +15,15 @@ type userProps = {
 export default function CreateComment({ feed }: userProps) {
   const [showWriteBox, setShowWriteBox] = useState(false);
   const { userContext } = useUser();
-
+  
+  // 배경 스크롤 잠금
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+  
   if (!feed || !userContext) {
     return <div className={`${styles.CreateCommentContainer} cursorPointer px-4`} />;
   }

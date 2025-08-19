@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./SidebarSettingPanel.module.css"; // Changed import
+import styles from "./SidebarSettingPanel.module.css";
 import itemStyles from "./NotificationItem.module.css";
 import { Nav } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +12,10 @@ import {
   faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import LogOutPopUp from "./LogoutPopUp";
+import PolicyPopup from "../policy/PolicyPopup";
+import PrivacyPolicyContent from "../policy/PrivacyPolicyContent";
+import TermsOfServiceContent from "../policy/TermsOfServiceContent";
+import ReportProblemPopup from "../report/ReportProblemPopup";
 
 type SidebarSettingPanelProps = {
   isOpen: boolean;
@@ -22,6 +26,9 @@ export default function SidebarSettingPanel({ isOpen, onClose }: SidebarSettingP
   const [isMounted, setIsMounted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLogoutPopUpOpen, setIsLogoutPopUpOpen] = useState(false);
+  const [isPolicyPopupOpen, setIsPolicyPopupOpen] = useState(false);
+  const [isTermsPopupOpen, setIsTermsPopupOpen] = useState(false);
+  const [isReportProblemPopupOpen, setIsReportProblemPopupOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -49,9 +56,34 @@ export default function SidebarSettingPanel({ isOpen, onClose }: SidebarSettingP
     setIsLogoutPopUpOpen(true);
   };
 
+  const handlePolicyPopup = () => {
+    setIsPolicyPopupOpen(true);
+  };
+
+  const handleTermsPopup = () => {
+    setIsTermsPopupOpen(true);
+  };
+
+  const handleReportProblemPopup = () => {
+    setIsReportProblemPopupOpen(true);
+  };
+
   return (
     <>
       {isLogoutPopUpOpen && <LogOutPopUp setIsLogoutPopUpOpen={setIsLogoutPopUpOpen} />}
+      {isPolicyPopupOpen && (
+        <PolicyPopup title="개인정보처리방침" onPolicyClose={() => setIsPolicyPopupOpen(false)}>
+          <PrivacyPolicyContent />
+        </PolicyPopup>
+      )}
+      {isTermsPopupOpen && (
+        <PolicyPopup title="서비스 약관" onPolicyClose={() => setIsTermsPopupOpen(false)}>
+          <TermsOfServiceContent />
+        </PolicyPopup>
+      )}
+      {isReportProblemPopupOpen && (
+        <ReportProblemPopup onClose={() => setIsReportProblemPopupOpen(false)} />
+      )}
       <div className={`${styles.overlay} ${isAnimating ? styles.open : ""}`} onClick={onClose} />
       <div
         className={`${styles.panel} ${isAnimating ? styles.open : ""}`}
@@ -64,77 +96,52 @@ export default function SidebarSettingPanel({ isOpen, onClose }: SidebarSettingP
           </button>
         </div>
         {/* Panel content */}
-        <div className={styles.content}>
+        <div className={`${styles.content}`}>
           <Nav className="flex-column">
             {/* 계정 관리 */}
-            <Nav.Link href="/settings" className={`${itemStyles.item}`}>
-              <div className={`${itemStyles.item}`}>
-                <div className={itemStyles.content}>
-                  {<FontAwesomeIcon icon={faUserGear} className={styles.navLink} />}
-                </div>
-                <div>
-                  <p className={`${itemStyles.content} ${styles.navLink}`}>계정 관리</p>
-                </div>
-              </div>
+            <Nav.Link
+              href="/settings"
+              className={`${itemStyles.item} d-flex justify-content-between align-items-center px-5 p-4`}
+            >
+              <FontAwesomeIcon icon={faUserGear} className={styles.navLink} />
+              <strong className={styles.navLink}>계정 관리</strong>
             </Nav.Link>
-
             {/* 개인정보처리방침 */}
-
-            <Nav.Link href="#" className={`${itemStyles.item}`}>
-              <div className={`${itemStyles.item}`}>
-                <div className={itemStyles.content}>
-                  <FontAwesomeIcon icon={faShieldHalved} className={styles.navUnLink} />
-                </div>
-                <div>
-                  <p className={`${itemStyles.content} ${styles.navUnLink}`}>개인정보처리방침</p>
-                </div>
-              </div>
+            <Nav.Link
+              onClick={handlePolicyPopup}
+              className={`${itemStyles.item} d-flex justify-content-between align-items-center px-5 p-4`}
+            >
+              <FontAwesomeIcon icon={faShieldHalved} className={styles.navLink} />
+              <span className={styles.navLink}>개인정보처리방침</span>
             </Nav.Link>
 
             {/* 서비스 약관 */}
-            <Nav.Link href="#" className={`${itemStyles.item}`}>
-              <div className={`${itemStyles.item}`}>
-                <div className={itemStyles.content}>
-                  <FontAwesomeIcon icon={faFileLines} className={styles.navUnLink} />
-                </div>
-                <div>
-                  <p className={`${itemStyles.content} ${styles.navUnLink}`}>서비스 약관</p>
-                </div>
-              </div>
+            <Nav.Link
+              onClick={handleTermsPopup}
+              className={`${itemStyles.item} d-flex justify-content-between align-items-center px-5 p-4`}
+            >
+              <FontAwesomeIcon icon={faFileLines} className={styles.navLink} />
+              <span className={styles.navLink}>서비스 약관</span>
             </Nav.Link>
 
             {/* 문제 신고 */}
-            <Nav.Link href="#" className={`${itemStyles.item}`}>
-              <div className={`${itemStyles.item}`}>
-                <div className={itemStyles.content}>
-                  <FontAwesomeIcon icon={faTriangleExclamation} className={styles.navUnLink} />
-                </div>
-                <div>
-                  <p className={`${itemStyles.content} ${styles.navUnLink}`}>문제 신고</p>
-                </div>
-              </div>
+            <Nav.Link
+              onClick={handleReportProblemPopup}
+              className={`${itemStyles.item} d-flex justify-content-between align-items-center px-5 p-4`}
+            >
+              <FontAwesomeIcon icon={faTriangleExclamation} className={styles.navLink} />
+              <span className={styles.navLink}>문제 신고</span>
             </Nav.Link>
           </Nav>
 
           {/* Log out */}
           <div
             onClick={handleLogoutPopup}
-            className={`${itemStyles.item} ${styles.footer} ${styles.footerText} p-4`}
+            className={`${itemStyles.item} ${styles.footer} ${styles.footerText} p-4 d-flex justify-content-between align-items-center px-5`}
           >
-            <div className={`${itemStyles.content} px-4`}>
-              <FontAwesomeIcon icon={faArrowRightFromBracket} className={styles.icon} />
-            </div>
-            <div>
-              <p className={`${itemStyles.content} ${styles.footerText} px-4`}>로그아웃</p>
-            </div>
+            <FontAwesomeIcon icon={faArrowRightFromBracket} className={styles.icon} />
+            <span className={`${styles.footerText}`}>로그아웃</span>
           </div>
-
-          {/* <div className={`${itemStyles.item} pt-3`}>
-            <Nav.Link onClick={onLogout} className={` ${styles.logout}`}>
-              <FontAwesomeIcon icon={faArrowRightFromBracket} className={styles.icon} />{" "}
-              <p className={`${styles.footerText}`}>로그 아웃</p>
-            </Nav.Link>
-          </div> */}
         </div>
       </div>
     </>

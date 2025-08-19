@@ -31,7 +31,7 @@ export default function CreateFeed({ userProps }: PropsType) {
         {userProps.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
 
         {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
-        {userProps.userId === userProps.userId && <BadgeMe role="me">나</BadgeMe>}
+        {userProps.userId === userContext?.userId && <BadgeMe role="me">나</BadgeMe>}
       </>
     );
   };

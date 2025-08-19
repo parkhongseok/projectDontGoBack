@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ACCESS_TOKEN_NAME, BACKEND_API_URL } from "./globalValues";
+import { BACKEND_API_URL } from "./globalValues";
 
 // 상태 코드 관련 유틸리티
 const isSuccessStatus = (status: number): boolean => status === 200 || status === 201;

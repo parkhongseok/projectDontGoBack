@@ -20,4 +20,4 @@ public class LocalBatchKickController {
     }
 }
 
-// curl -X POST http://localhost:8090/test/internal/batch/asset-refresh/run
+// curl http://localhost:8090/test/internal/batch/asset-refresh/run

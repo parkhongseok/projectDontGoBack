@@ -5,7 +5,6 @@ import styles from "./SideBar.module.css";
 import { Nav, Image } from "react-bootstrap";
 import CreatePopUp from "../feeds/CreatePopUp";
 import { useUser } from "../../contexts/UserContext";
-import { BACKEND_API_URL } from "../../utils/globalValues";
 import SideBarLoading from "./SidebarLoading";
 import NotificationPanel from "./NotificationPanel";
 import SidebarSettingPanel from "./SidebarSettingPanel";

@@ -1,0 +1,75 @@
+.overay {
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.createBoxBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  cursor: default;
+  overflow: hidden;
+}
+
+.createBoxlayout {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.createBoxTop {
+  color: var(--gray4);
+}
+
+.createBoxContainer {
+  width: var(--popup-width);
+  min-width: var(--popup-min-width);
+  height: auto;
+  min-height: 10vh;
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: auto;
+  background-color: var(--white);
+  border-radius: 20px;
+  position: relative;
+  top: -5vh;
+  transition: all 0.3s ease;
+}
+
+.content {
+  max-width: 85%;
+  margin: 0;
+  padding: 0;
+  color: var(--gray4);
+  line-height: 1.2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.write {
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 10px;
+  background-color: transparent;
+  border: 1px solid var(--gray4);
+  color: var(--gray4);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.write:hover {
+  color: var(--white);
+  border: 1px solid var(--gray3);
+  background-color: var(--gray3);
+}

@@ -22,6 +22,14 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
   const { feedContext, setFeedContext, setCrudMyFeed } = useFeed();
   const [userInput, setUserInput] = useState(feedContext?.content || "");
 
+  // 배경 스크롤 잠금
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   const autoResize = (input: HTMLTextAreaElement | React.FormEvent<HTMLTextAreaElement>) => {
     const target =
       input instanceof HTMLTextAreaElement ? input : (input.target as HTMLTextAreaElement);

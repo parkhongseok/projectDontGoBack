@@ -10,6 +10,7 @@ import { httpRequest } from "../../utils/httpRequest";
 import * as Types from "../../utils/types";
 import Dummys from "../../utils/dummyData";
 import { BACKEND_API_URL } from "../../utils/globalValues";
+import { useEffect } from "react";
 
 type propsType = {
   feedId: number;
@@ -21,6 +22,14 @@ export default function DeletePopUp({ feedId, setIsFeedDeleteOpen }: propsType) 
   const pathname = usePathname();
   // 현재 페이지 확인
   const isNowPostDetailPage = /\/post\/\d+$/.test(pathname);
+
+  // 배경 스크롤 잠금
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handleClosePopUp = () => {
     setIsFeedDeleteOpen(false);

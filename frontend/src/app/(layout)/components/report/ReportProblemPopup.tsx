@@ -1,26 +1,34 @@
-"use client";
-
-import "../../globals.css";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import styles from "./Feed.module.css";
-import { Stack } from "react-bootstrap";
-import { useFeed } from "../../contexts/FeedContext";
+import React, { useEffect, useState } from "react";
 import { useUser } from "../../contexts/UserContext";
-import { usePathname } from "next/navigation";
-import { httpRequest } from "../../utils/httpRequest";
-import { BACKEND_API_URL, MAX_TEXT_LENGTH } from "../../utils/globalValues";
-import * as Types from "../../utils/types";
-import Badge from "../badge/Badge";
-import BadgeMe from "../badge/BadgeMe";
+import styles from "../feeds/Feed.module.css";
+import { Stack } from "react-bootstrap";
+import {  MAX_TEXT_LENGTH } from "../../utils/globalValues";
 
-type propsType = {
-  setIsFeedCreaterOpen: Dispatch<SetStateAction<boolean>>;
+type ReportProblemPopupProps = {
+  onClose: () => void;
 };
 
-export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
-  // const router = useRouter();
-  const pathname = usePathname() || "";
-  const { setCrudMyFeed, setFeedContext } = useFeed();
+const ReportProblemPopup: React.FC<ReportProblemPopupProps> = ({ onClose }) => {
+  // 배경 스크롤 잠금
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
+  const handleSubmit = () => {
+    // API가 준비되면 여기에 연동합니다.
+    if (userInput.length == 20) alert("내용을 입력해주세요.");
+    if (!userInput.trim()) {
+      alert("내용을 입력해주세요.");
+      return;
+    }
+    // 예: sendReport(reportContent);
+    alert("문제 신고가 접수되었습니다. (현재는 프론트엔드 기능만 구현되어 있습니다.)");
+    onClose(); // 팝업 닫기
+  };
+
   const [userInput, setUserInput] = useState("");
   const { userContext } = useUser();
 
@@ -35,10 +43,6 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
   if (!userContext) {
     return <div className="loading" />;
   }
-
-  const handlerClose = () => {
-    setIsFeedCreaterOpen(false);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
@@ -56,35 +60,35 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
     }, 0);
   };
 
-  const handleSubmit = async () => {
-    if (userInput.length == 20) alert("내용을 입력해주세요.");
-    if (!userInput.trim()) {
-      alert("내용을 입력해주세요.");
-      return;
-    }
-    // 요청 객체
-    const createFeedRequest = {
-      content: userInput,
-    };
-    const method = "POST";
-    const url = `${BACKEND_API_URL}/v1/feeds`;
-    const body = createFeedRequest;
-    const success = (result: { data: Types.Feed }) => {
-      setUserInput("");
-      handlerClose();
-      // console.log(pathname)
-      // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
-      if (pathname === "/" || /\/profile\/\d+$/.test(pathname)) {
-        setFeedContext(result.data);
-        setCrudMyFeed({ C: true, R: false, U: false, D: false });
-      }
-    };
-    const fail = () => {
-      alert("서버 오류가 발생했습니다.");
-    };
+  // const handleSubmit = async () => {
+  //   if (userInput.length == 20) alert("내용을 입력해주세요.");
+  //   if (!userInput.trim()) {
+  //     alert("내용을 입력해주세요.");
+  //     return;
+  //   }
+  //   // 요청 객체
+  //   const createFeedRequest = {
+  //     content: userInput,
+  //   };
+  //   const method = "POST";
+  //   const url = `${BACKEND_API_URL}/v1/feeds`;
+  //   const body = createFeedRequest;
+  //   const success = (result: { data: Types.Feed }) => {
+  //     setUserInput("");
+  //     handlerClose();
+  //     // console.log(pathname)
+  //     // main 화면인 경우에만 리프레쉬(추후에 프로필이라면, 프로필 부분을 새로고침하도록 구현)
+  //     if (pathname === "/" || /\/profile\/\d+$/.test(pathname)) {
+  //       setFeedContext(result.data);
+  //       setCrudMyFeed({ C: true, R: false, U: false, D: false });
+  //     }
+  //   };
+  //   const fail = () => {
+  //     alert("서버 오류가 발생했습니다.");
+  //   };
 
-    httpRequest(method, url, body, success, fail);
-  };
+  //   httpRequest(method, url, body, success, fail);
+  // };
 
   // 작성하는 글의 높이 맞춤 설정
   const autoResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
@@ -93,21 +97,6 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
     target.style.height = `${target.scrollHeight}px`; // 텍스트의 높이에 맞게 설정
   };
 
-  // 뱃지를 렌더링하는 헬퍼 함수
-  const renderBadge = () => {
-    return (
-      <>
-        {/* 역할(Role) 기반 뱃지 */}
-        {userContext.userRole === "ADMIN" && <Badge role="admin">관리자</Badge>}
-        {userContext.userRole === "GUEST" && <Badge role="guest">방문자</Badge>}
-
-        {/* '나' 뱃지 (역할과 별개로 항상 표시) */}
-        {userContext.userId === userContext.userId && <BadgeMe role="me">나</BadgeMe>}
-      </>
-    );
-  };
-
-  const feedTypeClass = styles[userContext.userType] || "";
   return (
     <div className={`${styles.createBoxlayout} ${styles.overay} ${styles.createBoxBackground}`}>
       <div className="sidebar-space" />
@@ -124,13 +113,13 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
               {/* 왼쪽: 취소 버튼 */}
               <button
                 className={`${styles.write} ${styles.exitBtn} custom-button`}
-                onClick={handlerClose}
+                onClick={onClose}
               >
                 취소
               </button>
 
               {/* 중앙: 제목 */}
-              <h6 className={`${styles.createBoxTop} m-0`}>게시글 작성</h6>
+              <h6 className={`${styles.createBoxTop} m-0`}>문제 신고</h6>
 
               {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
               <button
@@ -147,17 +136,17 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
             <Stack gap={3} className="mx-5">
               <div className="d-flex align-items-center  mt-2">
                 {/* 이름과 뱃지를 정렬하기 위한 div */}
-                <p className={`${feedTypeClass} ${styles.userName} fontRedLight init`}>
+                {/* <p className={`${feedTypeClass} ${styles.userName} fontRedLight init`}>
                   {userContext.userName}
                 </p>
-                {renderBadge()} {/* 헬퍼 함수 호출 */}
+                {renderBadge()} 헬퍼 함수 호출 */}
               </div>
               <textarea
                 maxLength={MAX_TEXT_LENGTH}
                 onInput={(e) => autoResize(e)}
                 rows={5}
                 className={`${styles.textBox} fontGray4`}
-                placeholder="게시글 작성하기"
+                placeholder="서비스 이용 중 발생한 문제나 개선점을 알려주세요."
                 value={userInput}
                 onChange={handleChange}
                 // disabled
@@ -171,7 +160,7 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
                   className={`ms-auto mb-1 ${styles.write} custom-button`}
                   onClick={handleSubmit}
                 >
-                  게시
+                  전송
                 </button>
               </>
             </Stack>
@@ -179,5 +168,34 @@ export default function CreatePopUp({ setIsFeedCreaterOpen }: propsType) {
         </div>
       </div>
     </div>
+    // <div className={styles.overlay}>
+    //   <div className={styles.popup}>
+    //     <div className={styles.header}>
+    //       <h2 className={styles.title}>문제 신고</h2>
+    //       <button onClick={onClose} className={styles.closeButton}>
+    //         <FontAwesomeIcon icon={faXmark} width={24} height={24} />
+    //       </button>
+    //     </div>
+    //     <div className={styles.content}>
+    //       <p>서비스 이용 중 발생한 문제나 개선점을 알려주세요.</p>
+    //       <textarea
+    //         className={styles.textarea}
+    //         value={reportContent}
+    //         onChange={(e) => setReportContent(e.target.value)}
+    //         placeholder="문제 내용을 자세히 적어주세요."
+    //       />
+    //     </div>
+    //     <div className={styles.actions}>
+    //       <button onClick={onClose} className={`${styles.button} ${styles.cancelButton}`}>
+    //         취소
+    //       </button>
+    //       <button onClick={handleSubmit} className={`${styles.button} ${styles.submitButton}`}>
+    //         제출
+    //       </button>
+    //     </div>
+    //   </div>
+    // </div>
   );
-}
+};
+
+export default ReportProblemPopup;
