@@ -15,15 +15,7 @@ type userProps = {
 export default function CreateComment({ feed }: userProps) {
   const [showWriteBox, setShowWriteBox] = useState(false);
   const { userContext } = useUser();
-  
-  // 배경 스크롤 잠금
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
-  
+
   if (!feed || !userContext) {
     return <div className={`${styles.CreateCommentContainer} cursorPointer px-4`} />;
   }

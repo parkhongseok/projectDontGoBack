@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 
 
 /** scheduler 역할
@@ -31,7 +32,7 @@ public class DailyAssetRefreshScheduler {
         }
         long t0 = System.currentTimeMillis();
         try {
-            BatchResult r = job.run();
+            BatchResult r = job.run(LocalDate.now());
             log.info("[AssetRefresh] done. total={}, success={}, failed={}, {}ms",
                     r.getTotal(), r.getSuccess(), r.getFailed(), System.currentTimeMillis()-t0);
         } catch (Exception e) {

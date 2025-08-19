@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 /** usecase 역할
  *      하나의 비즈니스 흐름을 완결적으로 수행.
  *      도메인 서비스/리포지토리/외부 클라이언트를 조합한다.
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class AssetRefreshUseCase {
     private final InterServerAssetUpdateService updateService;
 
-    public BatchResult refreshAllActiveUsers() {
-        return updateService.updateAllActiveUsersAsset();
+    public BatchResult refreshAllActiveUsers(LocalDate snapshotDay) {
+        return updateService.updateAllActiveUsersAsset(snapshotDay);
     }
 }

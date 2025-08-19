@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -23,15 +25,16 @@ public class AssetRefreshJobTest {
         job = new AssetRefreshJob(useCase);
     }
 
+    private LocalDate today = LocalDate.now();
     @Test
     void run_should_return_usecase_result() {
         BatchResult expected = BatchResult.builder()
                 .total(5).success(5).failed(0).elapsedMs(321).build();
-        when(useCase.refreshAllActiveUsers()).thenReturn(expected);
+        when(useCase.refreshAllActiveUsers(today)).thenReturn(expected);
 
-        BatchResult actual = job.run();
+        BatchResult actual = job.run(today);
 
         assertThat(actual).isEqualTo(expected);
-        verify(useCase, times(1)).refreshAllActiveUsers();
+        verify(useCase, times(1)).refreshAllActiveUsers(today);
     }
 }

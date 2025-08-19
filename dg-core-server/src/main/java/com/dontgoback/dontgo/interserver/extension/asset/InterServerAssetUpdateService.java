@@ -29,7 +29,7 @@ public class InterServerAssetUpdateService {
     private final AssetHistoryService assetHistoryService;
 
     /** 전체 활성 유저 자산 갱신 + 집계 결과 반환*/
-    public BatchResult updateAllActiveUsersAsset() {
+    public BatchResult updateAllActiveUsersAsset(LocalDate snapshotDay) {
         long started = System.currentTimeMillis();
         List<User> activeUsers = userService.getActiveUsers();
 
@@ -40,7 +40,7 @@ public class InterServerAssetUpdateService {
             try {
                 UpdateAssetRequest req = new UpdateAssetRequest(user.getCurrentAssetHistory().getAmount());
                 UpdateAssetResponse res = apiExecutor.executeWithToken(jwt ->
-                        assetClient.updateAsset(user.getId(), jwt, req)
+                        assetClient.updateAsset(user.getId(), jwt, req, snapshotDay)
                 );
 
                 persistAssetChange(user, res.getUpdatedAsset(), res.getMultiplier());
