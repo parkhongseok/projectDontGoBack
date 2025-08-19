@@ -53,7 +53,7 @@ public class CookieUtil {
     만료 시간을 0으로 설정하여, 쿠키가 재생성되자마자 만료 처리*/
     public static void deleteCookie(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    String name,
+                                    String name, String path,
                                     boolean secure){
         Cookie[] cookies = request.getCookies();
         Optional<Cookie> optionalCookie = findCookie(cookies, name);
@@ -61,10 +61,10 @@ public class CookieUtil {
             Cookie cookie = optionalCookie.get();
 
             cookie.setValue("");
-            cookie.setPath("/");
+            cookie.setPath(path);
             cookie.setMaxAge(0);
             cookie.setHttpOnly(true);
-            cookie.setSecure(true);
+            cookie.setSecure(secure);
             response.addCookie(cookie);
         }
         // 무효한 쿠키를 발급하는 방식으로, 왜냐면 어차피 쿠키는 브라우저에 저장되니까?!

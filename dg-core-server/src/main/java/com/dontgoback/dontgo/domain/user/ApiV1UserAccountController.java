@@ -19,6 +19,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static com.dontgoback.dontgo.global.util.GlobalValues.REFRESH_TOKEN_API_PATH;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
@@ -68,7 +70,7 @@ public class ApiV1UserAccountController {
         accountStateService.closeAccount(user);
 
         // 클라이언트 쿠키 무효화 (중요!)
-        CookieUtil.deleteCookie(request, response, "refresh_token", secureCookie);
+        CookieUtil.deleteCookie(request, response, "refresh_token", REFRESH_TOKEN_API_PATH ,secureCookie);
 
         // 5. 리다이렉트 (성공 or 실패)
         LocalDate untilDate = LocalDate.now().plusDays(14);
@@ -112,7 +114,7 @@ public class ApiV1UserAccountController {
         accountStateService.deactivateAccount(user);
 
         // 클라이언트 쿠키 무효화
-        CookieUtil.deleteCookie(request, response, "refresh_token", secureCookie);
+        CookieUtil.deleteCookie(request, response, "refresh_token", REFRESH_TOKEN_API_PATH, secureCookie);
 
         // 5. 리다이렉트 (성공 or 실패)
         LocalDate untilDate = LocalDate.now().plusDays(14);

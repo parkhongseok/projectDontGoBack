@@ -65,6 +65,6 @@ public class OAuth2AuthorizationRequestBasedOnCookieRepository
 
     // OAuth2 인증이 완료되면 해당 요청 정보를 더 이상 유지할 필요가 없으므로 쿠키를 삭제 (더이상 쿠키가 필요없으니까)
     public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response){
-        CookieUtil.deleteCookie(request, response, OAUTH2_AUTHENTICATION_REQUEST_COOKIE_NAME, secureCookie);
+        CookieUtil.deleteCookie(request, response, OAUTH2_AUTHENTICATION_REQUEST_COOKIE_NAME, "/", secureCookie);
     }
 }
