@@ -68,3 +68,6 @@ inter-server:
 
   extension:
     host: ${EXTENSION_SERVER_HOST}
+
+custom:
+  allowed-ips: ${ALLOWED_INTERNAL_IPS:127.0.0.1}
