@@ -4,7 +4,7 @@ export default function Loading() {
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <h5 className="text-center mb-4 pt-4 topTitleText">Hello World</h5>
+      <h5 className="text-center topTitleText">Loading</h5>
 
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
 

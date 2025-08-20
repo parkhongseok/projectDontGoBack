@@ -18,6 +18,7 @@ import { BACKEND_API_URL } from "../../utils/globalValues";
 import Badge from "../badge/Badge";
 import BadgeMe from "../badge/BadgeMe";
 import ReportProblemPopup from "../report/ReportProblemPopup";
+import ShowMoreText from "./ShowMoreText";
 
 type PropsType = {
   feed: Types.Feed | null; // Props의 타입 정의
@@ -125,7 +126,7 @@ export default function Feed({ feed }: PropsType) {
       {isReportProblemPopupOpen && (
         <ReportProblemPopup onClose={() => setIsReportProblemPopupOpen(false)} />
       )}
-      <Stack className="px-5" gap={3}>
+      <Stack className={`${styles.leftMargin}`} gap={3}>
         {isFeedEditOpen && <EditPopUp setIsFeedEditOpen={setIsFeedEditOpen} />}
         {isFeedDeleteOpen && (
           <DeletePopUp feedId={feed.feedId} setIsFeedDeleteOpen={setIsFeedDeleteOpen} />
@@ -133,7 +134,7 @@ export default function Feed({ feed }: PropsType) {
         <Stack direction="horizontal" gap={3}>
           <div className="d-flex align-items-center">
             {/* 이름과 뱃지를 정렬하기 위한 div */}
-            <Link className="px-5" href={`/profile/${feed.userId}`} legacyBehavior>
+            <Link href={`/profile/${feed.userId}`} legacyBehavior>
               <p className={`${styles.userName} ${feedTypeClass} cusorPointer mb-0`}>
                 {feed.author}
               </p>
@@ -177,18 +178,21 @@ export default function Feed({ feed }: PropsType) {
         </Stack>
         {feedId ? (
           <div>
-            <p className={`px-5 ${styles.content}`}>{feed.content}</p>
+            <p className={` ${styles.leftMargin} ${styles.content}`}>{feed.content}</p>
           </div>
         ) : (
           <div className={`${styles.contentContainer}`}>
-            <Link className={`px-5 `} href={`/post/${feed.feedId}`} legacyBehavior>
-              <p onClick={handleFeedClick} className={`${styles.content} cusorPointer`}>
-                {feed.content}
-              </p>
+            <Link href={`/post/${feed.feedId}`} legacyBehavior>
+              <div
+                onClick={handleFeedClick}
+                className={`${styles.content} ${styles.leftMarginContent} cusorPointer`}
+              >
+                <ShowMoreText text={feed.content} maxLength={150} maxLines={3} />
+              </div>
             </Link>
           </div>
         )}
-        <Stack className="px-5" direction="horizontal" gap={3}>
+        <Stack className={`${styles.leftMargin}`} direction="horizontal" gap={3}>
           <div className={`flex items-center gap-2 text-xl leading-none`}>
             <FontAwesomeIcon
               icon={faHeart}

@@ -1,0 +1,30 @@
+.contentWrapper {
+  position: relative;
+}
+
+.contentText {
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap; /* Preserve whitespace and wrap lines */
+  word-break: break-word; /* Break long words */
+}
+
+.truncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Show 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moreButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--white);
+}

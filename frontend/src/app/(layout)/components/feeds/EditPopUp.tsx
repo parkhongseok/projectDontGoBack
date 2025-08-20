@@ -128,9 +128,9 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
           {/* 사이드바가 차지하지 않는 나머지 공간 */}
 
           {/* 본격 사용 가능 공간 */}
-          <Stack gap={1} direction="vertical" className="pb-4 pt-2">
+          <Stack gap={1} direction="vertical" className="pb-4">
             {/* 상단  취소 / 게시글 작성 / ... */}
-            <div className="d-flex justify-content-between align-items-center mx-5">
+            <div className={`d-flex justify-content-between align-items-center ${styles.sideArea}`}>
               {/* 왼쪽: 취소 버튼 */}
               <button
                 className={`${styles.write} ${styles.exitBtn} custom-button`}
@@ -140,7 +140,7 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
               </button>
 
               {/* 중앙: 제목 */}
-              <h6 className={`${styles.createBoxTop} m-0`}>답글 수정</h6>
+              <h6 className={`${styles.createBoxTop} m-0`}>게시글 수정</h6>
 
               {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
               <button
@@ -151,10 +151,10 @@ export default function EditPopUp({ setIsFeedEditOpen }: propsType) {
                 취소
               </button>
             </div>
-            <hr className="feed-underline fontGray4 mt-4" />
+            <hr className="feed-underline fontGray4" />
 
             {/* 글쓰기 영역*/}
-            <Stack gap={3} className="mx-5">
+            <Stack gap={3} className={`${styles.sideArea}`}>
               <div className="d-flex align-items-center mt-2">
                 {/* 이름과 뱃지를 정렬하기 위한 div */}
                 <p className={`${feedTypeClass} ${styles.userName} fontRedLight init`}>

@@ -21,6 +21,25 @@ export default function SideBar() {
     }
   }, [userContext]);
 
+  useEffect(() => {
+    const handleOverflow = () => {
+      if ((isNotificationPanelOpen || isSettingPanelOpen) && window.innerWidth < 768) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'auto';
+      }
+    };
+
+    handleOverflow();
+
+    window.addEventListener('resize', handleOverflow);
+
+    return () => {
+      document.body.style.overflow = 'auto';
+      window.removeEventListener('resize', handleOverflow);
+    };
+  }, [isNotificationPanelOpen, isSettingPanelOpen]);
+
   if (!userContext) return <SideBarLoading />;
 
   const handleCreateFeed = () => {
@@ -72,7 +91,7 @@ export default function SideBar() {
         </div>
 
         <div className={styles.navContainer}>
-          <Nav defaultActiveKey="/" className="flex-column">
+          <Nav defaultActiveKey="/">
             <Nav.Link href={`/profile/${userContext?.userId}`}>
               <Image src="/sidebar/profile.svg" alt="profile" className={styles.navImage} />
             </Nav.Link>

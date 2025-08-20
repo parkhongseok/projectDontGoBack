@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "../../globals.css";
 import { useUser } from "../../contexts/UserContext";
 import styles from "../feeds/Feed.module.css";
@@ -16,6 +16,14 @@ type propsType = {
 export default function ProfileSetting({ setIsSettingOpen }: propsType) {
   const [profileSettingState, setProfileSettingState] = useState(true);
   const { userContext } = useUser();
+
+  // 배경 스크롤 잠금
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handleToggle1 = () => {
     setProfileSettingState((prev) => !prev);
@@ -35,7 +43,7 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
           {/* 사이드바가 차지하지 않는 나머지 공간 */}
 
           {/* 본격 사용 가능 공간 */}
-          <Stack gap={1} direction="vertical" className="pb-4 pt-2">
+          <Stack gap={1} direction="vertical" className="pb-2 ">
             {/* 상단  취소 / 게시글 작성 / ... */}
             <div className="d-flex justify-content-between align-items-center mx-5">
               {/* 왼쪽: 취소 버튼 */}
@@ -58,26 +66,34 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
                 취소
               </button>
             </div>
-            <hr className="feed-underline fontGray4 mt-4" />
+            <hr className="feed-underline fontGray4 mt-3" />
             <Container className="d-flex align-items-center">
-              <Row className="ms-4 me-4 mt-2 w-100 align-items-center">
-                <Col className="">
-                  <p className={`${styles.settingName} ms-5`}>연결된 계정</p>
+              <Row className="w-100 align-items-center mx-0">
+                <Col xs={12} md={6} className="text-center text-md-start ps-md-5 mb-3 mb-md-0">
+                  <p className={`${styles.settingName} mb-0`}>연결된 계정</p>
                 </Col>
-                <Col className="d-flex align-items-center justify-content-end ">
+                <Col
+                  xs={12}
+                  md={6}
+                  className="d-flex align-items-center justify-content-center justify-content-md-end "
+                >
                   <div className={`${styles.settingEmailContainer} d-flex align-items-center p-2`}>
-                    <p className={`${styles.settingName} mx-auto`}>{userContext?.email}</p>
+                    <p className={`${styles.settingName} mx-auto mb-0`}>{userContext?.email}</p>
                   </div>
                 </Col>
               </Row>
             </Container>
             <hr className="feed-underline fontGray4 mt-4" />
             <Container className="d-flex align-items-center">
-              <Row className="ms-4 me-4 w-100 align-items-center">
-                <Col className="">
-                  <p className={`${styles.settingName} ms-5`}>프로필 비공개</p>
+              <Row className="w-100 align-items-center mx-0">
+                <Col xs={12} md={6} className="text-center text-md-start ps-md-5 mb-3 mb-md-0">
+                  <p className={`${styles.settingName} mb-0`}>프로필 비공개</p>
                 </Col>
-                <Col className="d-flex align-items-center justify-content-end ">
+                <Col
+                  xs={12}
+                  md={6}
+                  className="d-flex align-items-center justify-content-center justify-content-md-end "
+                >
                   <div className={` d-flex align-items-center p-2`}>
                     <Form.Check
                       reverse
@@ -95,11 +111,15 @@ export default function ProfileSetting({ setIsSettingOpen }: propsType) {
 
             <hr className="feed-underline fontGray4 mt-3" />
             <Container className="d-flex align-items-center">
-              <Row className="ms-4 me-4 w-100 align-items-center">
-                <Col className="">
-                  <p className={`${styles.settingName} ms-5`}>계정 비활성화 또는 삭제</p>
+              <Row className="w-100 align-items-center mx-0">
+                <Col xs={12} md={6} className="text-center text-md-start ps-md-5 mb-3 mb-md-0">
+                  <p className={`${styles.settingName} mb-0`}>계정 비활성화 또는 삭제</p>
                 </Col>
-                <Col className="d-flex align-items-center justify-content-end ">
+                <Col
+                  xs={12}
+                  md={6}
+                  className="d-flex align-items-center justify-content-center justify-content-md-end "
+                >
                   <Link href={"/settings"} className={` d-flex align-items-center p-2`}>
                     <FontAwesomeIcon icon={faLink} className={`fontGray3 cusorPointer`} />
                   </Link>

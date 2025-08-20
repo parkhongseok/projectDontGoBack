@@ -5,7 +5,6 @@ import styles from "../../components/feeds/Feed.module.css";
 import { useUser } from "../../contexts/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
-import { Stack } from "react-bootstrap";
 import { BACKEND_API_URL } from "../../utils/globalValues";
 // import * as Types from "../../utils/types";
 import { httpRequest } from "../../utils/httpRequest";
@@ -17,10 +16,14 @@ export default function DeactivateAccount() {
   const { userContext } = useUser();
   const router = useRouter();
   const [isEmailSend, setIsEmailSend] = useState(false);
+  if (!userContext) {
+    return <div className="loading" />;
+  }
 
   const handlerBefore = () => {
     router.back();
   };
+
   const handlerAccountCloseEamil = () => {
     const method = "POST";
     const url = `${BACKEND_API_URL}/v1/users/account-inactive/email-request`;
@@ -37,13 +40,17 @@ export default function DeactivateAccount() {
       alert("비활성화 요청에 실패했습니다. 다시 시도해 주세요.");
     };
     if (isEmailSend) alert("이미 이메일이 전송 되었습니다.");
-    httpRequest(method, url, body, success, fail);
+    if (userContext.userRole !== "GUEST") {
+      httpRequest(method, url, body, success, fail);
+    } else {
+      alert("방문자 계정은 비활성화 하실 수 없습니다.");
+    }
   };
 
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <div className="d-flex justify-content-between align-items-center pt-4 mb-4">
+      <div className="d-flex justify-content-between align-items-center">
         {/* 왼쪽: 뒤로가기 버튼 */}
         <GoBackButton size={30} />
 
@@ -58,56 +65,83 @@ export default function DeactivateAccount() {
       <div className={`feed-detail-container`}>
         {/* 본격 사용 가능 공간 */}
         <>
-          <Stack direction="horizontal" className="mx-3 mt-3">
+          <div
+            className={`d-flex justify-content-between align-items-center ${styles.sideArea} mt-3`}
+          >
+            {/* 왼쪽: 취소 버튼 */}
             <button
               className={`${styles.write} ${styles.exitBtn} custom-button`}
               onClick={handlerBefore}
+              // style={{ visibility: "hidden" }}
+              // aria-hidden="true"
             >
               이전 페이지
             </button>
-          </Stack>
+
+            {/* 중앙: 제목 */}
+            <h4 className={`fontRed m-0 fw-bold my-2 fontGray4`}>계정 비활성화</h4>
+            {/* <h2 className="fw-bold mt-3 mb-3 text-center fontRed">계정 삭제</h2> */}
+
+            {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
+            <button
+              className={`${styles.write} ${styles.exitBtn} custom-button`}
+              style={{ visibility: "hidden" }}
+              aria-hidden="true"
+            >
+              이전 페이지
+            </button>
+          </div>
+
           <hr className="feed-underline fontGray4 mt-3" />
           <div className="">
-            <div className=" overflow-hidden px-5">
+            <div className={`overflow-hidden ${styles.leftMargin}`}>
               {/* 상단: 설명 영역 */}
-              <div className="mx-5">
-                <h2 className="fw-bold mt-3 mb-3 text-center">계정 비활성화</h2>
-                <p className=" text-center fw-bold fontRed">
-                  계정을 일시적으로 비활성화 할 수 있습니다.
+              <div className="mx-3 mt-4">
+                <p className=" text-center">
+                  계정을
+                  <strong> 일시적</strong>
+                  으로 비활성화 할 수 있습니다.
                 </p>
-                <ul className="mt-3 list-unstyled mx-5">
-                  <li>✔ 이메일 인증을 통해 계속 진행하실 수 있습니다.</li>
-                  <li>✔ 작성한 게시글 및 댓글은 모두 숨겨집니다.</li>
-                  <li>✔ 다시 로그인해서 언제든지 활성화 할 수 있습니다.</li>
+                <ul className="mt-3 list-unstyled mx-1">
+                  {/* <li>✔ 작성한 게시글 및 댓글은 복구되지 않습니다.</li>
+                  <li>
+                    ✔ <strong>이메일 인증</strong>을 통해 계속 진행하실 수 있습니다.
+                  </li> */}
+                  <li>✔ 모든 활동이 숨겨집니다.</li>
+                  <li>✔ 다시 로그인하여, 계정을 활성화 할 수 있습니다.</li>
                 </ul>
               </div>
             </div>
-            <hr className="feed-underline fontGray4 pb-4 mt-4" />
+
+            <hr className="feed-underline fontGray3 pb-4 mt-4" />
+
             <div className="mx-5 mb-5">
               {/* 하단: 버튼 영역 */}
               <div className="text-center rounded-4 bg-white py-5 ">
                 <p className="mb-3 fontGray4 px-5">
-                  계정을 일시적으로 비활성화하고 싶다면 <br /> 마지막 단계를 안내하는 이메일을 다음
-                  주소로 보내드리겠습니다.
+                  계속 진행하길 원하신다면
+                  <br /> 아래 버튼을 클릭해주세요.
                 </p>
 
                 <p className="mb-3 fw-bold fontGray2">{userContext?.email}</p>
 
                 <p className={`${styles.settingName}  mx-auto`}></p>
                 {isEmailSend ? (
-                  <button className={`${styles.sendDeactivateEmailDone} fs-4 px-5 `}>
+                  <button
+                    className={`${styles.sendDeactivateEmailDone} fs-4  ${styles.leftMargin}`}
+                  >
                     <FontAwesomeIcon icon={faEnvelope} /> 이메일이 전송되었습니다
                   </button>
                 ) : (
                   <button
-                    className={`${styles.sendDeactivateEmail} fs-4 px-5 `}
+                    className={`${styles.sendDeactivateEmail} fs-4  ${styles.leftMargin}`}
                     onClick={handlerAccountCloseEamil}
                   >
-                    <FontAwesomeIcon icon={faEnvelope} /> 비활성화 이메일 보내기
+                    <FontAwesomeIcon icon={faEnvelope} /> 이메일 인증하기
                   </button>
                 )}
 
-                <p className="mt-3 text-muted small">※ 이메일 확인 후 비활성화가 완료됩니다.</p>
+                <p className="mt-3 text-muted small">※ 이메일 인증 후 비활성화가 완료됩니다.</p>
               </div>
             </div>
           </div>
