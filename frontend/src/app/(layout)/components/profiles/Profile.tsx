@@ -1,5 +1,5 @@
 "use client";
-import { Col, Container, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import styles from "../feeds/Feed.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
@@ -41,8 +41,8 @@ export default function CreateFeed({ userProps }: PropsType) {
     <>
       {isSettingOpen && <ProfileSetting setIsSettingOpen={setIsSettingOpen} />}
       <div className="profileTop mb-3 ">
-        <Container className="mt-3">
-          <Row className="mb-3 ms-3">
+        <div className="mt-3">
+          <div className="mb-3 ms-3 d-flex align-items-center">
             <OverlayTrigger
               key={"key"}
               placement={"left"}
@@ -52,25 +52,15 @@ export default function CreateFeed({ userProps }: PropsType) {
                 </Tooltip>
               }
             >
-              <Col className="d-flex align-items-center">
-                {/* <Badge pill bg={`${badgeType}`} className={`${styles.smallBadge} `} as={"span"}>
-                  {badgeName}
-                </Badge> */}
-                <div className="d-flex align-items-center">
-                  {/* 이름과 뱃지를 정렬하기 위한 div */}
-                  <p
-                    className={`${styles.ProfileuserName} ${styles.userName} ${typeClass} cusorPointer mb-0`}
-                  >
-                    {userProps.userName}
-                  </p>
-                  {renderBadge()} {/* 헬퍼 함수 호출 */}
-                </div>
-                {/* <p className={`${styles.ProfileuserName} ${typeClass} mx-2`}>
+              <div className="d-flex align-items-center">
+                {/* 이름과 뱃지를 정렬하기 위한 div */}
+                <p className={`${styles.ProfileuserName} ${typeClass} cusorPointer mb-0`}>
                   {userProps.userName}
-                </p> */}
-              </Col>
+                </p>
+                {renderBadge()} {/* 헬퍼 함수 호출 */}
+              </div>
             </OverlayTrigger>
-            <Col className={`${styles.profileSettingContainer} me-4`}>
+            <div className={`${styles.profileSettingContainer}`}>
               {userContext?.userId == userProps.userId && (
                 <FontAwesomeIcon
                   icon={faGear}
@@ -78,19 +68,15 @@ export default function CreateFeed({ userProps }: PropsType) {
                   onClick={handleSetting}
                 />
               )}
-            </Col>
-          </Row>
-          <Row className="mb-3 ms-3">
-            <Col xs={6}>{/* <p>프로필 메시지인데 뭐라고 쓸까</p> */}</Col>
-            <Col></Col>
-            <Col></Col>
-          </Row>
+            </div>
+          </div>
+
           {/* <Row>
             <Button variant="secondary" className={`${styles.profileSettingBtn}`}>
               프로필 설정
             </Button>
           </Row> */}
-        </Container>
+        </div>
       </div>
     </>
   );

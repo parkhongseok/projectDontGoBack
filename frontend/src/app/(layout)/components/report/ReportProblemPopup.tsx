@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "../../contexts/UserContext";
 import styles from "../feeds/Feed.module.css";
 import { Stack } from "react-bootstrap";
-import {  MAX_TEXT_LENGTH } from "../../utils/globalValues";
+import { MAX_TEXT_LENGTH } from "../../utils/globalValues";
 
 type ReportProblemPopupProps = {
   onClose: () => void;
@@ -107,9 +107,9 @@ const ReportProblemPopup: React.FC<ReportProblemPopupProps> = ({ onClose }) => {
           {/* 사이드바가 차지하지 않는 나머지 공간 */}
 
           {/* 본격 사용 가능 공간 */}
-          <Stack gap={1} direction="vertical" className="pb-4 pt-2">
+          <Stack gap={1} direction="vertical" className="pb-4">
             {/* 상단  취소 / 게시글 작성 / ... */}
-            <div className="d-flex justify-content-between align-items-center mx-5">
+            <div className={`d-flex justify-content-between align-items-center ${styles.sideArea}`}>
               {/* 왼쪽: 취소 버튼 */}
               <button
                 className={`${styles.write} ${styles.exitBtn} custom-button`}
@@ -130,11 +130,11 @@ const ReportProblemPopup: React.FC<ReportProblemPopupProps> = ({ onClose }) => {
                 취소
               </button>
             </div>
-            <hr className="feed-underline fontGray4 mt-4" />
+            <hr className="feed-underline fontGray4" />
 
             {/* 글쓰기 영역*/}
             <Stack gap={3} className="mx-5">
-              <div className="d-flex align-items-center  mt-2">
+              <div className="d-flex align-items-center">
                 {/* 이름과 뱃지를 정렬하기 위한 div */}
                 {/* <p className={`${feedTypeClass} ${styles.userName} fontRedLight init`}>
                   {userContext.userName}

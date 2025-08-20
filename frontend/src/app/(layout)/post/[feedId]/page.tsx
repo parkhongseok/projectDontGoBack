@@ -179,7 +179,7 @@ export default function FeedDetile() {
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <div className="d-flex justify-content-between align-items-center pt-4 mb-4">
+      <div className="d-flex justify-content-between align-items-center">
         {/* 왼쪽: 뒤로가기 버튼 */}
         <GoBackButton size={30} />
 
@@ -203,15 +203,16 @@ export default function FeedDetile() {
           </div>
           {/* 댓글 */}
           {/* 댓글 생성 쓰기 */}
-          <div className="my-3">
+          <div className="py-2">
             <CreateComment feed={feedContext} />
           </div>
+          <hr className="init  feedUnderLine" />
 
           {/* 댓글 공간 */}
           {comments.map((item, idx) => (
             <div key={idx}>
-              <hr className="init mb-3 feedUnderLine" />
               <Comment comment={item} />
+              <hr className="init mt-3 feedUnderLine" />
             </div>
           ))}
         </Stack>

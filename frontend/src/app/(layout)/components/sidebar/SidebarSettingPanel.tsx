@@ -30,6 +30,8 @@ export default function SidebarSettingPanel({ isOpen, onClose }: SidebarSettingP
   const [isTermsPopupOpen, setIsTermsPopupOpen] = useState(false);
   const [isReportProblemPopupOpen, setIsReportProblemPopupOpen] = useState(false);
 
+  
+
   useEffect(() => {
     if (isOpen) {
       setIsMounted(true);

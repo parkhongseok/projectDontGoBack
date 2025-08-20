@@ -19,6 +19,7 @@ import { BACKEND_API_URL } from "../../utils/globalValues";
 import Badge from "../badge/Badge";
 import BadgeMe from "../badge/BadgeMe";
 import ReportProblemPopup from "../report/ReportProblemPopup";
+import ShowMoreText from "../feeds/ShowMoreText";
 
 type CommentProps = {
   comment: Types.Comment;
@@ -113,7 +114,7 @@ export default function Comment({ comment }: CommentProps) {
       {isReportProblemPopupOpen && (
         <ReportProblemPopup onClose={() => setIsReportProblemPopupOpen(false)} />
       )}
-      <Stack className="px-5" gap={3}>
+      <Stack className={`${styles.leftMargin}`} gap={3}>
         {isCommentEditOpen && <EditCommentPopUp setIsCommentEditOpen={setIsCommentEditOpen} />}
         {isCommentDeleteOpen && (
           <DeleteCommentPopUp
@@ -125,7 +126,7 @@ export default function Comment({ comment }: CommentProps) {
           <div className="d-flex align-items-center">
             {" "}
             {/* 이름과 뱃지를 정렬하기 위한 div */}
-            <Link className="px-5" href={`/profile/${comment.userId}`} legacyBehavior>
+            <Link href={`/profile/${comment.userId}`} legacyBehavior>
               <p className={`${styles.userName} ${feedTypeClass} cusorPointer mb-0`}>
                 {comment.author}
               </p>
@@ -166,10 +167,10 @@ export default function Comment({ comment }: CommentProps) {
             </Dropdown>
           </div>
         </Stack>
-        <div className="px-5">
-          <p className={styles.content}>{comment.content}</p>
+        <div className={` ${styles.leftMargin}`}>
+          <ShowMoreText text={comment.content} maxLength={150} maxLines={3} />
         </div>
-        <Stack className="px-5" direction="horizontal" gap={3}>
+        <Stack className={` ${styles.leftMargin}`} direction="horizontal" gap={3}>
           <div className={`flex items-center gap-2 text-xl leading-none`}>
             <FontAwesomeIcon
               icon={faHeart}

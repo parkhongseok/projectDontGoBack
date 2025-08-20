@@ -10,7 +10,7 @@ type PolicyPopupProps = {
 };
 
 const PolicyPopup: React.FC<PolicyPopupProps> = ({ title, onPolicyClose, children }) => {
-  // 배경 스크롤 잠금 
+  // 배경 스크롤 잠금
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -29,7 +29,7 @@ const PolicyPopup: React.FC<PolicyPopupProps> = ({ title, onPolicyClose, childre
             {/* 사이드바가 차지하지 않는 나머지 공간 */}
 
             {/* 본격 사용 가능 공간 */}
-            <Stack gap={1} direction="vertical" className="pb-4 pt-2">
+            <Stack gap={1} direction="vertical" className="pb-4">
               {/* 상단  취소 / 게시글 작성 / ... */}
               <div className="d-flex justify-content-between align-items-center mx-5">
                 {/* 왼쪽: 취소 버튼 */}
@@ -53,7 +53,7 @@ const PolicyPopup: React.FC<PolicyPopupProps> = ({ title, onPolicyClose, childre
                   확인
                 </button>
               </div>
-              <hr className="feed-underline fontGray4 mt-4" />
+              <hr className="feed-underline fontGray4 mt-3" />
 
               {/* 글쓰기 영역*/}
               <Stack gap={3} className="mx-3">

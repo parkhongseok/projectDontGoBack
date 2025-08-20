@@ -8,7 +8,7 @@
 .ProfileuserName {
   margin: 0;
   padding: 0;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bolder;
 }
 
@@ -37,9 +37,10 @@
   vertical-align: middle;
 }
 .profileSettingContainer {
-  display: flex;
-  justify-content: flex-end;
+  margin-left: auto;
+  margin-right: 1.4rem;
 }
+
 .profileSettingBtn:hover {
   background-color: var(--gray3);
 }
@@ -85,6 +86,7 @@
   max-height: 300px;
   overflow-y: auto;
 }
+
 .content {
   max-width: 85%;
   margin: 0;
@@ -161,10 +163,7 @@
   border: solid var(--gray2);
   cursor: text;
 }
-/* .CreateFeedContainer:hover {
-  width: 96%;
-  border: solid var(--gray3);
-} */
+
 .createTextholder {
   color: var(--gray2);
 }
@@ -192,9 +191,14 @@
   color: var(--gray4);
 }
 
+.sideArea {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
 .createBoxContainer {
   width: var(--popup-width);
-  min-width: var(--popup-min-width);
+  min-width: 95vw;
   height: auto;
   min-height: 10vh;
   max-height: 65vh;
@@ -364,4 +368,59 @@
   border: 2px solid var(--gray3);
   background-color: var(--gray3);
   color: white;
+}
+
+.leftMargin {
+  margin-left: 1.8rem;
+  margin-right: 1.8rem;
+}
+
+.leftMarginContent {
+  margin-left: 1.8rem;
+  margin-right: 1.8rem;
+}
+
+@media (min-width: 768px) {
+  .createBoxContainer {
+    width: var(--popup-width);
+    min-width: var(--popup-min-width);
+    height: auto;
+    min-height: 10vh;
+    max-height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: auto;
+    background-color: var(--white);
+    border-radius: 20px;
+    position: relative; /* 위치 기준을 설정 */
+    top: -5vh;
+    transition: all 0.3s ease;
+  }
+
+  .sideArea {
+    margin-left: 3rem;
+    margin-right: 3rem;
+  }
+
+  .leftMargin {
+    margin-left: 3rem;
+    margin-right: 3rem;
+  }
+
+  .ProfileuserName {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    font-weight: bolder;
+    margin-left: 1.5rem;
+  }
+
+  .profileSettingContainer {
+    margin-right: 3rem;
+  }
+
+  .leftMarginContent {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
