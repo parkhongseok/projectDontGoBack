@@ -23,6 +23,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -30,7 +35,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.dontgoback.dontgo.global.util.GlobalValues.REFRESH_TOKEN_API_PATH;
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
@@ -45,7 +52,9 @@ public class WebSecurityConfig {
     private final UserService userService;
     private final TokenCookieService tokenCookieService;
     private final RefreshTokenService refreshTokenService;
-
+    private final String AUTHORIZATION_REQUEST_BASE_URL = "/api/oauth2/authorization";
+    private final String AUTHORIZATION_RESPONSE_BASE_URL = "/api/login/oauth2/code/*";
+    private final ClientRegistrationRepository clientRegistrationRepository;
     @Value("${app.FRONTEND_URL}")
     private String FRONTEND_URL;
 
@@ -118,11 +127,13 @@ public class WebSecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage(FRONTEND_URL + "/login")
                         .authorizationEndpoint(auth -> auth
-                                .baseUri("/api/oauth2/authorization")
+                                .baseUri(AUTHORIZATION_REQUEST_BASE_URL)
                                 .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                                .authorizationRequestResolver(customAuthorizationRequestResolver())
                         )
+
                         .redirectionEndpoint(redir -> redir
-                                .baseUri("/api/login/oauth2/code/*")
+                                .baseUri(AUTHORIZATION_RESPONSE_BASE_URL)
                         )
                         .successHandler(oAuth2SuccessHandler())
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserCustomService))
@@ -175,4 +186,31 @@ public class WebSecurityConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
+    /**
+     * ✨ Google 로그인 시 항상 계정 선택 창을 표시하도록 authorizationRequestResolver를 커스터마이징
+     */
+    @Bean
+    public OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver() {
+        DefaultOAuth2AuthorizationRequestResolver resolver = new DefaultOAuth2AuthorizationRequestResolver(
+                this.clientRegistrationRepository, "/api/oauth2/authorization"
+        );
+        // Standard OAuth2 request resolver를 기반으로 하되, 추가 파라미터를 설정
+        resolver.setAuthorizationRequestCustomizer(customizer ->
+                customizer.additionalParameters(params -> params.put("prompt", "select_account"))
+        );
+        return resolver;
+    }
+
+//    // clientRegistrationRepository() 빈이 없다면 추가해야 합니다.
+//    // 보통 Spring Boot가 자동 설정하지만, 명시적으로 필요할 수 있습니다.
+//    @Bean
+//    public ClientRegistrationRepository clientRegistrationRepository() {
+//        // application.yml/properties의 spring.security.oauth2.client.registration... 설정을 기반으로 자동 생성됩니다.
+//        // 만약 직접 ClientRegistration을 빌드했다면 해당 로직을 여기에 넣어야 합니다.
+//        // 일반적으로는 주입받아서 사용하면 됩니다. 아래는 예시입니다.
+//        // 이 빈을 SecurityConfig의 필드로 주입받도록 변경하는 것이 더 좋습니다.
+//        return new InMemoryClientRegistrationRepository(/* ... */); // 실제 환경에서는 주입받아서 사용
+//    }
 }
