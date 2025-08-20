@@ -90,7 +90,10 @@ export default function Login() {
             </Tooltip>
           }
         >
-          <a className="imageLink mx-auto" href={`${BACKEND_API_URL}/oauth2/authorization/google`}>
+          <a
+            className="imageLink mx-auto"
+            href={`${BACKEND_API_URL}/oauth2/authorization/google?prompt=select_account`}
+          >
             <Image className="image" src="/googleLogin.svg" alt="LogInBtn" />
           </a>
         </OverlayTrigger>

@@ -4,8 +4,9 @@
   top: 0;
   left: var(--sidebar-width);
   width: 23vw;
-  max-width: 80vw;
-  height: 100vh;
+  max-width: 50vw;
+  min-width: 300px;
+  height: 100%;
   background-color: #f0f0f0;
   border-right: 2px solid var(--gray4);
   box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.05);
@@ -24,8 +25,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 998;
   opacity: 0;
@@ -50,6 +51,7 @@
 .header h2 {
   font-size: 20px;
   font-weight: 600;
+  padding-left: 20px;
   margin: 0;
 }
 
@@ -88,6 +90,7 @@
 
 .navLink {
   color: var(--gray4);
+  margin-left: 10px;
 }
 
 .navUnLink {

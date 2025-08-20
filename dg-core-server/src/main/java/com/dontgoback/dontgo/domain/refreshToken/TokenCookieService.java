@@ -37,7 +37,7 @@ public class TokenCookieService {
         // ✨ 2. 쿠키를 추가하기 직전에, secureCookie의 실제 값을 로그로 출력
         log.info("Adding access_token cookie with secure flag: {}", secureCookie);
 
-        CookieUtil.addCookie(response, ACCESS_TOKEN_NAME, accessToken, maxAge, true, secureCookie, ROOT_PATH);
+        CookieUtil.addCookie(response, ACCESS_TOKEN_NAME, accessToken, maxAge, secureCookie, ROOT_PATH);
     }
 
     public void addRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
@@ -46,12 +46,12 @@ public class TokenCookieService {
         // ✨ 2. 쿠키를 추가하기 직전에, secureCookie의 실제 값을 로그로 출력
         log.info("Adding refresh_token cookie with secure flag: {}", secureCookie);
 
-        CookieUtil.addCookie(response, REFRESH_TOKEN_NAME, refreshToken, maxAge, true, secureCookie, REFRESH_TOKEN_API_PATH);
+        CookieUtil.addCookie(response, REFRESH_TOKEN_NAME, refreshToken, maxAge, secureCookie, REFRESH_TOKEN_API_PATH);
     }
 
     // 필요 시 로그아웃 등 쿠키 삭제 메서드도 추가 가능
     public void clearTokenCookies(HttpServletRequest request, HttpServletResponse response) {
-        CookieUtil.deleteCookie(request, response, ACCESS_TOKEN_NAME, "/", secureCookie);
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_NAME, REFRESH_TOKEN_API_PATH, secureCookie);
+        CookieUtil.deleteCookie(request, response, ACCESS_TOKEN_NAME, secureCookie, "/");
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_NAME, secureCookie, REFRESH_TOKEN_API_PATH);
     }
 }
