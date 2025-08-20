@@ -69,17 +69,18 @@ export default function Login() {
 
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
 
-      <Stack gap={4} className="col-md-5 mx-auto login-box pt-8">
+      <Stack gap={4} className="col-md-5 mx-auto login-box pt-xl">
         <Image
           src="/logoLong.svg"
           alt="Logo"
-          className="login-btn title m-0 p-0 border-0 mx-auto mb-4"
+          className="login-btn title m-0 p-0 border-0 mx-auto py-xl"
         />
-        <div className="text">
+        <div className="text mt-m">
           <h4 className="login-btn fontGray4  text">간편 로그인으로</h4>
           <h4 className="login-btn fontGray4 text">서비스 시작하기</h4>
         </div>
-        <div className="line mt-4 mb-3"></div>
+
+        <div className="line mb-m mt-m"></div>
 
         <OverlayTrigger
           key={"top"}

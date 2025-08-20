@@ -162,7 +162,7 @@ export default function ProfileMain() {
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <div className="d-flex justify-content-between align-items-center pt-4 mb-4">
+      <div className="d-flex justify-content-between align-items-center">
         {/* 왼쪽: 뒤로가기 버튼 */}
         <GoBackButton size={30} />
 

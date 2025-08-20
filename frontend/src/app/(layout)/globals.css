@@ -85,6 +85,7 @@ button {
   --feed-min-width: 500px;
   --popup-width: 40vw;
   --popup-min-width: 450px;
+  --bottom-nav-height: 60px; /* Added for mobile nav bar */
 }
 
 .fontWhite {
@@ -158,14 +159,19 @@ body {
   min-height: 80px;
 }
 /* page */
+/* Mobile-first: sidebar-space is hidden by default */
 .sidebar-space {
-  width: var(--sidebar-width);
-  min-width: var(--sidebar-item-min-width);
+  width: 0;
+  min-width: 0;
+  transition: width 0.3s ease;
 }
 .topTitleText {
   color: var(--gray4);
+  padding-top: 1rem !important; /* Reduced vertical padding for mobile */
+  padding-bottom: 1rem !important; /* Reduced vertical padding for mobile */
 }
 .main-space {
+  width: 100%;
   display: flex;
   flex-direction: column;
   margin: auto;
@@ -183,20 +189,21 @@ body {
   /* color: var(--white); */
 }
 
+/* Mobile-first: feeds-container takes full width */
 .feeds-container {
-  width: var(--feed-width);
-  min-width: var(--feed-min-width);
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
   min-height: 100vh;
-  /* overflow-y: hidden; */
   margin: auto;
   background-color: var(--white);
-  border: 2px solid var(--gray3);
-  border-radius: 28px 28px 0 0;
+  padding-bottom: var(--bottom-nav-height); /* Space for bottom nav bar */
+  border-top: 2px solid var(--gray4);
 }
 
 .feed-detail-container {
-  width: var(--feed-width);
-  min-width: var(--feed-min-width);
+  width: 100%;
+  min-width: 98%;
   min-height: 60vh;
   /* overflow-y: hidden; */
   margin: auto;
@@ -265,16 +272,52 @@ body {
   border-radius: 50%;
 }
 .loadingTitle {
-  min-width: 7rem;
+  min-width: 10%;
   height: 1rem;
   background-color: var(--white);
   border-radius: 3rem;
 }
 
 .loadingContant {
-  width: 90%;
-  min-width: 20rem;
+  min-width: 70%;
   height: 1rem;
   background-color: var(--white);
   border-radius: 3rem;
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .sidebar-space {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-item-min-width);
+  }
+
+  .feeds-container {
+    width: var(--feed-width);
+    min-width: var(--feed-min-width);
+    border: 2px solid var(--gray3);
+    border-radius: 28px 28px 0 0;
+    padding-bottom: 0; /* Reset padding for desktop */
+  }
+
+  .main-space {
+    width: auto; /* Reset width for desktop */
+    margin: auto; /* Restore margin for desktop centering */
+  }
+
+  .topTitleText {
+    padding-top: 1.5rem !important; /* Reduced vertical padding for mobile */
+    padding-bottom: 1.5rem !important;
+  }
+
+  .feed-detail-container {
+    width: var(--feed-width);
+    min-width: var(--feed-min-width);
+    min-height: 60vh;
+    /* overflow-y: hidden; */
+    margin: auto;
+    background-color: var(--white);
+    border: 2px solid var(--gray3);
+    border-radius: 15px;
+  }
 }

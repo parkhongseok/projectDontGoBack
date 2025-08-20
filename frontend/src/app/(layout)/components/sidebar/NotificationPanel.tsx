@@ -26,6 +26,8 @@ export default function NotificationPanel({ isOpen, onClose }: NotificationPanel
     }
   }, [isOpen]);
 
+  
+
   const handleTransitionEnd = () => {
     if (!isOpen) {
       setIsMounted(false); // Unmount after close animation

@@ -26,7 +26,7 @@ export default function Settings() {
   return (
     <>
       {/* dropdown 버튼이 들어올 자리 */}
-      <div className="d-flex justify-content-between align-items-center pt-4 mb-4">
+      <div className="d-flex justify-content-between align-items-center">
         {/* 왼쪽: 뒤로가기 버튼 */}
         <GoBackButton size={30} />
 
@@ -40,20 +40,38 @@ export default function Settings() {
       {/* 사이드바가 차지하지 않는 나머지 공간 */}
       <div className={`feed-detail-container`}>
         {/* 본격 사용 가능 공간 */}
-        <Stack direction="horizontal" className="mx-3 mt-3">
+
+        <div
+          className={`d-flex justify-content-between align-items-center ${styles.sideArea} mt-3`}
+        >
+          {/* 왼쪽: 취소 버튼 */}
           <button
             className={`${styles.write} ${styles.exitBtn} custom-button`}
-            onClick={handlerBefore}
+            // onClick={handlerBefore}
+            style={{ visibility: "hidden" }}
+            aria-hidden="true"
           >
             이전 페이지
           </button>
-        </Stack>
-        <hr className="feed-underline fontGray4 mt-3" />
+
+          {/* 중앙: 제목 */}
+          <h6 className={`${styles.createBoxTop} m-0`}>계정 설정</h6>
+
+          {/* 오른쪽: 제목을 중앙에 정렬하기 위한 보이지 않는 공간 */}
+          <button
+            className={`${styles.write} ${styles.exitBtn} custom-button`}
+            style={{ visibility: "hidden" }}
+            aria-hidden="true"
+          >
+            이전 페이지
+          </button>
+        </div>
+        <hr className="feed-underline fontGray4" />
         <Tabs
           defaultActiveKey="Main"
           id="uncontrolled-tab-example"
           variant="underline"
-          className="mb-3"
+          className="b-3"
           justify
         >
           <Tab eventKey="Main" title="계정" className={``}>

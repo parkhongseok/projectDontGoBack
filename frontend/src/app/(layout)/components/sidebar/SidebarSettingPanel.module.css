@@ -1,37 +1,35 @@
-/* components/SidebarSettingPanel.module.css */
+/* components/NotificationPanel.module.css */
 .panel {
   position: fixed;
-  top: 0;
-  left: var(--sidebar-width);
-  width: 23vw;
-  max-width: 50vw;
-  min-width: 300px;
-  height: 100%;
+  bottom: var(--bottom-nav-height);
+  /* 기존 사이드바 너비만큼 왼쪽에서 띄웁니다. (예: 80px) */
+  min-width: 100%;
+  height: 90%;
   background-color: #f0f0f0;
-  border-right: 2px solid var(--gray4);
-  box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.05);
-  transform: translateX(-100%);
+  border-top: 2px solid var(--gray4);
+
+  /* 초기 상태: 화면 왼쪽 바깥에 위치 */
+  transform: translateY(200%);
   transition: transform 0.3s ease-in-out;
-  z-index: 999;
+  z-index: 999; /* 사이드바보다 위에 오도록 설정 */
+
   display: flex;
   flex-direction: column;
 }
 
 .panel.open {
-  transform: translateX(0);
+  /* 열렸을 때: 원래 위치로 이동 */
+  transform: translateY(0);
 }
 
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 998;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
   pointer-events: none;
+  overflow-y: hidden;
 }
 
 .overlay.open {
@@ -99,4 +97,50 @@
 
 .navItem {
   padding: 30px;
+}
+
+.noScrollBody {
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .panel {
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-width);
+    width: 23vw;
+    max-width: 50vw;
+    min-width: 300px;
+    height: 100%;
+    background-color: #f0f0f0;
+    border-right: 2px solid var(--gray4);
+    box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.05);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel.open {
+    transform: translateX(0);
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+  }
+
+  .overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

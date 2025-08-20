@@ -122,7 +122,7 @@ export default function Chart({ userId }: ChartProps) {
   return (
     <div className="px-3 mb-4">
       {/* 시간 간격 선택 버튼 */}
-      <div className="d-flex justify-content-end mb-2">
+      <div className="d-flex justify-content-end mb-2 mx-5">
         <ButtonGroup size="sm">
           <Button
             variant={interval === "daily" ? "primary" : "outline-secondary"}
@@ -148,7 +148,7 @@ export default function Chart({ userId }: ChartProps) {
       {/* 차트 렌더링 영역 */}
       <div style={{ width: "100%", height: 250 }}>
         <ResponsiveContainer>
-          <ComposedChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+          <ComposedChart data={data} margin={{ top: 5, right: 0, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" fontSize={12} />
             <YAxis

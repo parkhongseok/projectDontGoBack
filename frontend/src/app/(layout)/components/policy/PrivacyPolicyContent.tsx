@@ -3,7 +3,6 @@ import React from "react";
 const PrivacyPolicyContent = () => {
   return (
     <div>
-      <br />
       <h5>1. 개인정보의 처리 목적</h5>
       <p>
         회사는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적
