@@ -8,7 +8,7 @@
 
 <br/>
 
-- 소개 : 사용자의 자산 증감을 닉네임과 그래프로 표현하는 `익명 SNS`입니다.
+- 소개 : 매일 갱신되는 사용자의 자산을 닉네임과 그래프로 표현하는 `익명 SNS`입니다.
 - GitHub : [Core Server](https://github.com/parkhongseok/projectDontGoBack) | [Auth Server](https://github.com/parkhongseok/dontgoback-auth-server) | [Extension Server](https://github.com/parkhongseok/dontgoback-extension-server)
 - 배포 주소 : [https://dontgoback.kro.kr/](https://dontgoback.kro.kr/)
 
