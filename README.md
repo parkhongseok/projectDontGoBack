@@ -1,701 +1,247 @@
 # 프로젝트 돈고백(Dont go back)
 
-#### 목차
+<br/>
 
-[1. 프로젝트 개요](#1-프로젝트-개요)  
- [2. 주요 기능](#2-주요-기능)  
- [3. 아키텍처](#3-아키텍처)
+<p align="center">
+" 저비용 인프라(Raspberry Pi) 위에서 OAuth 2.0 인증 서버를 직접 구축하며 성능 한계를 극복한 기록을 담고 있습니다."
+</p>
+
+<br/>
+
+- 소개 : 사용자의 자산 증감을 닉네임과 그래프로 표현하는 `익명 SNS`입니다.
+- GitHub : [Core Server](https://github.com/parkhongseok/projectDontGoBack) | [Auth Server](https://github.com/parkhongseok/dontgoback-auth-server) | [Extension Server](https://github.com/parkhongseok/dontgoback-extension-server)
+- 배포 주소 : [https://dontgoback.kro.kr/](https://dontgoback.kro.kr/)
 
 </br>
 </br>
+</br>
 
-# 1. 프로젝트 개요
+# 1. 주요 성과
 
-- 소개 : `MSA 기반 소셜 로그인 기반 익명 SNS`
+### **주도적인 MSA 전환으로 확장성과 안정성 확보**
+
+- 모놀리식 구조의 한계를 개선하고자 3-Tier(`Core`, `Auth`, `Extension`) MSA로 전환하였습니다.
+- AWS EC2와 Raspberry Pi를 넘나드는 하이브리드 환경을 구축하며 네트워크 및 인프라 문제 해결 능력을 길렀습니다.
+  > 🔗 블로그 포스트 : [라즈베리파이로 MSA 서버 구축하기:**_네트워크, 인프라 문제의 해결_** ](https://keinmall.tistory.com/22)
+
+### **OAuth 2.0 표준 기반 인증 서버 개발로 안전한 통신 구현**
+
+- MSA 환경의 서비스 간 신뢰를 확보하기 위해, OAuth 2.0 표준(RFC 6749)을 기반으로 `Client Credentials Grant` 방식의 인증 서버를 직접 설계하고 개발했습니다.
+- 특히 **비대칭키(RS256)를 채택**하여, 인증서버만 개인키를 소유하고 다른 서버들은 공개키로 검증하게 함으로써 보안 관리 포인트를 최소화했습니다.
+  > 🔗 블로그 포스트 : [MSA 서버 간 인증을 위한 **_OAuth2 직접 구현하기_** ](https://keinmall.tistory.com/22)
+
+### DB 쿼리 성능 1000배 개선:
+
+- 실행 계획 분석과 복합 인덱스 적용을 통해 게시글 조회 API의 응답 속도를 **2초에서 0.002초로 단축**하며 데이터베이스 최적화 경험을 쌓았습니다.
+- 이 경험을 통해 데이터베이스 성능 병목 지점을 찾아내고 해결하는 능력을 길렀습니다.
+  > 🔗 블로그 포스트 : [실행 계획 분석과 인덱싱을 통한 DB 쿼리 성능 개선](https://keinmall.tistory.com/21)
+
+### **빌드 파이프라인 최적화로 배포 시간 98% 단축**
+
+- 멀티 스테이지 빌드와 **Docker Layer Caching** 전략을 적용하여, GitHub Actions의 빌드 시간을 **501초에서 6초**로 단축하며 개발 및 배포 생산성을 크게 향상시켰습니다.
+- 컨테이너 레지스트리(Aws ECR)의 유무에 따른 배포 파이프라인을 모든 구축해봤습니다.
+  > 🔗 블로그 포스트 : [빌드 캐싱을 통한 CI/CD 빌드시간 단축](https://keinmall.tistory.com/22)
+
+### **Linux 시스템 이해를 통한 서버 무중단 운영**
+
+- **Swap 메모리** 설정으로 저사양 라즈베리파이의 OOM(Out of Memory) 문제를 해결하고,
+- **systemd** 서비스 등록을 통해 예기치 않은 장애 발생 시 자동으로 서비스를 복구하는 시스템을 구축하며 안정적인 서버 운영 능력을 확보했습니다.
+  > 🔗 블로그 포스트 : [서버 장애 대응 및 복구 자동화](https://keinmall.tistory.com/20)
+
+<br>
+<br>
+<br>
+
+# 2. 기술 스택
+
+| 구분               | 기술                                                           |
+| :----------------- | :------------------------------------------------------------- |
+| **Backend**        | Java 21, Spring Boot 3.4, Spring Security, JPA, JUnit, Mockito |
+| **Infrastructure** | Raspberry Pi, AWS EC2, Nginx                                   |
+| **DevOps**         | Docker, Docker Compose, GitHub Actions, AWS ECR                |
+| **Database**       | MariaDB                                                        |
+| **ETC**            | TypeScript, Next.js, AWS SES                                   |
+
+> 📌 관련 기록: [02-백엔드-기술스택-선정.md](./docs/architecture/decisions/02-백엔드-기술스택-선정.md) | [03-데이터베이스-기술스택-선정.md](./docs/architecture/decisions/03-데이터베이스-기술스택-선정.md) | [01-프론트엔드-기술스택-선정.md](./docs/architecture/decisions/01-프론트엔드-기술스택-선정.md)
+
+<br>
+<br>
+<br>
+
+# 3. 아키텍처 발전 과정
+
+## Phase 1. 모놀리식 아키텍처 - EC2
+
+<p align="center">
+  <img src="./docs/architecture/src/04-시스템-아키텍처-요약.png" width="55%" alt="EC2 시스템 아키텍처 요약">
+  <img src="./docs/architecture/src/04-시스템-아키텍처.png" width="31%" alt="EC2 시스템 아키텍처">
+</p>
+
+#### 구조
+
+- **AWS EC2 인스턴스 내에서 Docker 기반**으로 프론트엔드(Next.js), 백엔드(Spring Boot), 데이터베이스(MariaDB)를 **각각 컨테이너로 분리하여 실행**
+- **Nginx**는 리버스 프록시로서 요청을 각 서비스로 분기하며, 외부 서비스로는 **Google OAuth**와 **AWS SES**를 연동하여 인증 및 메일 전송을 처리
+
+<p align="center">
+</p>
+
+#### 선택 이유
+
+- 빠른 프로토타이핑과 검증
+- 초기 비용 효율성
+
+#### 한계점
+
+- 기능 변경 시 전체 배포 필요
+- 장애 발생 시 전체 서비스 중단 위험(SPOF)
+
+> 📌 관련 기록: [04-시스템-아키텍처.md](./docs/architecture/decisions/04-시스템-아키텍처.md)
+
+<br/>
+<br/>
+
+## Phase 2. MSA로의 전환 - EC2, Raspberry Pi
+
+#### 구조
+
+- `Core(기존 EC2)`, `Auth`, `Extension` 서버를 EC2와 라즈베리파이에 분리 배포
+- **OAuth 2.0 Client Credentials Grant** 기반의 서버 간 인증 방식
+
+<p align="center">
+  <img src="./docs/architecture/src/15-MSA-전환-개요-3-서버-아키텍처-요약.png" width="55%" alt="MSA 서버 아키텍처 요약">
+  <img src="./docs/architecture/src/15-MSA-전환-개요-3-서버-아키텍처.png" width="40%" alt="MSA 서버 아키텍처">
+</p>
+
+#### 서버별 역할
+
+| 서버                | OAuth 2.0 역할       | 핵심 책임                                            |
+| :------------------ | :------------------- | :--------------------------------------------------- |
+| dg-auth-server      | Authorization Server | 서버 간 통신용 JWT(Access Token) 발급 및 공개키 제공 |
+| dg-core-server      | Client               | 인증 서버에 토큰 요청, 비즈니스 로직 오케스트레이션  |
+| dg-extension-server | Resource Server      | 토큰 검증 후 보호된 API(자산 갱신 등) 제공           |
+
+#### 전환 이유
+
+1. **인증 기능 분리**: 서버 간 안전한 통신을 위한 중앙 인증 시스템 필요성
+
+2. **확장성**: 기능 단위의 독립적인 개발 및 배포 구조 마련
+
+3. **장애 격리**: 특정 서버의 장애가 다른 서버로 전파되는 것을 방지
+
+> 📌 관련 기록: [15-MSA-시스템-아키텍처](./docs/architecture/decisions/15-MSA-시스템-아키텍처.md)
+
+   <br>
+   <br>
+   <br>
+
+# 주요 설계 결정
+
+단순히 기능을 구현하는 것을 넘어, 확장성과 안정성을 고려한 설계 원칙을 세우고 모든 결정 과정을 **ADR(아키텍처 결정 기록)** 로 문서화했습니다.  
+ 모든 기록은 `docs/architecture/decisions` 에서 확인하실 수 있으며, 대표적인 설계 고민은 다음과 같습니다.
+
+1.  **도메인 모델링 (JPA/ERD):**  
+    사용자 자산과 SNS 활동의 관계를 표현하기 위해 **도메인 모델을 설계** 하고, 정규화를 거쳐 **ERD를 구축**했습니다.  
+    특히 JPA 환경에서 발생할 수 있는 양방향 연관관계의 순환 참조 문제를 DTO 변환 레이어에서 해결하고, N+1 문제를 **Fetch Join으로 최적화**한 경험이 있습니다.
+
+    > 📌 관련 기록: [05-도메인-모델-설계.md](./docs/architecture/decisions/05-도메인-모델-설계.md) | [06-데이터-모델-및-ERD-설계.md](./docs/architecture/decisions/06-데이터-모델-및-ERD-설계.md) | [07-JPA-기반-엔티티-설계.md](./docs/architecture/decisions/07-JPA-기반-엔티티-설계.md)
+
+2.  **서버 내부 API 보안 강화:**  
+    MSA 환경에서는 외부뿐만 아니라 내부 서비스 간의 통신 보안도 중요하다고 판단했습니다.  
+    따라서 토큰 검증 외에 추가적인 보안 계층을 마련하기 위해, 게이트웨이를 통해 들어온 요청이 아닐 경우 허용된 **내부 IP 주소에서만 API를 호출**할 수 있도록 필터를 구현했습니다.
+
+    > 📌 관련 기록: [29-내부-API-보안-강화를-위한-허용-IP-기반-필터-도입.md](./docs/architecture/decisions/29-내부-API-보안-강화를-위한-허용-IP-기반-필터-도입)
+
+3.  **대용량 데이터 처리 (Backfill & Batch):**  
+    새로운 기능 도입으로 기존 유저들의 데이터(프로필 자산 그래프 등)를 일괄 생성해야 하는 요구사항이 있었습니다.  
+    대량의 업데이트 쿼리가 서비스에 주는 부하를 최소화하기 위해, **사용자 ID 기반으로 작업을 분할하고 순차적으로 처리**하는 **Backfill 로직과 배치(Batch) 아키텍처**를 설계하고 도입했습니다.
+    > 📌 관련 기록: [23-데이터-Backfill-및-seed-방식-도입.md](./docs/architecture/decisions/23-데이터-Backfill-및-seed-방식-도입.md) | [20-도메인-분리-기반의-배치-아키텍처-구축-방안.md](./docs/architecture/decisions/20-도메인-분리-기반의-배치-아키텍처-구축-방안.md)
+
+<br/>
+<br/>
+
+# 5. 부록
+
+### 프로젝트 개요
+
+- 제목 : 돈고백 (Dont Go Back)
 - 기간 : 2025.01.13 ~ (진행 중)
 - 인원 : 개인 프로젝트
-- 배포 : [https://dontgoback.kro.kr/](https://dontgoback.kro.kr/)
-- 관련 프로젝트 :
 
-  - [MSA 인증 서버 gitHub 링크](https://github.com/parkhongseok/dontgoback-auth-server)
-  - [MSA 확장 서버 gitHub 링크](https://github.com/parkhongseok/dontgoback-extension-server)
-
-- 기술 스택 :
-
-  |      분류      |               도구               |  버전   |
-  | :------------: | :------------------------------: | :-----: |
-  |      언어      |        Java / TypeScript         | 21 / ^5 |
-  |    Frontend    |             Next.js              | 15.1.7  |
-  |    Backend     |           Spring boot            |  3.4.0  |
-  |       DB       |             MariaDB              | 10.11.6 |
-  |  Testing tool  |          Junit, Mockio           |         |
-  |     DevOps     |      GitHub Action, Docker       |         |
-  | Infrastructure | Raspberry Pi / AWS EC2, ECR, SES |         |
-
-- 문제 해결 사례 :
-  - 블로그 포스트 1. [실행 계획 분석과 인덱싱을 통한 **_DB 쿼리 성능 개선_**](https://keinmall.tistory.com/21)
-  - 블로그 포스트 2. [스왑 공간 확보 및 systemd를 통한 **_서버 장애 대응 및 복구 자동화_** ](https://keinmall.tistory.com/20)
-
-<br/>
-<br/>
-
----
-
-<br/>
-<br/>
-
-# 2. 주요 기능
-
-### ① 소셜 로그인
-
-- **OAuth2** 기반 구글 소셜 로그인
-- **JWT** 기반 로그인 및 로그아웃 상태 관리
-- **Spring Security** 상에서 위의 두 가지 기능 구현
-
-<br/>
-
-### ② 계정 탈퇴 및 비활성화 시 이메일 인증
-
-- **AWS SES (Simple Email Service)** 기반 이메일 발송
-- 이메일 발송 방식 : JavaMailSender를 이용한 SMTP 방식
-- 메일 내용 : Thymeleaf 기반 HTML 템플릿
-
-<br/>
-
-### ③ 게시글 / 댓글 / 좋아요 기능
-
-- JPA 및 Hibernate 기반 **REST API**
-- **무한스크롤** 기반 메인 피드, 프로필, 답글 조회
-- 게시글 작성/수정 시 **글자수 제한 및 줄바꿈 반복 제거**
-
-<br/>
-
-### ④ 프로필 페이지
-
-- 프로필 설정 페이지 제공
-- 회원 별 작성한 게시물 조회
-- 게시물의 타입 별 조회
-
-<br/>
-
-### ⑤ 닉네임 변경
-
-- (2025.8.12 지원 예정)
-- 매일 자산 기반의 유저 닉네임이 갱신
-- 갱신된 자산은 프로필의 그래프로 표시
-- 유저의 자산 증감에 따른 타입 반영
-
-### ⑥ 기타
-
-- **AWS EC2**, **ECR**을 통한 배포 파이프라인 구성
-- Docker Compose, GitHub Action 기반 **_빌드 및 배포 자동화_**
-- **_라즈베리파이 홈서버_** 기반 MSA 구성 (2025.8.11 각 서버 배포 예정)
-
-  </br>
-  </br>
-
----
-
-# 3. 아키텍처
-
-아키텍처 결정 과정을 **_맥락_**, **_결정_**, **_결과_** 순서로 소개합니다.  
-더 다양한 주제의 문서는 [/docs/architecture/decisions](./docs/architecture/decisions/)에서 확인하실 수 있습니다.
-
-<br/>
-
-#### 목차
-
-[3-1. 시스템 구조](#3-1-시스템-구조)  
- [3-2. OAuth2 및 JWT 기반 인증/인가 아키텍처](#3-2-oauth2-및-jwt-기반-인증인가-아키텍처)  
- [3-3. 빌드 및 배포 자동화](#3-3-빌드-및-배포-자동화)  
- [3-4. MSA 내부 구조 설계](#3-4-msa-내부-구조-설계)
-
-<br/>
-<br/>
-
-## 3-1. 시스템 구조
-
-!["System Architecture"](./docs/architecture/src/04-시스템-아키텍처-요약.png)
-<br/>
-
-- **AWS EC2 인스턴스 내에서 Docker 기반**으로 프론트엔드(Next.js), 백엔드(Spring Boot), 데이터베이스(MariaDB)를 **각각 컨테이너로 분리하여 실행** 하고 있습니다.
-- **Nginx**는 리버스 프록시로서 요청을 각 서비스로 분기하며, 외부 서비스로는 **Google OAuth**와 **AWS SES**를 연동하여 인증 및 메일 전송을 처리합니다.
-
-  <br/>
-  <br/>
-
-## 맥락
-
-초기 개발 단계에서는 **빠른 배포와 구조 검증이 중요한 상황**이었습니다.  
-이에 따라 **하나의 EC2 인스턴스에서 모든 서비스를 컨테이너 단위로 구동하는 구조를 선택**하였으며, 다음과 같은 설계 방향을 따랐습니다.
-
-### 프론트엔드/백엔드 분리 설계
-
-프론트엔드는 사용자 경험과 렌더링을 담당하며, 백엔드는 인증·피드·상태 관리를 담당합니다.  
- 이를 통해 UI와 비즈니스 로직을 독립적으로 개발·배포할 수 있도록 하였습니다.
-
-<br/>
-
-### Docker 기반 모놀리식 실행
-
-Docker Compose를 통해 동일한 환경에서 전체 서비스를 실행 가능하게 구성하였으며, 운영 효율성과 테스트 일관성을 확보하였습니다.
-
-<br/>
-
-### EC2 단일 구성 선택 배경
-
-초기 운영 비용 절감과 단일 노드 운영의 간편함을 우선 고려하였고,  
- 추후에는 AWS의 S3, RDS, ALB, ECS 등으로 확장할 수 있도록 유연한 구조로 설계하였습니다.
-
-  <br/>
-  <br/>
-
-## 결정
-
-!["System Architecture"](./docs/architecture/src/04-시스템-아키텍처.png)
-
-### Backend (Spring Boot)
-
-- **REST API 제공 및 비즈니스 로직 처리**  
-  피드 작성, 댓글, 좋아요 등의 기능을 API 형태로 제공합니다.
-
-- **OAuth2 기반 인증 및 JWT 발급**  
-  Google OAuth를 통해 사용자 인증을 위임받고, 자체 JWT를 발급하여 사용자 식별에 활용합니다.
-
-- **계정 상태 이력 및 탈퇴 유예 관리**  
-  탈퇴 요청 시 계정을 비활성화하고, 일정 유예 기간 후 자동 삭제 처리 로직을 관리합니다.
-
-<br/>
-<br/>
-
-### Frontend (Next.js)
-
-- **CSR/SSR 혼합 렌더링**  
-  초기 페이지는 SSR로 제공하고, 이후 동작은 CSR 기반으로 처리하여 사용자 경험을 향상시킵니다.
-
-- **전역 상태 관리 및 데이터 시각화**  
-  Context API 기반으로 로그인, 피드, 닉네임 등의 상태를 관리하고, API 데이터를 가공하여 UI에 출력합니다.
-
-<br/>
-<br/>
-
-### Database (MariaDB)
-
-- **도메인 데이터 영속화 및 이력 관리**  
-  사용자, 피드, 좋아요, 댓글 등의 엔티티를 안정적으로 저장하며, 시간 기반 상태 이력을 추적합니다.
-
-- **인덱스를 활용한 성능 최적화**  
-  복합 인덱스를 통해 무한 스크롤 기반의 피드 조회 성능을 개선하였습니다.
-
-<br/>
-<br/>
-
-### Load Balancer (Nginx)
-
-- **도메인 기반 요청 라우팅**  
-  `/api` 요청은 백엔드로, 정적 요청은 프론트엔드로 전달합니다.
-
-- **HTTPS 적용 및 보안 설정**  
-  모든 요청을 HTTPS로 리디렉션하여 보안성을 확보합니다.  
-  HttpOnly 쿠키 설정 등을 통해 보안 수준을 강화하였습니다.
-
-<br/>
-<br/>
-
-### 외부 서비스 연동
-
-- **Google OAuth**: 인증 코드와 사용자 정보 수신
-- **AWS SES**: 탈퇴 인증 메일 발송 및 실패 대응 자동화
-
-  <br/>
-  <br/>
-
-## 결과
-
-단일 EC2 인스턴스 기반의 구조는 개발 초기에는 효율적이었으나, 다음과 같은 제한점이 있었습니다.
-
-### ① EC2 단일 구성의 안정성 문제
-
-- 부분 장애가 전체 서비스 중단으로 이어질 수 있음
-
-<br/>
-
-### ② DB 백업 및 복구 전략 부족
-
-- 장애 발생 시 데이터 손실 가능성
-- systemd 및 Docker restart 정책을 활용해 일부 보완
-
-<br/>
-
-### ③ SSR의 실효성 재검토
-
-- 대부분의 페이지는 CSR로 충분하며, SSR 적용 범위를 조정할 필요성 발견
-- 점진적으로 아래와 같은 개선 방향을 고려하고 있습니다.
-  | 단계 | 개선 사항 | 기대 효과 |
-  | :---: | :-------------------------------: | :--------------------------------------------: |
-  | 1단계 | DB 분리 : aws RDS + EBS | 데이터 안정성 확보 및 백업/복구 기능 강화 |
-  | 2단계 | 프론트엔드 분리 : S3 + CloudFront | 서버 부하 감소, 프론트엔드 독립 배포 구조 확보 |
-  | 3단계 | ALB 추가 + Auto Scaling | 트래픽 분산 처리 및 시스템 유연성 향상 |
-  | 4단계 | ECS 또는 EKS로 컨테이너 관리 전환 | 무중단 배포 및 자동 스케일링 환경 구축 |
-
-  <br/>
-  <br/>
-
----
-
-  <br/>
-  <br/>
-
-## 3-2. OAuth2 및 JWT 기반 인증/인가 아키텍처
-
-!["OAuth2 Architecture"](./docs/architecture/src/08-OAuth2-JWT-인증-인가-흐름-요약.png)
-
-> 사용자는 구글을 통해 인증하고, 백엔드는 사용자 정보를 바탕으로 JWT를 발급하여 인증 상태를 유지합니다.
-
-| 항목        | 설명                                                           |
-| ----------- | -------------------------------------------------------------- |
-| 인증 수단   | Google OAuth2 (Authorization Code Flow)                        |
-| 사용자 식별 | JWT Access Token 활용                                          |
-| 재인증 방식 | Refresh Token을 통한 토큰 재발급                               |
-| 저장 위치   | Access Token → localStorage / Refresh Token → HttpOnly Cookie  |
-| 보안 강화   | HTTPS 전용 통신, HttpOnly 쿠키 설정, Spring Security 기반 구성 |
-
-<br/>
-<br/>
-
-## 맥락
-
-본 프로젝트에서의 인증 관련 요구사항은 다음과 같았습니다.
-
-```
-① 사용자는 간편하게 로그인할 수 있어야 한다.
-② 인증 상태는 일정 시간 동안 안전하게 유지되어야 한다.
-③ 사용자 정보는 보안적으로 보호되어야 한다.
-```
-
-이에 따라 인증과 인가 흐름은 아래 세 가지 기준을 중심으로 설계하였습니다.
-
-<br/>
-
-### ① 간편한 로그인 수단 선택: `Google OAuth2`
-
-- 사용자가 매번 ID/PW를 입력하는 방식은 번거롭기 때문에, **소셜 로그인 방식이 적합**하다고 판단했습니다
-- 단, 다양한 소셜 로그인 제공 시 혼란 가능성을 고려하여, **Google 단일 플랫폼 기반 로그인**을 채택하였습니다.
-
-<br/>
-
-### ② 인증 상태 유지 방식 결정: `JWT 기반 인증 `
-
-- 세션-쿠키 방식은 서버 측 세션 관리를 요구하므로 확장성에 불리하다고 판단했습니다.
-- 따라서 **OAuth2를 통한 사용자 인증 위임 후, JWT를 활용한 토큰 기반 인증 방식**을 채택하였습니다.
-  - `Access Token`은 짧은 유효 기간을 갖고,
-  - `Refresh Token`은 장기적으로 재발급을 위한 용도로 사용됩니다.
-- 클라이언트 측에서는 이 두 토큰을 각각 `localStorage`, `cookie`에 저장합니다.
-
-<br/>
-
-### ③ 보안 강화 및 서버 설정: `Spring Security 적용`
-
-- **Spring Security** 위에서 OAuth2와 JWT 기반 인증을 구현하여 보안을 강화하였습니다.
-- 토큰은 반드시 HTTPS 환경에서만 통신되도록 하고, 민감한 정보가 담긴 쿠키에는 다음 옵션을 적용하였습니다:
-
-  - `Secure` : HTTPS 환경에서만 전송
-  - `HttpOnly` : JavaScript 접근 차단
-
-- 이를 위해 사전에 다음과 같은 작업이 선행되었습니다.
-
-  <pre>
-  1. EC2에 고정 IP 할당
-  2. 도메인 연결 (A 레코드 설정)
-  3. SSL 인증서 발급 및 Nginx HTTPS 리버스 프록시 구성
-  </pre>
-
-<br/>
-<br/>
-
-## 결정
-
-!["OAuth2 Architecture"](./docs/architecture/src/08-OAuth2-JWT-인증-인가-흐름.png)
-
-JWT 기반 Google OAuth 인증 인가 아키텍처는 아래와 같이 총 세 주체로 구성됩니다.
-
-- **사용자 브라우저 (Resource Owner)**
-
-- **서비스 서버 (Client Application)**
-
-- **Google 서버 (Authorization Server + Resource Server)**
-
-그리고 아래와 같은 과정으로 진행됩니다.
-
-<br/>
-<br/>
-
-### 1단계: 사용자 인증 요청
-
-- 사용자가 `구글 로그인 버튼`을 클릭하면, 프론트엔드는 백엔드의 `/oauth2/authorization/google` 엔드포인트를 호출합니다.
-
-- 이후 리다이렉트를 통해 Google 로그인 페이지로 이동하며, 사용자는 Google ID/PW를 입력하여 인증을 수행합니다.
-
-<br/>
-<br/>
-
-### 2단계: 인가 코드 발급 및 전달
-
-- 인증이 완료되면 Google 서버는 `인가 코드 (Authentication Code)` 를 포함한 리디렉션 URL로 다시 돌아옵니다.
-
-- 백엔드는 해당 `인가코드` 값을 파라미터로 받아 인증 요청을 처리합니다.
-
-<br/>
-<br/>
-
-### 3단계: 액세스 토큰 및 유저 정보 획득
-
-- 백엔드는 받은 `인가코드`를 이용해 Google 서버에 액세스 토큰을 요청합니다.
-
-- Google 서버는 토큰을 발급하고, 해당 토큰으로부터 사용자 프로필 정보(이메일, 이름 등)를 요청하여 받아옵니다.
-
-<br/>
-<br/>
-
-### 4단계: 자체 JWT 발급 및 저장
-
-- 서비스 서버는 Google 유저 정보를 기반으로 자체 `User` 엔티티를 생성하거나 조회한 후, 자체 발급한 **JWT Access Token**과 **Refresh Token**을 생성합니다.
-
-- 이 토큰은 다음과 같이 브라우저에 저장됩니다:
-
-  - `Access Token`: localStorage 또는 쿠키
-
-  - `Refresh Token`: HttpOnly 쿠키로 분리 저장
-
-<br/>
-<br/>
-
-### 5단계: 로그인 완료 및 인증 상태 유지
-
-- 토큰 저장이 완료되면, 브라우저는 인증된 상태로 서비스 접근이 가능해집니다.
-
-- 이후 클라이언트는 모든 요청 시 `Access Token`을 함께 전송하며, 서버는 이를 검증하여 인가를 수행합니다.
-
-- `Access Token`이 만료된 경우, `Refresh Token`을 이용해 재발급을 요청합니다.
-
-<br/>
-<br/>
-
-### 보안 고려 사항
-
-- JWT는 암호화되지 않으므로 반드시 HTTPS 위에서만 통신하도록 설정하였습니다.
-
-- Refresh Token은 HttpOnly + Secure 쿠키에 저장되어 JavaScript로 접근할 수 없습니다.
-
-- 인증 객체는 `SecurityContextHolder`에 저장되어 요청마다 전역적으로 접근이 가능하며,
-  스레드 간 공유되지 않아 **성능 및 보안 측면 모두에서 유리**합니다.
-
-<br/>
-<br/>
-
-## 결과
-
-현재는 JWT 기반 OAuth2 인증 흐름을 안정적으로 운영하고 있습니다.
-
-<br/>
-
-### 성능 측면 개선
-
-- 매 요청마다 DB에서 사용자 정보를 조회하던 과정을 줄였습니다.
-
-```
-  기존: SecurityContext → Principal → getEmail → findByEmail → User 객체 획득
-  개선: @AuthenticationPrincipal User me → 즉시 인증 객체 접근 가능
-```
-
-<br/>
-
-### 보안 취약점 발견 및 개선 진행 중
-
-- 과거에는 `Access Token`을 URL 쿼리 파라미터로 전달하는 방식이 존재하였고,
-  로그아웃 후 이전 페이지로 돌아가도 토큰이 재사용되는 문제가 있었습니다.
-
-- 임시 해결책으로, **로컬스토리지에 토큰을 저장한 뒤 URL을 즉시 제거**하는 방식으로 대응하였으나,
-  이는 보안상 근본적인 해결책이 아니며,
-  향후 Access Token 또한 HttpOnly 쿠키로 전환하는 개선 작업을 계획 중입니다.
-
-<br/>
-
-### 향후 도입 고려 사항 :`OIDC(OpenID Connect)`
-
-- 현재는 OAuth2의 Authorization Code Flow만 사용하고 있으나,
-  단순 로그인 기능만 필요한 상황에서는 OIDC가 더 적합할 수 있습니다.
-
-- OAuth2 인증 플로우에 대한 충분한 이해를 위해 현재는 도입을 보류하고 있습니다.
-
-  <br/>
-  <br/>
-
----
-
-  <br/>
-  <br/>
-
-## 3-3. 빌드 및 배포 자동화
-
-GitHub Actions, Docker, Amazon ECR, EC2를 활용하여 자동화된 빌드 및 배포 파이프라인을 구축하였습니다.
-
-!["CI/CD Architecture"](./docs/architecture/src/09-빌드-및-배포-자동화-프로세스-요약.png)
-
-#### 개요
-
-```
-  ① main 브랜치에 push 발생
-  ② GitHub Actions에서 각 Docker 이미지 빌드
-  ③ Amazon ECR에 이미지 푸시
-  ④ EC2에 SSH 접속 → 최신 이미지 pull
-  ⑤ docker-compose로 컨테이너 재시작
-```
-
-#### 이미지 구성
-
-- **Backend**: openJDK 기반, Spring Boot `.jar` 파일 포함
-- **Frontend**: Node.js 기반, Next.js 앱
-- **DB**: MariaDB 공식 이미지 + volume 마운트로 데이터 지속성 확보
-
-<br/>
-<br/>
-
-## 맥락
-
-초기에는 **Raspberry Pi**를 활용하여 애플리케이션이 정상적으로 실행되는지를 검증하였습니다.  
-이후 **AWS EC2** 환경으로 확장하면서 다음과 같은 문제들을 마주했습니다.
-
-<br/>
-
-### 문제 1. 반복적인 수동 배포 작업 → GitHub Actions 도입
-
-- 수동으로 빌드 및 배포하는 과정에서 반복 작업과 오류가 빈번하게 발생했습니다.
-- 이를 자동화하기 위해 GitHub Actions 기반 CI/CD 파이프라인을 도입하였고, 커밋 메시지에 `#deploy` 키워드가 포함된 경우에만 실행되도록 조건을 설정하였습니다.
-- 서버 내 쉘 스크립트 자동화도 고려했지만, 브랜치 트리거 및 버전 관리 측면에서 **GitHub Actions**가 더 적합하다고 판단하였습니다.
-
-<br/>
-
-### 문제 2. 환경 설정 및 버전 충돌 → Docker 및 Docker Compose 도입
-
-- 라이브러리 버전 충돌 및 실행 환경 차이로 인한 문제를 해결하기 위해 Docker를 도입하였습니다.
-- Backend, Frontend, DB를 각각 컨테이너화하고, `docker-compose.yml`을 통해 동일 네트워크에서 통합 실행되도록 구성하였습니다.
-
-<br/>
-
-### 문제 3. AWS 배포 환경 선택: Elastic Beanstalk vs `EC2`
-
-|     항목      |               EC2                |         Elastic Beanstalk         |
-| :-----------: | :------------------------------: | :-------------------------------: |
-| 컨테이너 구성 | 자유롭게 다중 컨테이너 구성 가능 |   기본적으로 단일 컨테이너 중심   |
-|  설정 유연성  | nginx, systemd 등 자유 설정 가능 | 제한적 설정 (프록시 등 제한 있음) |
-| 로그/모니터링 |          수동 설정 필요          |     CloudWatch 연동 자동 제공     |
-
-- 본 프로젝트는 백엔드, 프론트엔드, 데이터베이스를 포함하여 3개 이상의 컨테이너를 동시에 구동해야 하므로, **Docker Compose** 기반 구성이 필요합니다.
-- Elastic Beanstalk에서는 멀티 컨테이너 구성이 가능하긴 하나, Docker Compose를 직접 지원하지 않고, ECS 기반 JSON 구성 방식만 허용되므로 복잡성이 증가합니다.
-- 이에 따라, 더 높은 유연성과 간결한 구성을 제공하는 `EC2 환경을 선택`하였습니다.
-
-<br/>
-<br/>
-
-## 결정
-
-!["CI/CD Architecture"](./docs/architecture/src/09-빌드-및-배포-자동화-프로세스.png)
-
-자동화 파이프라인은 다음과 같은 단계로 구성됩니다:
-
-<br/>
-
-### 1단계. 로컬 개발 환경 구성 및 버전 관리
-
-- 프로젝트 구조: `backend/`, `frontend/`, `docker-compose.yml`, `.github/workflows/ci-cd.yml`
-- main 브랜치로 커밋 시 배포 여부 결정
-
-<br/>
-
-### 2단계. GitHub Actions 조건부 트리거
-
-- `#deploy` 키워드 포함 여부를 기준으로 파이프라인 실행
-
-  ```
-  if: contains(github.event.head_commit.message, '#deploy')
-  ```
-
-<br/>
-
-### 3단계. Docker 이미지 빌드 및 ECR 푸시
-
-- Backend: `.jar` 빌드 후 이미지 생성
-
-- Frontend: Next.js 앱 이미지 생성
-
-- 생성된 이미지를 Amazon ECR에 푸시
-
-<br/>
-
-### 4단계. EC2 서버 연결 및 배포 자동화
-
-- 이전 이미지 정리 (`docker image prune`)
-- 최신 이미지 pull
-- `docker-compose`로 재시작
-
-<br/>
-
-### 5단계. MariaDB는 외부 이미지 활용 및 데이터 지속성 유지
-
-- Docker Hub 공식 이미지 사용
-- volume 마운트를 통해 데이터 영속성 확보
-
-<br/>
-<br/>
-
-## 결과
-
-### ① GitHub Actions, ECR, EC2 간 역할 분리 및 자동화 체계 정립
-
-- 전체 배포 과정을 자동화함으로써, 사람의 개입 없이 안정적인 운영이 가능해졌습니다.
-- 구성요소별 역할:
-  - **GitHub Actions**: 트리거 감지, 빌드, SSH 배포 실행
-  - **ECR**: 이미지 저장소, 생명주기 정책 (최대 6개 보관)
-  - **EC2**: 컨테이너 실행 환경, 자동 정리 및 재시작 담당
-
-<br/>
-<br/>
-
-### ② 이미지 누적에 따른 자원 낭비 문제 해결
-
-- **EC2 내부 정리**: GitHub Actions 내부에서 배포 직전 docker image prune 실행
-
-- **ECR 저장소 정리**: 생명주기 정책 설정으로 태그 기준 최신 6개만 유지
-
-<br/>
-<br/>
-
-### ③ 장애 복구 및 빌드 안정성 향상
-
-- 로그 수집: CloudWatch 연동을 통해 docker logs를 대체
-- 알림 연동: 향후 Slack, 이메일 기반 경고 시스템 도입 예정
-- 캐시 전략: .m2, node_modules 디렉토리 캐싱 도입 예정
-
-<br/>
-<br/>
-
----
-
-<br/>
-<br/>
-
-# 3-4. MSA 내부 구조 설계
-
-!["Entity Architecture"](./docs/architecture/src/15-MSA-전환-개요-3-서버-아키텍처-요약.png)
-
-아래는 Core·Auth·Extension로 분리한 3-서버 MSA의 통신 흐름에 대한 요약입니다.
-
-1. **dg-core-server** : 기존 기능(도메인 기능) 수행, 내부 서버 오케스트레이션
-2. **dg-auth-server** : S256 기반 JWT 발급·공개키 제공
-3. **dg-extension-server** : 공개키로 검증 후 확장 API(유저 자산 갱신 등)를 제공
-
-## 맥락
-
-단일 Core 서버에 **인증, 확장 기능, 도메인 로직**이 공존하던 구조를 분리하여,  
-서버 간 보안 경계를 명확히 하고 확장성을 높이기 위해 **MSA**로 전환중에 있습니다.
-
-본 ADR를 통해, 세 인스턴스의 **역할**과 **통신 흐름**을 한눈에 정리하고자 합니다.
-
-<br/>
-<br/>
-
-## 결정
-
-!["Entity Architecture"](./docs/architecture/src/15-MSA-전환-개요-3-서버-아키텍처.png)
-
-### 1. 인스턴스와 역할
-
-| 서버                     | 이하      | 역할                                                                  | 보안                                                   |
-| ------------------------ | --------- | --------------------------------------------------------------------- | ------------------------------------------------------ |
-| **dg-core-server <br/>** | Core      | **JWT 요청자**, <br/> 도메인 오케스트레이션, <br/> 외부 호출의 시작점 | `clientId/secret` 보관, <br/> **JWT 소비자**           |
-| **dg-auth-server <br/>** | Auth      | **JWT 발급자**(RS256 개인키 서명), <br/> 공개키 제공                  | **개인키(Private Key) 보유**, <br/> 공개키만 외부 제공 |
-| **dg-extension-server**  | Extension | **JWT 검증자**(공개키 검증), <br/> 확장 기능(자산/닉네임 등) 제공     | 공개키 캐싱, <br/> 개인키 없음                         |
-
-> 핵심 원칙  
-> ① **서명 권한은 Auth에만 존재** (개인키 집중)  
-> ② **검증은 Core/Extension에서** 공개키로 수행 (키 공유 제거)  
-> ③ Core는 **토큰 발급·주입·재시도**를 표준화하여 호출부 단순화
-
-<br/>
-
-### 2. 서버 간 인증·통신 흐름
-
-- **① Core → Auth**:
-
-  - `clientId/secret`로 **JWT 발급 요청**
-  - 예: POST `/msa/auth/token`
-
-- **② Auth → Core**:
-
-  - 자격 검증 후 **JWT 문자열 반환**
-
-- **③ Extension → Auth**:
-
-  - **공개키 요청** (GET `/msa/auth/public-key`)
-  - **공개키 캐싱**
-
-- **④ Core → Extension**:
-
-  - `Authorization: Bearer {JWT}` 로 **Extension** API 호출
-  - 예: POST `/msa/ext/api/update-asset/{userId}`
-
-- **⑤ Extension**:
-
-  - 공개키로 **JWT 검증** 후 비즈니스 로직 수행
-  - **응답 반환**
-
-- **⑥ Core**:
-
-  - 응답을 기반으로 `AssetHistory` 저장 및 `User.currentAssetHistory` 갱신
-
-<br/>
-
-### 3. 주요 API
-
-| 서버      | 엔드포인트                                | 요청 본문/헤더                                 | 응답                           | 목적                    |
-| --------- | ----------------------------------------- | ---------------------------------------------- | ------------------------------ | ----------------------- |
-| Auth      | `POST /msa/auth/api/token`                | JSON `{clientId, clientSecret}`                | `text/plain`(JWT)              | 서버 간 통신용 JWT 발급 |
-| Auth      | `GET /msa/auth/api/public-key`            | -                                              | `text/plain`(Base64 PEM)       | JWT 검증용 공개키 제공  |
-| Extension | `POST /msa/ext/api/update-asset/{userId}` | `Authorization: Bearer {JWT}` + JSON `{asset}` | `ResData<UpdateAssetResponse>` | 자산 갱신(검증 필수)    |
-
-<br/>
-
-### 4. 코어 서버 내부 설계 포인트
-
-- ① **토큰 수명 관리(5분)**: `TokenManager`가 **메모리 캐시** + **만료 감지** + **자동 재발급** 수행
-- ② **API 실행 래퍼**: `InterServerApiExecutor`가 **JWT 주입** 및 **401 수신 시 강제 재발급 후 1회 재시도**를 표준화
-- ③ **트랜잭션 분리**: 외부 호출은 트랜잭션 밖, 응답 성공 시에만 `@Transactional` 내부에서 **도메인 반영**
-- ④ **타임아웃/격리**: `RestTemplate` 타임아웃 분리(인증/확장 전용 Bean)로 **장애 전파 최소화**
-
-<br/>
-<br/>
-
-## 결과
-
-| 효과                 | 내용                                                                       |
-| -------------------- | -------------------------------------------------------------------------- |
-| **보안 분리**        | 서명(개인키) 권한을 Auth로 집중, Core/Extension은 공개키 검증만 수행       |
-| **확장성**           | 확장 기능은 Extension 계열로 수평 확장, Core는 오케스트레이션에 집중       |
-| **장애 격리**        | 외부 통신 실패가 Core의 도메인 트랜잭션에 영향을 주지 않음(요청/저장 분리) |
-| **일관된 호출 규약** | Core의 래퍼/토큰 캐시로 모든 서버 간 호출이 동일한 인증 흐름을 따름        |
-| **운영 단순화**      | 키 배포는 공개키만 공유, 비밀은 Auth에만 존재하여 관리 포인트 축소         |
-
-> 관련 프로젝트는 아래에서 확인하실 수 있습니다:
->
-> - [`dontgoback-auth-server`의 gitHub 링크](https://github.com/parkhongseok/dontgoback-auth-server)
-> - [`dontgoback-extension-server`의 gitHub 링크](https://github.com/parkhongseok/dontgoback-extension-server)
-
- <br/>
- <br/>
- <br/>
-
----
+<details>
+<summary><strong>프론트엔드 화면 보기</strong>
+</summary>
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/web/login.png" alt="로그인 화면" width="80%">
+      <br>
+      <sub>로그인 화면</sub>
+    </td>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/web/main.png" alt="메인 피드" width="80%">
+      <br>
+      <sub>메인 피드</sub>
+    </td>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/web/profile.png" alt="프로필" width="80%">
+      <br>
+      <sub>프로필</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/web/editPost.png" alt="게시글 수정" width="80%">
+      <br>
+      <sub>게시글 CRUD</sub>
+    </td>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/web/profileSettings.png" alt="프로필 세팅" width="80%">
+      <br>
+      <sub>프로필 설정</sub>
+    </td>
+        <td align="center">
+      <img src="./docs/architecture/src/frontend/web/likes.png" alt="알림 패널" width="80%">
+      <br>
+      <sub>좌측 알림 패널</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/mobile/main.PNG" alt="모바일 메인 화면" width="50%">
+      <br>
+      <sub>모바일 메인 화면</sub>
+    </td>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/mobile/profile.PNG" alt="모바일 프로필" width="50%">
+      <br>
+      <sub>모바일 프로필</sub>
+    </td>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/mobile/write.PNG" alt="모바일 게시글" width="50%">
+      <br>
+      <sub>모바일 게시글 작성</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/mobile/post.PNG" alt="모바일 게시물" width="50%">
+      <br>
+      <sub>모바일 게시물</sub>
+    </td>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/mobile/likes.PNG" alt="하단 알림 패널" width="50%">
+      <br>
+      <sub>하단 알림 패널</sub>
+    </td>
+    <td align="center">
+      <img src="./docs/architecture/src/frontend/mobile/settings.PNG" alt="하단 설정 패널" width="50%">
+      <br>
+      <sub>하단 설정 패널</sub>
+    </td>
+  </tr>
+</table>
+
+</details>
 
 <br/>
 <br/>
@@ -703,13 +249,6 @@ GitHub Actions, Docker, Amazon ECR, EC2를 활용하여 자동화된 빌드 및 
 
 준비한 `README.md`는 여기까지입니다.
 
-> 더 다양한 주제의 문서는 [/docs/architecture/decisions/\* ](./docs/architecture/decisions/)에서 확인해보실 수 있습니다.  
-> **기술 스택의 선정 이유** 및 **도메인, 데이터, 엔티티 모델 설계** 등을 다루고 있습니다.
-
-<br/>
-<br/>
-<br/>
-<br/>
 <br/>
 <br/>
 
