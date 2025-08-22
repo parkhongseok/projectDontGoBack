@@ -28,7 +28,7 @@
 
 - MSA 환경의 서비스 간 신뢰를 확보하기 위해, OAuth 2.0 표준(RFC 6749)을 기반으로 `Client Credentials Grant` 방식의 인증 서버를 직접 설계하고 개발했습니다.
 - 특히 **비대칭키(RS256)를 채택**하여, 인증서버만 개인키를 소유하고 다른 서버들은 공개키로 검증하게 함으로써 보안 관리 포인트를 최소화했습니다.
-  > 🔗 블로그 포스트 : [MSA 서버 간 인증을 위한 **_OAuth2 직접 구현하기_** ](https://keinmall.tistory.com/22)
+  > 🔗 블로그 포스트 : [MSA 서버 간 인증을 위한 **_OAuth2 직접 구현하기_** ](https://keinmall.tistory.com/24)
 
 ### DB 쿼리 성능 1000배 개선:
 
@@ -40,7 +40,7 @@
 
 - 멀티 스테이지 빌드와 **Docker Layer Caching** 전략을 적용하여, GitHub Actions의 빌드 시간을 **501초에서 6초**로 단축하며 개발 및 배포 생산성을 크게 향상시켰습니다.
 - 컨테이너 레지스트리(Aws ECR)의 유무에 따른 배포 파이프라인을 모든 구축해봤습니다.
-  > 🔗 블로그 포스트 : [빌드 캐싱을 통한 CI/CD 빌드시간 단축](https://keinmall.tistory.com/22)
+  > 🔗 블로그 포스트 : [빌드 캐싱을 통한 CI/CD 빌드시간 단축](https://keinmall.tistory.com/23)
 
 ### **Linux 시스템 이해를 통한 서버 무중단 운영**
 
