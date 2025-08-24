@@ -28,7 +28,7 @@
 
 - MSA 환경의 서비스 간 신뢰를 확보하기 위해, OAuth 2.0 표준(RFC 6749)을 기반으로 `Client Credentials Grant` 방식의 인증 서버를 직접 설계하고 개발했습니다.
 - 특히 **비대칭키(RS256)를 채택**하여, 인증서버만 개인키를 소유하고 다른 서버들은 공개키로 검증하게 함으로써 보안 관리 포인트를 최소화했습니다.
-  > 🔗 블로그 포스트 : [MSA 서버 간 인증을 위한 **_OAuth2 직접 구현하기_** ](https://keinmall.tistory.com/22)
+  > 🔗 블로그 포스트 : [MSA 서버 간 인증을 위한 **_OAuth2 직접 구현하기_** ](https://keinmall.tistory.com/24)
 
 ### DB 쿼리 성능 1000배 개선:
 
@@ -39,8 +39,8 @@
 ### **빌드 파이프라인 최적화로 배포 시간 98% 단축**
 
 - 멀티 스테이지 빌드와 **Docker Layer Caching** 전략을 적용하여, GitHub Actions의 빌드 시간을 **501초에서 6초**로 단축하며 개발 및 배포 생산성을 크게 향상시켰습니다.
-- 컨테이너 레지스트리(Aws ECR)의 유무에 따른 배포 파이프라인을 모든 구축해봤습니다.
-  > 🔗 블로그 포스트 : [빌드 캐싱을 통한 CI/CD 빌드시간 단축](https://keinmall.tistory.com/22)
+- 컨테이너 레지스트리(Aws ECR)의 유무에 따른 배포 파이프라인을 모두 구축했습니다.
+  > 🔗 블로그 포스트 : [빌드 캐싱을 통한 CI/CD 빌드시간 단축](https://keinmall.tistory.com/23)
 
 ### **Linux 시스템 이해를 통한 서버 무중단 운영**
 
@@ -102,7 +102,7 @@
 
 ## Phase 2. MSA로의 전환 - EC2, Raspberry Pi
 
-#### 구조
+#### 서버간 내부 통신 구조
 
 - `Core(기존 EC2)`, `Auth`, `Extension` 서버를 EC2와 라즈베리파이에 분리 배포
 - **OAuth 2.0 Client Credentials Grant** 기반의 서버 간 인증 방식
@@ -114,11 +114,11 @@
 
 #### 서버별 역할
 
-| 서버                | OAuth 2.0 역할       | 핵심 책임                                            |
-| :------------------ | :------------------- | :--------------------------------------------------- |
-| dg-auth-server      | Authorization Server | 서버 간 통신용 JWT(Access Token) 발급 및 공개키 제공 |
-| dg-core-server      | Client               | 인증 서버에 토큰 요청, 비즈니스 로직 오케스트레이션  |
-| dg-extension-server | Resource Server      | 토큰 검증 후 보호된 API(자산 갱신 등) 제공           |
+| 서버                  | OAuth 2.0 역할       | 핵심 책임                                            |
+| :-------------------- | :------------------- | :--------------------------------------------------- |
+| `dg-auth-server`      | Authorization Server | 서버 간 통신용 JWT(Access Token) 발급 및 공개키 제공 |
+| `dg-core-server`      | Client               | 인증 서버에 토큰 요청, 비즈니스 로직 오케스트레이션  |
+| `dg-extension-server` | Resource Server      | 토큰 검증 후 보호된 API(자산 갱신 등) 제공           |
 
 #### 전환 이유
 
@@ -128,7 +128,19 @@
 
 3. **장애 격리**: 특정 서버의 장애가 다른 서버로 전파되는 것을 방지
 
-> 📌 관련 기록: [15-MSA-시스템-아키텍처](./docs/architecture/decisions/15-MSA-시스템-아키텍처.md)
+#### MSA 도입 후 전체 시스템 구조
+
+- 서버 간 통신 구조를 포함한 전체 시스템 아키텍처는 아래와 같습니다.
+<p align="center">
+  <img src="./docs/architecture/src/15-MSA-전환-개요-3-서버-아키텍처-통합.png" width="80%" alt="MSA 서버 아키텍처 통합">
+</p>
+
+- 본 아키텍처는 **사용자 인증**과 **서버 간 인증** 모두에 OAuth 2.0 표준을 적용하지만, 목적에 따라 서로 다른 인증 방식을 사용합니다.
+
+  - **사용자 인증**: 사용자가 구글을 통해 안전하게 로그인할 수 있는 `Authorization Code Grant` 방식
+  - **서버 간 인증**: 각 마이크로서비스가 안전하게 통신할 수 있는 `Client Credentials Grant` 방식
+
+> 📌 관련 기록: [15-MSA-시스템-아키텍처.md](./docs/architecture/decisions/15-MSA-시스템-아키텍처.md)
 
    <br>
    <br>
