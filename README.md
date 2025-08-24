@@ -8,12 +8,10 @@
 
 <br/>
 
-- 소개 : 사용자의 자산 증감을 닉네임과 그래프로 표현하는 `익명 SNS`입니다.
+- 소개 : 매일 갱신되는 사용자의 자산을 닉네임과 그래프로 표현하는 `익명 SNS`입니다.
 - GitHub : [Core Server](https://github.com/parkhongseok/projectDontGoBack) | [Auth Server](https://github.com/parkhongseok/dontgoback-auth-server) | [Extension Server](https://github.com/parkhongseok/dontgoback-extension-server)
 - 배포 주소 : [https://dontgoback.kro.kr/](https://dontgoback.kro.kr/)
 
-</br>
-</br>
 </br>
 
 # 1. 주요 성과
@@ -148,8 +146,8 @@
 
 # 주요 설계 결정
 
-단순히 기능을 구현하는 것을 넘어, 확장성과 안정성을 고려한 설계 원칙을 세우고 모든 결정 과정을 **ADR(아키텍처 결정 기록)** 로 문서화했습니다.  
- 모든 기록은 `docs/architecture/decisions` 에서 확인하실 수 있으며, 대표적인 설계 고민은 다음과 같습니다.
+협업을 고려하여, 중요한 결정 과정을 **ADR(아키텍처 결정 기록)** 로 문서화했습니다.  
+모든 기록은 `docs/architecture/decisions` 에서 확인하실 수 있으며, 대표적인 설계 고민은 다음과 같습니다.
 
 1.  **도메인 모델링 (JPA/ERD):**  
     사용자 자산과 SNS 활동의 관계를 표현하기 위해 **도메인 모델을 설계** 하고, 정규화를 거쳐 **ERD를 구축**했습니다.  
